@@ -1,0 +1,1058 @@
+<ng-container *ngIf="product; else notFound">
+
+  <main class="product-page">
+
+    <!-- =====================================================
+         BREADCRUMB
+    ====================================================== -->
+    <div class="container-fluid product-container">
+
+      <nav class="breadcrumb-bar">
+        <a routerLink="/">Home</a>
+        <span>/</span>
+
+        <a routerLink="/products" [queryParams]="{ category: product.category }">
+          {{ product.category }}
+        </a>
+
+        <span>/</span>
+
+        <strong>{{ product.name }}</strong>
+      </nav>
+
+
+      <!-- =====================================================
+           MAIN PRODUCT AREA
+      ====================================================== -->
+
+      <div class="product-layout">
+
+        <!-- =================================================
+             LEFT : IMAGE
+        ================================================== -->
+
+        <aside class="product-image-column">
+
+          <div class="image-sticky">
+
+            <!-- OFFER BADGE ABOVE IMAGE — shown whenever there's an
+                 actual discount, so "Best Deal" tagged products get
+                 the offer called out above the image. -->
+            <div class="offer-banner" *ngIf="discountPercent as discount">
+
+              <div class="offer-icon">
+                <i class="bi bi-lightning-fill"></i>
+              </div>
+
+              <div>
+                <!-- <small>{{ product.tag === 'Best Deal' ? 'BEST DEAL — LIMITED TIME OFFER' : 'LIMITED TIME OFFER' }}</small> -->
+                <strong>{{ discount }}% OFF · Save ₹{{ savings | number }}</strong>
+              </div>
+
+              <span class="offer-arrow">
+                <i class="bi bi-chevron-right"></i>
+              </span>
+            </div>
+
+
+            <!-- IMAGE -->
+            <div class="image-section">
+
+              <div class="image-top-row">
+
+                <span class="product-tag" *ngIf="product.tag">
+                  {{ product.tag }}
+                </span>
+
+                <button type="button" class="wishlist-button"
+                  [class.active]="wishlistService.isWishlisted(product.productCode)" (click)="toggleWishlist()">
+
+                  <i class="bi" [ngClass]="
+      wishlistService.isWishlisted(product.productCode)
+        ? 'bi-heart-fill'
+        : 'bi-heart'
+    ">
+                  </i>
+
+                </button>
+
+
+              </div>
+
+
+              <div class="product-image-wrapper">
+
+                <img [src]="product.image" [alt]="product.name" class="product-main-image" loading="eager" />
+
+              </div>
+
+
+              <!-- IMAGE FOOTER -->
+              <div class="image-footer">
+
+                <div class="image-feature">
+                  <i class="bi bi-shield-check"></i>
+                  <span>100% Genuine</span>
+                </div>
+
+                <div class="image-feature">
+                  <i class="bi bi-truck"></i>
+                  <span>Secure Delivery</span>
+                </div>
+
+                <div class="image-feature">
+                  <i class="bi bi-arrow-repeat"></i>
+                  <span>Easy Support</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             RIGHT : PRODUCT DETAILS
+        ================================================== -->
+
+        <section class="product-details-column">
+
+          <!-- ===============================================
+               BASIC PRODUCT INFORMATION
+          ================================================ -->
+
+          <section class="product-intro">
+
+            <div class="brand-category">
+              <span>{{ product.brand }}</span>
+
+              <i class="bi bi-dot"></i>
+
+              <span>{{ product.category }}</span>
+            </div>
+
+
+            <h1>
+              {{ product.name }}
+            </h1>
+
+
+            <p class="model-line" *ngIf="apiProduct?.Model_No">
+
+              Model:
+              <strong>{{ apiProduct.Model_No }}</strong>
+
+            </p>
+
+
+            <!-- RATING -->
+            <div class="rating-row">
+
+              <div class="rating-box">
+
+                <strong>
+                  {{ reviewAverage || apiRating | number:'1.1-1' }}
+                </strong>
+
+                <i class="bi bi-star-fill"></i>
+
+              </div>
+
+
+              <div class="rating-stars">
+
+                <ng-container *ngFor="let star of stars">
+
+                  <i class="bi" [ngClass]="{
+                      'bi-star-fill star-full': getStarType(star) === 'full',
+                      'bi-star-half star-half': getStarType(star) === 'half',
+                      'bi-star star-empty': getStarType(star) === 'empty'
+                    }">
+                  </i>
+
+                </ng-container>
+
+              </div>
+
+
+              <button type="button" class="review-link" (click)="openReviews()">
+
+                {{ reviewCount }} Reviews
+
+              </button>
+
+            </div>
+
+
+            <!-- PRICE -->
+            <div class="price-section">
+
+              <div class="current-price">
+                ₹{{ product.price | number }}
+              </div>
+
+              <div class="mrp-price" *ngIf="product.mrp > product.price">
+
+                ₹{{ product.mrp | number }}
+
+              </div>
+
+              <div class="discount-pill" *ngIf="discountPercent as discount">
+
+                {{ discount }}% off
+
+              </div>
+
+            </div>
+
+
+            <div class="saving-text" *ngIf="savings > 0">
+
+              You save ₹{{ savings | number }}
+
+            </div>
+
+
+            <div class="tax-note">
+
+              Inclusive of all applicable taxes
+
+              <span *ngIf="apiProduct?.Gst_Per">
+                · {{ apiProduct.Gst_Per }}
+              </span>
+
+            </div>
+
+          </section>
+
+
+          <!-- ===============================================
+               PURCHASE CARD
+          ================================================ -->
+
+          <section class="purchase-card">
+
+            <!-- STOCK -->
+            <div class="stock-row">
+
+              <div [ngClass]="stockClass">
+
+                <i class="bi" [ngClass]="{
+                    'bi-check-circle-fill': stockClass === 'stock-good',
+                    'bi-exclamation-circle-fill': stockClass === 'stock-low',
+                    'bi-x-circle-fill': stockClass === 'stock-out'
+                  }">
+                </i>
+
+                {{ stockStatus }}
+
+              </div>
+
+              <span class="stock-count" *ngIf="product.stock > 0">
+
+                {{ product.stock }} available
+
+              </span>
+
+            </div>
+
+
+            <!-- QUANTITY + CART -->
+            <div class="purchase-row" *ngIf="product.stock > 0">
+
+              <div class="quantity-control">
+
+                <button type="button" (click)="changeQuantity(-1)" [disabled]="quantity <= 1">
+
+                  −
+
+                </button>
+
+                <span>
+                  {{ quantity }}
+                </span>
+
+                <button type="button" (click)="changeQuantity(1)" [disabled]="quantity >= product.stock">
+
+                  +
+
+                </button>
+
+              </div>
+
+
+              <button type="button" class="add-cart-btn" (click)="addToCart()">
+
+                <i class="bi" [ngClass]="
+                    justAdded
+                      ? 'bi-check2-circle'
+                      : 'bi-cart-plus'
+                  ">
+                </i>
+
+                {{ justAdded ? 'Added to Cart' : 'Add to Cart' }}
+
+              </button>
+
+
+              <button type="button" class="buy-now-btn" (click)="buyNow()">
+
+                <i class="bi bi-lightning-charge-fill"></i>
+
+                Buy Now
+
+              </button>
+
+            </div>
+
+
+            <button type="button" class="out-stock-btn" *ngIf="product.stock <= 0" disabled>
+
+              Currently Unavailable
+
+            </button>
+
+          </section>
+
+
+          <!-- ===============================================
+               CARD 1 : DESCRIPTION
+          ================================================ -->
+
+          <section class="detail-card">
+
+            <div class="card-heading">
+
+              <div class="card-icon blue">
+                <i class="bi bi-file-text"></i>
+              </div>
+
+              <div>
+                <h2>Product Description</h2>
+                <p>About this product</p>
+              </div>
+
+            </div>
+
+
+            <div class="description-content">
+
+              <p>
+                {{ specDetails || product.description }}
+              </p>
+
+            </div>
+
+          </section>
+
+
+          <!-- ===============================================
+               CARD 2 : PRODUCT DETAILS
+          ================================================ -->
+
+          <section class="detail-card">
+
+            <div class="card-heading">
+
+              <div class="card-icon purple">
+                <i class="bi bi-info-circle"></i>
+              </div>
+
+              <div>
+                <h2>Product Details</h2>
+                <p>Important product information</p>
+              </div>
+
+            </div>
+
+
+            <div class="info-grid">
+
+              <div class="info-item">
+                <span>Product Code</span>
+                <strong>{{ product.productCode || '-' }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Brand</span>
+                <strong>{{ product.brand || '-' }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Category</span>
+                <strong>{{ product.category || '-' }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Model No</span>
+                <strong>{{ apiProduct?.Model_No || '-' }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>SKU</span>
+                <strong>{{ apiProduct?.SKU || product.sku || '-' }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Barcode</span>
+                <strong>{{ apiProduct?.Barcode || product.barcode || '-' }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Color</span>
+                <strong>{{ apiProduct?.Color_Name || product.color || '-' }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>UOM</span>
+                <strong>{{ uom }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Product Type</span>
+                <strong>{{ productType }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Inventory Type</span>
+                <strong>{{ inventoryType }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>HSN</span>
+                <strong>{{ hsn }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>GST</span>
+                <strong>{{ apiProduct?.Gst_Per || '-' }}</strong>
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- ===============================================
+               CARD 3 : SPECIFICATIONS
+          ================================================ -->
+
+          <section class="detail-card">
+
+            <div class="card-heading">
+
+              <div class="card-icon orange">
+                <i class="bi bi-list-check"></i>
+              </div>
+
+              <div>
+                <h2>Specifications</h2>
+                <p>Technical specifications</p>
+              </div>
+
+            </div>
+
+
+            <!-- SPEC DETAILS -->
+            <div class="spec-description" *ngIf="specDetails">
+
+              <h3>Specification Details</h3>
+
+              <p>
+                {{ specDetails }}
+              </p>
+
+            </div>
+
+
+            <!-- SPECIFICATION TABLE -->
+            <div class="spec-list" *ngIf="product.specs?.length">
+
+              <div class="spec-row" *ngFor="let spec of product.specs">
+
+                <div class="spec-label">
+                  {{ spec.label }}
+                </div>
+
+                <div class="spec-value">
+                  {{ spec.value }}
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="empty-spec" *ngIf="!product.specs?.length">
+
+              No technical specifications available.
+
+            </div>
+
+          </section>
+
+
+          <!-- ===============================================
+               CARD 4 : DELIVERY / WARRANTY / STOCK
+          ================================================ -->
+
+          <section class="detail-card">
+
+            <div class="card-heading">
+
+              <div class="card-icon green">
+                <i class="bi bi-shield-check"></i>
+              </div>
+
+              <div>
+                <h2>Delivery & Product Information</h2>
+                <p>Additional information</p>
+              </div>
+
+            </div>
+
+
+            <div class="feature-grid">
+
+              <div class="feature-item">
+
+                <div class="feature-icon">
+                  <i class="bi bi-truck"></i>
+                </div>
+
+                <div>
+                  <strong>Secure Delivery</strong>
+                  <span>Safe and reliable delivery</span>
+                </div>
+
+              </div>
+
+
+              <div class="feature-item">
+
+                <div class="feature-icon">
+                  <i class="bi bi-shield-check"></i>
+                </div>
+
+                <div>
+                  <strong>Warranty</strong>
+                  <span>{{ warranty }}</span>
+                </div>
+
+              </div>
+
+
+              <div class="feature-item">
+
+                <div class="feature-icon">
+                  <i class="bi bi-box-seam"></i>
+                </div>
+
+                <div>
+                  <strong>Current Stock</strong>
+                  <span>{{ product.stock }} {{ uom }}</span>
+                </div>
+
+              </div>
+
+
+              <div class="feature-item">
+
+                <div class="feature-icon">
+                  <i class="bi bi-boxes"></i>
+                </div>
+
+                <div>
+                  <strong>Stock Range</strong>
+                  <span>
+                    {{ minimumStock }} - {{ maximumStock }}
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- ===============================================
+               CUSTOMER REVIEWS
+          ================================================ -->
+
+          <section class="reviews-section" id="customer-reviews">
+
+            <div class="reviews-header">
+
+              <div>
+
+                <span class="section-kicker">
+                  CUSTOMER EXPERIENCE
+                </span>
+
+                <h2>Customer Reviews</h2>
+
+                <p>
+                  See what customers are saying about this product.
+                </p>
+
+              </div>
+
+
+              <button type="button" class="write-review-btn" (click)="openReviewForm()">
+
+                <i class="bi bi-pencil-square"></i>
+
+                Write a Review
+
+              </button>
+
+            </div>
+
+
+            <!-- REVIEW SUMMARY -->
+            <div class="review-summary">
+
+              <div class="average-rating">
+
+                <strong>
+                  {{ reviewAverage | number:'1.1-1' }}
+                </strong>
+
+                <div class="summary-stars">
+
+                  <ng-container *ngFor="let star of stars">
+
+                    <i class="bi" [ngClass]="{
+                        'bi-star-fill star-full':
+                          getReviewSummaryStarType(star) === 'full',
+
+                        'bi-star-half star-half':
+                          getReviewSummaryStarType(star) === 'half',
+
+                        'bi-star star-empty':
+                          getReviewSummaryStarType(star) === 'empty'
+                      }">
+                    </i>
+
+                  </ng-container>
+
+                </div>
+
+                <span>
+                  {{ reviewCount }} customer reviews
+                </span>
+
+              </div>
+
+
+              <div class="rating-breakdown">
+
+                <div class="rating-line" *ngFor="let rating of [5,4,3,2,1]">
+
+                  <span>{{ rating }}</span>
+
+                  <i class="bi bi-star-fill"></i>
+
+                  <div class="rating-progress">
+                    <span [style.width.%]="getReviewPercentage(rating)">
+                    </span>
+                  </div>
+
+                  <small>
+                    {{ getReviewPercentage(rating) }}%
+                  </small>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- REVIEW FORM -->
+            <div class="review-form" *ngIf="showReviewForm">
+
+              <div class="review-form-header">
+
+                <div>
+                  <h3>Write your review</h3>
+                  <p>Share your experience with this product.</p>
+                </div>
+
+                <button type="button" (click)="closeReviewForm()">
+
+                  <i class="bi bi-x-lg"></i>
+
+                </button>
+
+              </div>
+
+
+              <div class="review-rating-select">
+
+                <span>Your Rating</span>
+
+                <div>
+
+                  <button type="button" *ngFor="let rating of [1,2,3,4,5]" [class.selected]="newReview.rating >= rating"
+                    (click)="setReviewRating(rating)">
+
+                    <i class="bi bi-star-fill"></i>
+
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <label>
+                Review title
+
+                <input type="text" [(ngModel)]="newReview.title" placeholder="Give your review a title">
+              </label>
+
+
+              <label>
+                Your review
+
+                <textarea rows="5" [(ngModel)]="newReview.comment" placeholder="Tell us about your experience...">
+                </textarea>
+
+              </label>
+
+
+              <p class="review-message" *ngIf="reviewMessage">
+
+                {{ reviewMessage }}
+
+              </p>
+
+
+              <div class="review-form-actions">
+
+                <button type="button" class="cancel-review" (click)="closeReviewForm()">
+
+                  Cancel
+
+                </button>
+
+                <button type="button" class="submit-review" [disabled]="reviewSubmitting" (click)="submitReview()">
+
+                  <i class="bi bi-send"></i>
+
+                  {{ reviewSubmitting ? 'Submitting...' : 'Submit Review' }}
+
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <!-- REVIEWS LIST -->
+            <div class="review-list">
+
+              <div class="review-item" *ngFor="let review of reviews">
+
+                <div class="review-avatar">
+                  {{ getInitial(review.Customer_Name) }}
+                </div>
+
+                <div class="review-body">
+
+                  <div class="review-user-row">
+
+                    <strong>
+                      {{ review.Customer_Name }}
+                    </strong>
+
+                    <span *ngIf="review.Created_On">
+
+                      {{ review.Created_On }}
+
+                    </span>
+
+                  </div>
+
+
+                  <div class="review-stars">
+
+                    <i class="bi bi-star-fill" *ngFor="let star of [1,2,3,4,5]" [class.empty-review-star]="
+                        !isFilledStar(review, star)
+                      ">
+                    </i>
+
+                  </div>
+
+
+                  <h4 *ngIf="review.Review_Title">
+                    {{ review.Review_Title }}
+                  </h4>
+
+                  <p>
+                    {{ review.Review_Message }}
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <div class="no-reviews" *ngIf="!reviewsLoading && !reviews.length">
+
+                <i class="bi bi-chat-square-text"></i>
+
+                <h3>No reviews yet</h3>
+
+                <p>
+                  Be the first customer to review this product.
+                </p>
+
+                <button type="button" (click)="openReviewForm()">
+
+                  Write the First Review
+
+                </button>
+
+              </div>
+
+
+              <div class="reviews-loading" *ngIf="reviewsLoading">
+
+                Loading customer reviews...
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+
+        </section>
+
+      </div>
+
+
+      <!-- ⭐ ADVERTISEMENT — Slot_No 7 (Product Details page) -->
+      <div class="container-fluid product-container">
+        <app-ad-banner [slotNo]="7"></app-ad-banner>
+      </div>
+
+
+      <!-- =====================================================
+           DISCOVER MORE
+      ====================================================== -->
+
+      <!-- =========================================================
+     DISCOVER MORE
+========================================================== -->
+
+      <section class="discover-section" *ngIf="relatedProducts.length">
+
+        <div class="discover-heading">
+
+          <div>
+            <span>MORE FROM THIS CATEGORY</span>
+            <h2>Discover More</h2>
+          </div>
+
+          <a routerLink="/products" [queryParams]="{ category: product.category }">
+
+            View All
+            <i class="bi bi-arrow-right"></i>
+
+          </a>
+
+        </div>
+
+
+        <!-- Same card structure/look as the Products listing page card -->
+        <div class="related-products-grid">
+
+          <div class="related-product-item" *ngFor="let item of relatedProducts">
+
+            <article class="related-product-card" (click)="selectRelatedProduct(item)">
+
+              <!-- IMAGE -->
+              <div class="related-image-wrapper">
+
+                <span class="related-offer-badge" *ngIf="getRelatedDiscount(item) > 0">
+
+                  {{ getRelatedDiscount(item) }}% OFF
+
+                </span>
+
+                <button type="button" class="related-wishlist-btn" [class.active]="isRelatedWishlisted(item)"
+                  (click)="toggleRelatedWishlist(item, $event)" title="Wishlist">
+
+                  <i class="bi" [class.bi-heart]="!isRelatedWishlisted(item)"
+                    [class.bi-heart-fill]="isRelatedWishlisted(item)">
+                  </i>
+
+                </button>
+
+                <img *ngIf="!relatedImageError[getRelatedKey(item)]" [src]="item.image" [alt]="item.name"
+                  class="related-image" (error)="onRelatedImageError(item)" />
+
+                <div class="related-no-image" *ngIf="relatedImageError[getRelatedKey(item)]">
+
+                  <i class="bi bi-box-seam"></i>
+
+                </div>
+
+              </div>
+
+
+              <!-- DETAILS -->
+              <div class="related-card-body">
+
+                <span class="related-category">
+                  {{ item.category }}
+                </span>
+
+                <div class="related-name-row">
+
+                  <h3 class="related-name">
+                    {{ item.name }}
+                  </h3>
+
+                  <span class="related-brand" *ngIf="item.brand">
+                    {{ item.brand }}
+                  </span>
+
+                </div>
+
+                <p class="related-short-desc" *ngIf="item.description">
+
+                  {{ item.description.length > 80
+                  ? (item.description.substring(0, 80) + '...')
+                  : item.description }}
+
+                </p>
+
+                <!-- RATING -->
+                <div class="related-rating">
+
+                  <i class="bi bi-star-fill" *ngFor="let s of relatedStarsArray(relatedRoundedRating(item))">
+                  </i>
+
+                  <i class="bi bi-star" *ngFor="let s of relatedStarsArray(5 - relatedRoundedRating(item))">
+                  </i>
+
+                  <!-- <span *ngIf="item.rating > 0">
+                    {{ item.rating | number:'1.1-1' }}
+                  </span> -->
+
+                </div>
+
+                <!-- PRICE -->
+                <div class="related-price-row">
+
+                  <strong class="related-price">
+                    ₹{{ item.price | number:'1.0-0' }}
+                  </strong>
+
+                  <del class="related-old-price" *ngIf="item.mrp > item.price">
+                    ₹{{ item.mrp | number:'1.0-0' }}
+                  </del>
+
+                  <span class="related-discount" *ngIf="getRelatedDiscount(item) > 0">
+                    {{ getRelatedDiscount(item) }}% OFF
+                  </span>
+
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="related-card-actions">
+
+                  <button type="button" class="related-add-cart-btn" [disabled]="item.stock === 0"
+                    (click)="addRelatedProductToCart(item, $event)">
+
+                    <i class="bi bi-cart3"></i>
+                    <span>{{ item.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}</span>
+
+                  </button>
+
+                  <button type="button" class="related-quickview-btn"
+                    (click)="$event.stopPropagation(); selectRelatedProduct(item)">
+
+                    <i class="bi bi-eye"></i>
+                    <span>View</span>
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</ng-container>
+
+
+<!-- =========================================================
+     NOT FOUND
+========================================================== -->
+
+<ng-template #notFound>
+
+  <div class="not-found">
+
+    <div class="not-found-icon">
+      <i class="bi bi-box-seam"></i>
+    </div>
+
+    <h2>Product not found</h2>
+
+    <p>
+      The product you're looking for is unavailable.
+    </p>
+
+    <a routerLink="/products" class="back-products">
+
+      <i class="bi bi-arrow-left"></i>
+      Back to Products
+
+    </a>
+
+  </div>
+
+</ng-template>
+
+<!-- =========================================================
+     ⭐ TOAST NOTIFICATION (bottom-right, replaces alert())
+========================================================== -->
+
+<div class="detail-toast" *ngIf="toastMessage" [class.toast-success]="toastType === 'success'"
+  [class.toast-error]="toastType === 'error'">
+
+  <i class="bi" [class.bi-check-circle-fill]="toastType === 'success'"
+    [class.bi-exclamation-circle-fill]="toastType === 'error'">
+  </i>
+
+  <span class="toast-text">
+    {{ toastMessage }}
+  </span>
+
+  <button type="button" class="toast-close" (click)="closeToast()" aria-label="Close">
+
+    <i class="bi bi-x"></i>
+
+  </button>
+
+</div>

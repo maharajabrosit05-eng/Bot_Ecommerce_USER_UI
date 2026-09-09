@@ -1,0 +1,59 @@
+<!-- BIG PICTURE JOURNEY -->
+<div class="delivery-journey mb-4" *ngIf="journeyStage as stage; else statusLoading">
+
+  <div class="journey-node" [class.active]="stage >= 0" [class.current]="stage === 0">
+    <div class="journey-icon"><i class="bi bi-building"></i></div>
+    <span>Warehouse</span>
+  </div>
+
+  <div class="journey-track">
+    <div class="journey-track-fill" [style.width.%]="stage >= 1 ? 100 : 0"></div>
+    <i class="bi bi-truck journey-mover" [class.at-start]="stage === 0" [class.at-end]="stage >= 1"></i>
+  </div>
+
+  <div class="journey-node" [class.active]="stage >= 1" [class.current]="stage === 1">
+    <div class="journey-icon"><i class="bi bi-person-badge"></i></div>
+    <span>Delivery Person</span>
+  </div>
+
+  <div class="journey-track">
+    <div class="journey-track-fill" [style.width.%]="stage >= 2 ? 100 : 0"></div>
+    <i class="bi bi-truck journey-mover" [class.at-start]="stage === 1" [class.at-end]="stage >= 2"></i>
+  </div>
+
+  <div class="journey-node" [class.active]="stage >= 2" [class.current]="stage === 2">
+    <div class="journey-icon"><i class="bi bi-house-check-fill"></i></div>
+    <span>You</span>
+  </div>
+
+</div>
+
+<ng-template #statusLoading>
+  <p class="text-center text-muted small" *ngIf="loadingStatus">Loading status…</p>
+</ng-template>
+
+<!-- STEPPER -->
+<ng-container *ngIf="liveResult as live">
+  <div class="tracking-stepper d-flex justify-content-between position-relative mb-4">
+    <div
+      class="step text-center"
+      *ngFor="let step of live.steps; let i = index"
+      [class.completed]="i <= live.stepIndex"
+    >
+      <div class="step-icon mx-auto" [class.animate-float]="i === live.stepIndex">
+        <i class="bi" [ngClass]="stepIcons[step]"></i>
+      </div>
+      <p class="small mt-2 mb-0" [class.fw-bold]="i === live.stepIndex">{{ step }}</p>
+    </div>
+    <div class="stepper-line">
+      <div class="stepper-line-fill" [style.width.%]="(live.stepIndex / (live.steps.length - 1)) * 100"></div>
+    </div>
+  </div>
+
+  <p class="text-center text-muted small mb-0" *ngIf="live.status !== 'Delivered'">
+    <i class="bi bi-info-circle"></i> Your order is currently <strong>{{ live.status }}</strong>. We'll keep it moving!
+  </p>
+  <p class="text-center text-success small mb-0" *ngIf="live.status === 'Delivered'">
+    <i class="bi bi-check-circle-fill"></i> Delivered! We hope you enjoy your new gear.
+  </p>
+</ng-container>

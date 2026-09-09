@@ -1,0 +1,969 @@
+<section class="checkout-page">
+
+  <!-- =====================================================
+       MAIN CHECKOUT
+  ====================================================== -->
+  <section class="container checkout-container">
+
+    <!-- EMPTY CART -->
+    <ng-container *ngIf="cartService.totalCount() > 0; else emptyState">
+
+      <!-- =================================================
+           ⭐ STEP INDICATOR
+      ================================================== -->
+      <div class="checkout-stepper">
+
+        <div class="checkout-step" [class.active]="checkoutStep === 1" [class.done]="checkoutStep > 1">
+
+          <span class="step-circle">
+            <i class="bi bi-check-lg" *ngIf="checkoutStep > 1"></i>
+            <ng-container *ngIf="checkoutStep <= 1">1</ng-container>
+          </span>
+
+          <span class="step-label">Delivery Address</span>
+
+        </div>
+
+        <span class="step-connector" [class.done]="checkoutStep > 1"></span>
+
+        <div class="checkout-step" [class.active]="checkoutStep === 2">
+
+          <span class="step-circle">2</span>
+
+          <span class="step-label">Payment</span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           STEP 1 : SHIPPING ADDRESS
+      ================================================== -->
+      <section *ngIf="checkoutStep === 1" class="checkout-step-content">
+
+        <div class="row g-4 g-xl-5">
+
+          <!-- ADDRESS FORM -->
+          <div class="col-xl-8">
+
+            <div class="checkout-card address-card glass-card">
+
+              <!-- HEADER -->
+              <div class="section-heading">
+
+                <div class="heading-icon delivery-icon glass-icon">
+                  <i class="bi bi-geo-alt-fill"></i>
+                </div>
+
+                <div class="heading-text-block">
+                  <span class="section-label">
+                    DELIVERY DETAILS
+                  </span>
+
+                  <h2>
+                    Where should we deliver?
+                  </h2>
+
+                  <p>
+                    Enter your delivery address to continue.
+                  </p>
+                </div>
+
+                <!-- USE CURRENT LOCATION -->
+                <button type="button" class="use-location-btn" [disabled]="locatingUser" (click)="useCurrentLocation()">
+                  <i class="bi" [class.bi-crosshair]="!locatingUser" [class.bi-arrow-repeat]="locatingUser"
+                    [class.spin]="locatingUser"></i>
+                  <span>
+                    {{ locatingUser ? 'Detecting…' : 'Use my location' }}
+                  </span>
+                </button>
+
+              </div>
+
+
+              <!-- LOCATION ERROR -->
+              <div class="inline-hint error" *ngIf="locationError">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>{{ locationError }}</span>
+              </div>
+
+
+              <!-- FORM -->
+              <div class="address-form">
+
+                <!-- FULL NAME -->
+                <div class="form-field">
+
+                  <label for="fullName">
+                    Full Name
+                    <span>*</span>
+                  </label>
+
+                  <div class="glass-input">
+
+                    <div class="input-icon">
+                      <i class="bi bi-person-fill"></i>
+                    </div>
+
+                    <input id="fullName" type="text" [(ngModel)]="fullName" name="fullName"
+                      placeholder="Enter your full name" autocomplete="name" />
+
+                  </div>
+
+                </div>
+
+
+                <!-- PHONE -->
+                <div class="form-field">
+
+                  <label for="phone">
+                    Mobile Number
+                    <span>*</span>
+                  </label>
+
+                  <div class="glass-input phone-input">
+
+                    <div class="country-code">
+                      <span>+91</span>
+                    </div>
+
+                    <input id="phone" type="tel" [(ngModel)]="phone" name="phone" placeholder="10-digit mobile number"
+                      maxlength="10" inputmode="numeric" autocomplete="tel" />
+
+                  </div>
+
+                </div>
+
+                <!-- LANDMARK -->
+                <div class="form-field full-width">
+
+                  <label for="landmark">
+                    Landmark <span>*</span>
+                  </label> 
+                  
+
+                  <div class="glass-input">
+
+                    <div class="input-icon">
+                      <i class="bi bi-signpost-2-fill"></i>
+                    </div>
+
+                    <input id="landmark" type="text" [(ngModel)]="landmark" name="landmark"
+                      placeholder="Nearby landmark" autocomplete="landmark" />
+
+                  </div>
+
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="form-field full-width">
+
+                  <label for="addressLine">
+                    Complete Address
+                    <span>*</span>
+                  </label>
+
+                  <div class="glass-textarea">
+
+                    <div class="textarea-icon">
+                      <i class="bi bi-house-fill"></i>
+                    </div>
+
+                    <textarea id="addressLine" [(ngModel)]="addressLine" name="addressLine"
+                      placeholder="House / Flat number, street, area, landmark" rows="3"
+                      autocomplete="street-address"></textarea>
+
+                  </div>
+
+                </div>
+
+
+                <!-- CITY / STATE / PINCODE -->
+                <div class="form-field full-width">
+
+                  <div class="address-trio">
+
+                    <!-- PINCODE (first, so lookup can auto-fill city/state below) -->
+                    <div class="trio-field">
+
+                      <label for="pincode">
+                        Pincode
+                        <span>*</span>
+                      </label>
+
+                      <div class="glass-input">
+
+                        <div class="input-icon">
+                          <i class="bi bi-pin-map-fill"></i>
+                        </div>
+
+                        <input id="pincode" type="text" [(ngModel)]="pincode" name="pincode"
+                          placeholder="6-digit pincode" maxlength="6" inputmode="numeric" autocomplete="postal-code"
+                          (input)="onPincodeInput()" />
+
+                      </div>
+
+                      <small class="inline-hint" *ngIf="pincodeLookupLoading">
+                        Checking pincode…
+                      </small>
+
+                      <small class="inline-hint error" *ngIf="pincodeLookupError">
+                        {{ pincodeLookupError }}
+                      </small>
+
+                    </div>
+
+
+                    <!-- STATE -->
+                    <div class="trio-field">
+
+                      <label for="state">
+                        State
+                        <span>*</span>
+                      </label>
+
+                      <div class="glass-input select-input">
+
+                        <div class="input-icon">
+                          <i class="bi bi-map-fill"></i>
+                        </div>
+
+                        <select id="state" [(ngModel)]="state" name="state" (change)="onStateChange()">
+                          <option value="" disabled selected>
+                            Select state
+                          </option>
+                          <option *ngFor="let s of indianStates" [value]="s">
+                            {{ s }}
+                          </option>
+                        </select>
+
+                        <i class="bi bi-chevron-down select-chevron"></i>
+
+                      </div>
+
+                    </div>
+
+
+                    <!-- CITY -->
+                    <div class="trio-field">
+
+                      <label for="city">
+                        City
+                        <span>*</span>
+                      </label>
+
+                      <div class="glass-input">
+
+                        <div class="input-icon">
+                          <i class="bi bi-buildings-fill"></i>
+                        </div>
+
+                        <input id="city" type="text" [(ngModel)]="city" name="city" list="cityOptions"
+                          [placeholder]="state ? 'Select or type your city' : 'Select state first'"
+                          autocomplete="address-level2" />
+
+                      </div>
+
+                      <datalist id="cityOptions">
+                        <option *ngFor="let c of availableCities" [value]="c"></option>
+                      </datalist>
+
+                    </div>
+
+
+                    <!-- GST INVOICE (OPTIONAL) -->
+                    <div class="form-field full-width gst-field">
+
+                      <label class="gst-toggle-row">
+
+                        <input type="checkbox" [(ngModel)]="needsGstInvoice" name="needsGstInvoice"
+                          (change)="onGstToggleChange()" />
+
+                        <span>I need a GST invoice for this order</span>
+
+                      </label>
+
+                      <div *ngIf="needsGstInvoice" class="glass-input gst-input">
+
+                        <div class="input-icon">
+                          <i class="bi bi-receipt"></i>
+                        </div>
+
+                        <input id="gstin" type="text" [(ngModel)]="gstin" name="gstin"
+                          placeholder="e.g. 27ABCDE1234F1Z5" maxlength="15" autocomplete="off"
+                          style="text-transform: uppercase;" />
+
+                      </div>
+
+                      <small class="inline-hint error"
+                        *ngIf="needsGstInvoice && gstin.trim().length > 0 && !isGstinValid">
+                        Enter a valid 15-character GSTIN.
+                      </small>
+
+                    </div>
+
+
+
+
+
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <!-- PRIVACY NOTE -->
+              <div class="privacy-note glass-chip">
+
+                <div class="privacy-icon">
+                  <i class="bi bi-shield-check"></i>
+                </div>
+
+                <div>
+                  <strong>Your details stay private</strong>
+
+                  <span>
+                    We use your delivery details only to process and deliver your order.
+                  </span>
+                </div>
+
+              </div>
+
+
+              <!-- ERROR -->
+              <div class="checkout-error glass-chip" *ngIf="errorMessage">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                <span>{{ errorMessage }}</span>
+              </div>
+
+
+              <!-- CONTINUE -->
+              <button type="button" class="continue-payment-btn" [disabled]="!isAddressValid"
+                (click)="continueToPayment()">
+
+                <span>
+                  Continue to Payment
+                </span>
+
+                <div class="continue-arrow">
+                  <i class="bi bi-arrow-right"></i>
+                </div>
+
+              </button>
+
+
+              <!-- SECURITY -->
+              <div class="bottom-security">
+
+                <i class="bi bi-lock-fill"></i>
+
+                <span>
+                  Your checkout information is secured with 256-bit SSL encryption.
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ADDRESS SIDE CARD -->
+          <div class="col-xl-4">
+
+            <aside class="delivery-side-card glass-card">
+
+              <div class="delivery-illustration glass-icon-lg">
+                <div class="delivery-icon-circle">
+                  <i class="bi bi-truck"></i>
+                </div>
+              </div>
+
+              <span class="side-label">
+                DELIVERY
+              </span>
+
+              <h3>
+                We'll deliver it
+                <br />
+                right to your door.
+              </h3>
+
+              <p>
+                Make sure your address and mobile number are correct
+                so your order reaches you without any delay.
+              </p>
+
+              <div class="side-divider"></div>
+
+              <div class="delivery-features">
+
+                <div>
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span>Reliable delivery</span>
+                </div>
+
+                <div>
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span>Order tracking</span>
+                </div>
+
+                <div>
+                  <i class="bi bi-check-circle-fill"></i>
+                  <span>Customer support</span>
+                </div>
+
+              </div>
+
+              <div class="delivery-art">
+                <img src="../../../assets/img/delivered.png" alt="" style="height: 200px; margin-left: 40px;">
+              </div>
+
+            </aside>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           STEP 2 : PAYMENT
+      ================================================== -->
+      <section *ngIf="checkoutStep === 2" class="checkout-step-content payment-step">
+
+        <div class="row g-4 g-xl-5">
+
+
+          <!-- =============================================
+               PAYMENT LEFT
+          ============================================== -->
+          <div class="col-xl-8">
+
+            <div class="checkout-card payment-card glass-card">
+
+              <!-- PAYMENT HEADER -->
+              <div class="section-heading payment-heading">
+
+                <div class="heading-icon payment-icon glass-icon">
+                  <i class="bi bi-wallet2"></i>
+                </div>
+
+                <div>
+                  <span class="section-label">
+                    PAYMENT
+                  </span>
+
+                  <h2>
+                    Choose how you want to pay
+                  </h2>
+
+                  <p>
+                    Select a payment method below. Card and UPI open a secure Razorpay checkout.
+                  </p>
+                </div>
+
+              </div>
+
+
+              <!-- =========================================
+                   PAYMENT METHOD IMAGE CARDS
+              ========================================== -->
+              <div class="payment-method-grid">
+
+
+                <!-- CARD -->
+                <button type="button" class="payment-method-card glass-tile" [class.selected]="paymentMethod === 'card'"
+                  (click)="selectPaymentMethod('card')">
+
+                  <div class="payment-image-area">
+
+                    <img src="../../../assets/img/card.png" alt="Credit or Debit Card" />
+
+                    <span class="selected-check" *ngIf="paymentMethod === 'card'">
+                      <i class="bi bi-check-lg"></i>
+                    </span>
+
+                  </div>
+
+                  <div class="payment-card-info">
+
+                    <div>
+                      <strong>
+                        Credit / Debit Card
+                      </strong>
+
+                      <span>
+                        Visa, Mastercard, RuPay & more
+                      </span>
+                    </div>
+
+                    <span class="payment-radio">
+                      <span [class.active]="paymentMethod === 'card'"></span>
+                    </span>
+
+                  </div>
+
+                </button>
+
+
+
+                <!-- UPI -->
+                <button type="button" class="payment-method-card glass-tile" [class.selected]="paymentMethod === 'upi'"
+                  (click)="selectPaymentMethod('upi')">
+
+                  <div class="payment-image-area">
+
+                    <img src="../../../assets/img/upi.png" alt="UPI Payment" />
+
+                    <span class="selected-check" *ngIf="paymentMethod === 'upi'">
+                      <i class="bi bi-check-lg"></i>
+                    </span>
+
+                  </div>
+
+                  <div class="payment-card-info">
+
+                    <div>
+                      <strong>
+                        UPI Payment
+                      </strong>
+
+                      <span>
+                        Google Pay, PhonePe, Paytm & more
+                      </span>
+                    </div>
+
+                    <span class="payment-radio">
+                      <span [class.active]="paymentMethod === 'upi'"></span>
+                    </span>
+
+                  </div>
+
+                </button>
+
+
+
+                <!-- CASH ON DELIVERY -->
+                <button type="button" class="payment-method-card glass-tile" [class.selected]="paymentMethod === 'cod'"
+                  (click)="selectPaymentMethod('cod')">
+
+                  <div class="payment-image-area">
+
+                    <img src="../../../assets/img/cash-on-delivery.png" alt="Cash on Delivery" />
+
+                    <span class="selected-check" *ngIf="paymentMethod === 'cod'">
+                      <i class="bi bi-check-lg"></i>
+                    </span>
+
+                  </div>
+
+                  <div class="payment-card-info">
+
+                    <div>
+                      <strong>
+                        Cash on Delivery
+                      </strong>
+
+                      <span>
+                        Pay when you receive your order
+                      </span>
+                    </div>
+
+                    <span class="payment-radio">
+                      <span [class.active]="paymentMethod === 'cod'"></span>
+                    </span>
+
+                  </div>
+
+                </button>
+
+              </div>
+
+
+
+              <!-- =========================================
+                   CARD -> handled by Razorpay's own secure form
+              ========================================== -->
+              <div *ngIf="paymentMethod === 'card'" class="payment-detail-panel glass-panel animate-payment">
+
+                <div class="detail-panel-header">
+
+                  <div class="detail-title">
+
+                    <div class="detail-icon glass-icon">
+                      <i class="bi bi-credit-card-2-front-fill"></i>
+                    </div>
+
+                    <div>
+                      <strong>Card Payment</strong>
+
+                      <span>
+                        You'll enter your card details on the next secure screen
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div class="secure-pill">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    SECURE
+                  </div>
+
+                </div>
+
+                <p class="gateway-note">
+                  When you click <strong>Place Order</strong>, a secure Razorpay
+                  window will open where you can safely enter your card number,
+                  expiry and CVV. We never see or store your full card details.
+                </p>
+
+              </div>
+
+
+
+              <!-- =========================================
+                   UPI -> handled by Razorpay's own secure form
+              ========================================== -->
+              <div *ngIf="paymentMethod === 'upi'" class="payment-detail-panel glass-panel animate-payment">
+
+                <div class="detail-panel-header">
+
+                  <div class="detail-title">
+
+                    <div class="detail-icon upi-icon glass-icon">
+                      <i class="bi bi-phone-fill"></i>
+                    </div>
+
+                    <div>
+                      <strong>UPI Payment</strong>
+
+                      <span>
+                        Pay using any UPI app on the next secure screen
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div class="secure-pill">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    SECURE
+                  </div>
+
+                </div>
+
+                <p class="gateway-note">
+                  When you click <strong>Place Order</strong>, a secure Razorpay
+                  window will open where you can pay using your UPI ID, QR code,
+                  or any UPI app like Google Pay, PhonePe or Paytm.
+                </p>
+
+              </div>
+
+
+
+              <!-- =========================================
+                   COD DETAILS
+              ========================================== -->
+              <div *ngIf="paymentMethod === 'cod'" class="cod-payment-panel glass-panel animate-payment">
+
+                <div class="cod-image-box">
+
+                  <img src="../../../assets/img/cash-on-delivery.png" alt="Cash on Delivery" />
+
+                </div>
+
+                <div class="cod-content">
+
+                  <span class="cod-label">
+                    PAYMENT AT YOUR DOORSTEP
+                  </span>
+
+                  <h3>
+                    Cash on Delivery
+                  </h3>
+
+                  <p>
+                    Pay in cash when your order is safely delivered
+                    to your doorstep.
+                  </p>
+
+                  <div class="cod-benefits">
+
+                    <div>
+                      <i class="bi bi-check-circle-fill"></i>
+                      No online payment required
+                    </div>
+
+                    <div>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Pay only when you receive
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="cod-confirmed">
+                  <i class="bi bi-check-lg"></i>
+                </div>
+
+              </div>
+
+
+
+              <!-- SECURITY FOOTER -->
+              <div class="payment-footer-security">
+
+                <div class="footer-security-icon glass-icon">
+                  <i class="bi bi-shield-fill-check"></i>
+                </div>
+
+                <div>
+                  <strong>
+                    Safe & Secure Checkout
+                  </strong>
+
+                  <span>
+                    Your personal and payment information is protected.
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- =============================================
+               ORDER SUMMARY
+          ============================================== -->
+          <div class="col-xl-4 summary-sticky-wrap">
+
+            <aside class="order-summary-card glass-card">
+
+              <!-- SUMMARY HEADER -->
+              <div class="summary-header">
+
+                <div>
+                  <span class="summary-label">
+                    YOUR ORDER
+                  </span>
+
+                  <h2>
+                    Order Summary
+                  </h2>
+                </div>
+
+                <span class="item-count">
+                  {{ cartService.totalCount() }}
+                  {{ cartService.totalCount() === 1 ? 'Item' : 'Items' }}
+                </span>
+
+              </div>
+
+
+              <!-- PRODUCTS -->
+              <div class="summary-products">
+
+                <div class="summary-product" *ngFor="let item of cartService.cartItems()">
+
+                  <div class="product-image">
+
+                    <img [src]="item.product.image || '../../../assets/img/product-placeholder.png'"
+                      [alt]="item.product.name" />
+
+                    <span class="quantity-badge">
+                      {{ item.quantity }}
+                    </span>
+
+                  </div>
+
+                  <div class="product-details">
+
+                    <strong>
+                      {{ item.product.name }}
+                    </strong>
+
+                    <span>
+                      &#8377;{{ item.product.price | number }}
+                      × {{ item.quantity }}
+                    </span>
+
+                  </div>
+
+                  <strong class="product-total">
+                    &#8377;{{ item.product.price * item.quantity | number }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <!-- PRICE -->
+              <div class="price-breakdown">
+
+                <div class="price-row">
+                  <span>Subtotal</span>
+
+                  <strong>
+                    &#8377;{{ cartService.subTotal() | number }}
+                  </strong>
+                </div>
+
+
+                <div class="price-row">
+                  <span>Shipping</span>
+
+                  <ng-container *ngIf="cartService.shipping() > 0; else freeShipping">
+                    <strong>
+                      &#8377;{{ cartService.shipping() | number }}
+                    </strong>
+                  </ng-container>
+
+                  <ng-template #freeShipping>
+                    <strong class="free-text">
+                      FREE
+                    </strong>
+                  </ng-template>
+
+                </div>
+
+
+                <div class="free-delivery" *ngIf="cartService.shipping() === 0">
+                  <i class="bi bi-truck"></i>
+
+                  <span>
+                    Free delivery on this order
+                  </span>
+                </div>
+
+              </div>
+
+
+              <!-- TOTAL -->
+              <div class="grand-total">
+
+                <div>
+                  <span>Total Amount</span>
+
+                  <small>
+                    Inclusive of applicable charges
+                  </small>
+                </div>
+
+                <strong>
+                  &#8377;{{ cartService.grandTotal() | number }}
+                </strong>
+
+              </div>
+
+
+              <!-- PLACE ORDER -->
+              <button type="button" class="place-order-btn" [disabled]="!isFormValid || placingOrder"
+                (click)="placeOrder()">
+
+                <span class="spinner-border spinner-border-sm" *ngIf="placingOrder"></span>
+
+                <span>
+                  {{
+                  placingOrder
+                  ? 'Processing...'
+                  : (paymentMethod === 'cod' ? 'Place Order' : 'Pay & Place Order')
+                  }}
+                </span>
+
+                <i class="bi bi-arrow-right" *ngIf="!placingOrder"></i>
+
+              </button>
+
+
+              <!-- TRUST -->
+              <div class="trust-items">
+
+                <div>
+                  <i class="bi bi-shield-check"></i>
+                  <span>Secure</span>
+                </div>
+
+                <div>
+                  <i class="bi bi-truck"></i>
+                  <span>Safe Delivery</span>
+                </div>
+
+                <div>
+                  <i class="bi bi-headset"></i>
+                  <span>Support</span>
+                </div>
+
+              </div>
+
+            </aside>
+
+
+            <!-- BACK TO ADDRESS -->
+            <button type="button" class="back-address-btn glass-chip-btn" (click)="backToAddress()">
+              <i class="bi bi-arrow-left"></i>
+              Edit Delivery Details
+            </button>
+
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </ng-container>
+
+
+    <!-- =====================================================
+         EMPTY CART
+    ====================================================== -->
+    <ng-template #emptyState>
+
+      <div class="empty-checkout glass-card">
+
+        <div class="empty-icon glass-icon">
+          <i class="bi bi-bag-x"></i>
+        </div>
+
+        <span>
+          CHECKOUT
+        </span>
+
+        <h2>
+          Your cart is empty
+        </h2>
+
+        <p>
+          Add some products to your cart before proceeding to checkout.
+        </p>
+
+        <a routerLink="/products" class="empty-btn">
+          Browse Products
+          <i class="bi bi-arrow-right"></i>
+        </a>
+
+      </div>
+
+    </ng-template>
+
+  </section>
+
+
+  <!-- ERROR -->
+  <div class="checkout-global-error glass-chip" *ngIf="errorMessage && checkoutStep === 2">
+    <i class="bi bi-exclamation-circle-fill"></i>
+    {{ errorMessage }}
+  </div>
+
+</section>

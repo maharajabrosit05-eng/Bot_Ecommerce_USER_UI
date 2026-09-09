@@ -1,0 +1,178 @@
+<div class="popup-backdrop" *ngIf="visible">
+
+  <div class="popup-card">
+
+    <button
+      type="button"
+      class="popup-close-btn"
+      (click)="close()"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <!-- Title -->
+    <div class="auth-title">
+
+      <h1>Sign in</h1>
+
+      <p>
+        Login to track orders, write reviews, and checkout faster.
+      </p>
+
+    </div>
+
+
+    <!-- Error -->
+    <div
+      class="message message-error"
+      *ngIf="errorMsg"
+    >
+
+      <i class="bi bi-exclamation-circle-fill"></i>
+
+      <span>
+        {{ errorMsg }}
+      </span>
+
+      <button
+        type="button"
+        (click)="errorMsg = ''"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <!-- Login form -->
+    <form
+      #popupForm="ngForm"
+      (ngSubmit)="onLogin(popupForm)"
+      novalidate
+    >
+
+      <!-- Mobile -->
+      <div class="form-group">
+
+        <label for="popup-mobile">
+          Mobile number
+        </label>
+
+        <div class="input-box">
+
+          <span class="input-prefix">
+            +91
+          </span>
+
+          <input
+            id="popup-mobile"
+            type="tel"
+            name="Mobile_No"
+            [(ngModel)]="loginModel.Mobile_No"
+            required
+            pattern="^[0-9]{10}$"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="Enter mobile number"
+            autocomplete="tel"
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- Password -->
+      <div class="form-group">
+
+        <label for="popup-password">
+          Password
+        </label>
+
+        <div class="input-box">
+
+          <input
+            id="popup-password"
+            [type]="showPassword ? 'text' : 'password'"
+            name="app_password"
+            [(ngModel)]="loginModel.app_password"
+            required
+            minlength="4"
+            placeholder="Enter password"
+            autocomplete="current-password"
+          />
+
+          <button
+            type="button"
+            class="eye-btn"
+            (click)="togglePassword()"
+            [attr.aria-label]="
+              showPassword
+                ? 'Hide password'
+                : 'Show password'
+            "
+          >
+
+            <i
+              class="bi"
+              [class.bi-eye]="!showPassword"
+              [class.bi-eye-slash]="showPassword"
+            ></i>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- Login button -->
+      <button
+        type="submit"
+        class="primary-btn"
+        [disabled]="loading"
+      >
+
+        <ng-container *ngIf="!loading">
+
+          <span>Sign in</span>
+
+          <i class="bi bi-arrow-right"></i>
+
+        </ng-container>
+
+
+        <ng-container *ngIf="loading">
+
+          <span class="spinner"></span>
+
+          <span>
+            Signing in...
+          </span>
+
+        </ng-container>
+
+      </button>
+
+    </form>
+
+
+    <!-- New customer -->
+    <div class="divider">
+      <span></span>
+      <small>New to BOT Ecommerce?</small>
+      <span></span>
+    </div>
+
+    <button
+      type="button"
+      class="secondary-btn"
+      (click)="goToFullLoginPage()"
+    >
+      Create your BOT Ecommerce account
+    </button>
+
+  </div>
+
+</div>

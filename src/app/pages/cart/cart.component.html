@@ -1,0 +1,631 @@
+<section class="cart-page">
+
+  <div class="container cart-container">
+
+    <!-- =====================================================
+         BREADCRUMB
+    ====================================================== -->
+
+    <!-- <div class="breadcrumb-row">
+
+      <a routerLink="/" class="breadcrumb-home">
+        Home
+      </a>
+
+      <i class="bi bi-chevron-right"></i>
+
+      <span>
+        Cart
+      </span>
+
+    </div> -->
+
+
+    <!-- =====================================================
+         CART PAGE HEADER
+    ====================================================== -->
+
+    <div class="cart-page-header">
+
+      <div class="cart-title-wrapper">
+
+        <h1>
+          Your Cart
+        </h1>
+
+        <span class="cart-item-count">
+          ({{ cartService.totalCount() }} Items)
+        </span>
+
+      </div>
+
+
+      <a routerLink="/products" class="continue-shopping">
+        <i class="bi bi-chevron-left"></i>
+        Shopping
+      </a>
+
+    </div>
+
+
+ 
+
+    <!-- =====================================================
+         CART CONTENT
+    ====================================================== -->
+
+    <ng-container *ngIf="
+        cartService.totalCount() > 0;
+        else emptyCart
+      ">
+
+      <div class="row cart-main-row">
+
+        <!-- =================================================
+             LEFT SIDE
+        ================================================== -->
+
+        <div class="col-lg-8">
+
+          <!-- PRODUCT TABLE -->
+
+          <div class="cart-products-box">
+
+            <!-- TABLE HEADER -->
+
+            <div class="cart-table-header">
+
+              <div class="product-heading">
+                PRODUCT
+              </div>
+
+              <div class="price-heading">
+                PRICE
+              </div>
+
+              <div class="quantity-heading">
+                QUANTITY
+              </div>
+
+              <div class="total-heading">
+                TOTAL
+              </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PRODUCT ITEM
+            ================================================== -->
+
+            <div class="cart-product-row" *ngFor="
+                let item of cartService.cartItems();
+                let i = index
+              " [style.animation-delay.ms]="i * 70">
+
+              <!-- PRODUCT -->
+
+              <div class="product-column">
+
+                <div class="cart-product-image">
+
+                  <a [routerLink]="[
+                      '/product',
+                      item.product.id
+                    ]">
+
+                    <img [src]="item.product.image" [alt]="item.product.name" />
+
+                  </a>
+
+                </div>
+
+
+                <div class="cart-product-details">
+
+                  <span class="cart-product-category" *ngIf="item.product.category">
+                    {{ item.product.category }}
+                  </span>
+
+
+                  <a [routerLink]="[
+                      '/product',
+                      item.product.id
+                    ]" class="cart-product-name">
+                    {{ item.product.name }}
+                  </a>
+
+
+                  <div class="cart-product-brand" *ngIf="item.product.brand">
+                    {{ item.product.brand }}
+                  </div>
+
+
+                  <div class="cart-product-code" *ngIf="item.product.productCode">
+                    Code: {{ item.product.productCode }}
+                  </div>
+
+
+                  <div class="cart-product-meta-row">
+
+                    <div class="stock-status">
+
+                      <i class="bi bi-check-circle-fill"></i>
+
+                      In Stock
+
+                    </div>
+
+
+                    <div class="warranty-info" *ngIf="item.product.warranty">
+
+                      <i class="bi bi-shield-check"></i>
+
+                      {{ item.product.warranty }}
+
+                    </div>
+
+                  </div>
+
+
+                  <div class="cart-product-savings" *ngIf="item.product.mrp > item.product.price">
+
+                    <del>₹{{ item.product.mrp | number }}</del>
+
+                    <span>
+                      Save ₹{{ (item.product.mrp - item.product.price) | number }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <!-- PRICE -->
+
+              <div class="price-column">
+
+                <span class="mobile-label">
+                  Price
+                </span>
+
+                <strong>
+                  ₹{{ item.product.price | number }}
+                </strong>
+
+                <span class="price-unit-note">per unit</span>
+
+              </div>
+
+
+              <!-- QUANTITY -->
+
+              <!-- QUANTITY -->
+              <div class="quantity-column">
+
+                <span class="mobile-label">
+                  Quantity
+                </span>
+
+                <div class="quantity-action-row">
+
+                  <!-- Quantity Control -->
+                  <div class="quantity-control">
+
+                    <button type="button" (click)="decrement(
+          item.product.id,
+          item.quantity
+        )" [disabled]="item.quantity <= 1" aria-label="Decrease quantity">
+                      −
+                    </button>
+
+                    <span>
+                      {{ item.quantity }}
+                    </span>
+
+                    <button type="button" (click)="increment(
+          item.product.id,
+          item.quantity
+        )" [disabled]="item.quantity >= item.product.stock" aria-label="Increase quantity">
+                      +
+                    </button>
+
+                  </div>
+
+                  <!-- Remove -->
+                  <button type="button" class="remove-button" (click)="cartService.removeFromCart(item.product.id)"
+                    aria-label="Remove product">
+
+                    <i class="bi bi-trash3"></i>
+
+                    <!-- <span>Remove</span> -->
+
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <!-- TOTAL -->
+
+              <div class="total-column">
+
+                <span class="mobile-label">
+                  Total
+                </span>
+
+                <strong>
+                  ₹{{
+                  item.product.price *
+                  item.quantity
+                  | number
+                  }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               BENEFITS
+          ================================================== -->
+
+          <!-- <div class="cart-benefits">
+
+          
+
+            <div class="benefit-item">
+
+              <div class="benefit-icon">
+                <i class="bi bi-shield-check"></i>
+              </div>
+
+              <div class="benefit-content">
+
+                <strong>
+                  Secure Checkout
+                </strong>
+
+                <span>
+                  100% secure payment
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="benefit-divider"></div>
+
+
+      
+
+            <div class="benefit-item">
+
+              <div class="benefit-icon">
+                <i class="bi bi-truck"></i>
+              </div>
+
+              <div class="benefit-content">
+
+                <strong>
+                  Fast Delivery
+                </strong>
+
+                <span>
+                  Delivery within 2-4 days
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="benefit-divider"></div>
+
+
+           
+
+            <div class="benefit-item">
+
+              <div class="benefit-icon">
+                <i class="bi bi-arrow-repeat"></i>
+              </div>
+
+              <div class="benefit-content">
+
+                <strong>
+                  Easy Returns
+                </strong>
+
+                <span>
+                  7 days return policy
+                </span>
+
+              </div>
+
+            </div>
+
+          </div> -->
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT SIDE
+        ================================================== -->
+
+        <div class="col-lg-4">
+
+          <div class="cart-sidebar">
+
+
+            <!-- =================================================
+                 ORDER SUMMARY
+            ================================================== -->
+
+            <div class="order-summary-card">
+
+              <h2>
+                Order Summary
+              </h2>
+
+
+              <!-- Subtotal -->
+
+              <div class="summary-line">
+
+                <span>
+                  Subtotal
+                  ({{ cartService.totalCount() }} items)
+                </span>
+
+                <strong>
+                  ₹{{ cartService.subTotal() | number }}
+                </strong>
+
+              </div>
+
+
+              <!-- Shipping -->
+
+              <div class="summary-line">
+
+                <span>
+                  Shipping
+                </span>
+
+                <ng-container *ngIf="
+                    cartService.shipping() > 0;
+                    else freeShipping
+                  ">
+
+                  <strong>
+                    ₹{{ cartService.shipping() | number }}
+                  </strong>
+
+                </ng-container>
+
+
+                <ng-template #freeShipping>
+
+                  <strong class="free-shipping">
+                    FREE
+                  </strong>
+
+                </ng-template>
+
+              </div>
+
+
+              <!-- Optional tax display
+                   Keep commented because current
+                   CartService doesn't expose tax().
+              -->
+
+              <!--
+              <div class="summary-line">
+                <span>Tax (18%)</span>
+                <strong>₹2,393</strong>
+              </div>
+              -->
+
+
+              <div class="summary-divider"></div>
+
+
+              <!-- Total -->
+
+              <div class="summary-total">
+
+                <span>
+                  Total
+                </span>
+
+                <strong>
+                  ₹{{ cartService.grandTotal() | number }}
+                </strong>
+
+              </div>
+
+
+              <!-- Saving -->
+
+              <div class="saving-message" *ngIf="
+                  cartService.shipping() === 0
+                ">
+
+                You save on shipping with this order
+
+              </div>
+
+
+              <!-- Checkout -->
+
+              <a routerLink="/checkout" class="checkout-button">
+
+                <i class="bi bi-lock-fill"></i>
+
+                <span>
+                  Proceed to Checkout
+                </span>
+
+              </a>
+
+
+              <!-- Buy Now -->
+
+              <a routerLink="/checkout" class="buy-now-button">
+                Buy Now
+              </a>
+
+
+              <!-- Payment -->
+
+              <div class="payment-section">
+
+                <span class="payment-title">
+                  We accept
+                </span>
+
+                <div class="payment-methods">
+
+                  <span class="payment-card visa">
+                    <img src="assets/img/visa-logo-png-hd-blue-3.png" alt="Visa" />
+                  </span>
+
+                  <span class="payment-card mastercard">
+                    <span class="mc-circle mc-red"></span>
+                    <span class="mc-circle mc-yellow"></span>
+                  </span>
+
+                  <span class="payment-card rupay">
+                    <img src="assets/img/Rupay-Logo.png" alt="RuPay" />
+                  </span>
+
+                  <span class="payment-card upi">
+                    <img src="assets/img/upi-logo.jpg" alt="UPI" />
+                  </span>
+
+                  <span class="payment-card gpay">
+                    <img src="assets/img/google-pay.png" alt="Google Pay" />
+                  </span>
+
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- =================================================
+                 COUPON
+            ================================================== -->
+
+            <!-- <div class="coupon-card">
+
+              <h3>
+                Have a Coupon?
+              </h3>
+
+
+              <div class="coupon-input-wrapper">
+
+                <input type="text" placeholder="Enter coupon code" />
+
+                <button type="button">
+                  Apply
+                </button>
+
+              </div>
+
+            </div> -->
+
+
+            <!-- =================================================
+                 SECURITY MESSAGE
+            ================================================== -->
+
+            <div class="payment-security">
+
+              <div class="security-icon">
+
+                <i class="bi bi-shield-check"></i>
+
+              </div>
+
+
+              <div>
+
+                <strong>
+                  Your payment information is safe
+                </strong>
+
+                <span>
+                  We use 256-bit SSL encryption
+                </span>
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+         <!-- ⭐ ADVERTISEMENT — Slot_No 8 (Cart page) -->
+    <app-ad-banner [slotNo]="8"></app-ad-banner>
+
+
+    </ng-container>
+
+
+    <!-- =====================================================
+         EMPTY CART
+    ====================================================== -->
+
+    <ng-template #emptyCart>
+
+      <div class="empty-cart">
+
+        <div class="empty-cart-icon">
+
+       <img src="assets/img/cart-empty.png" alt="">
+
+        </div>
+
+
+        <h2>
+          Your Cart is Empty
+        </h2>
+
+
+        <p>
+          Looks like you haven't added anything to your cart yet.
+          Explore our products and find something you love.
+        </p>
+
+
+        <a routerLink="/products" class="browse-products">
+
+          Browse Products
+
+          <i class="bi bi-arrow-right"></i>
+
+        </a>
+
+      </div>
+
+    </ng-template>
+
+  </div>
+
+</section>

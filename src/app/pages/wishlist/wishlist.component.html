@@ -1,0 +1,475 @@
+<section class="wishlist-page">
+
+  <div class="container wishlist-container">
+
+    <!-- =====================================================
+         BREADCRUMB
+    ====================================================== -->
+
+    <!-- <nav class="breadcrumb-bar">
+
+      <a routerLink="/">
+        Home
+      </a>
+
+      <span>/</span>
+
+      <strong>
+        Wishlist
+      </strong>
+
+    </nav> -->
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="wishlist-header">
+
+      <div>
+
+        <!-- <span class="section-kicker">
+          SAVED FOR LATER
+        </span> -->
+
+        <!-- <h1>
+          My Wishlist
+        </h1> -->
+
+        <p >
+
+          {{ wishlistService.totalCount() }}
+
+          {{
+          wishlistService.totalCount() === 1
+          ? 'item'
+          : 'items'
+          }}
+
+          saved
+
+        </p>
+
+        <p *ngIf="wishlistService.totalCount() === 0">
+
+          Your saved products will appear here
+
+        </p>
+
+      </div>
+
+
+      <!-- CONTINUE SHOPPING -->
+
+      <a routerLink="/products" class="continue-shopping-link">
+        <i class="bi bi-chevron-left"></i>
+        Shopping
+
+
+      </a>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         LOADING STATE
+    ====================================================== -->
+
+    <div class="wishlist-grid" *ngIf="wishlistService.loading()">
+
+      <div class="wishlist-item" *ngFor="let s of [1,2,3,4]">
+
+        <div class="wishlist-skeleton">
+
+          <div class="skeleton-image"></div>
+
+          <div class="skeleton-line"></div>
+
+          <div class="skeleton-line small"></div>
+
+          <div class="skeleton-line"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         WISHLIST CONTENT
+    ====================================================== -->
+
+    <ng-container *ngIf="!wishlistService.loading()">
+
+
+      <!-- =================================================
+           PRODUCT GRID
+      ================================================== -->
+
+      <div class="wishlist-grid" *ngIf="
+          wishlistService.totalCount() > 0;
+          else emptyWishlist
+        ">
+
+
+        <!-- =================================================
+             PRODUCT CARD
+        ================================================== -->
+
+        <div class="wishlist-item" *ngFor="
+            let item of wishlistService.wishlistItems();
+            let i = index
+          " [style.animation-delay.ms]="i * 60">
+
+
+          <article class="wishlist-card" (click)="goToProduct(item)">
+
+
+            <!-- =================================================
+                 IMAGE SECTION
+            ================================================== -->
+
+            <div class="wishlist-image-wrapper">
+
+
+              <!-- DISCOUNT -->
+
+              <span class="wishlist-offer-badge" *ngIf="getDiscount(item) > 0">
+
+                {{ getDiscount(item) }}% OFF
+
+              </span>
+
+
+
+              <!-- HEART / REMOVE -->
+
+              <button type="button" class="wishlist-remove-btn active" title="Remove from wishlist"
+                aria-label="Remove from wishlist" (click)="
+                  removeFromWishlist(item, $event)
+                ">
+
+                <i class="bi bi-heart-fill"></i>
+
+              </button>
+
+
+
+              <!-- PRODUCT IMAGE -->
+
+              <img *ngIf="
+                  getImage(item) &&
+                  !imageError[getKey(item)]
+                " [src]="getImage(item)" [alt]="getName(item)" class="wishlist-image" loading="lazy"
+                (error)="onImageError(item)" />
+
+
+
+              <!-- IMAGE FALLBACK -->
+
+              <div class="wishlist-no-image" *ngIf="
+                  !getImage(item) ||
+                  imageError[getKey(item)]
+                ">
+
+                <i class="bi bi-box-seam"></i>
+
+                <span>
+                  Image unavailable
+                </span>
+
+              </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PRODUCT DETAILS
+            ================================================== -->
+
+            <div class="wishlist-card-body">
+
+
+              <!-- CATEGORY -->
+
+              <span class="wishlist-category" *ngIf="getCategory(item)">
+
+                {{ getCategory(item) }}
+
+              </span>
+
+
+
+              <!-- PRODUCT NAME + BRAND -->
+
+              <div class="wishlist-name-row">
+
+                <h3 class="wishlist-name">
+
+                  {{ getName(item) }}
+
+                </h3>
+
+
+                <span class="wishlist-brand" *ngIf="getBrand(item)">
+
+                  {{ getBrand(item) }}
+
+                </span>
+
+              </div>
+
+
+
+              <!-- DESCRIPTION -->
+
+              <p class="wishlist-short-desc" *ngIf="getShortDescription(item)">
+
+                {{ getShortDescription(item) }}
+
+              </p>
+
+
+
+              <!-- =================================================
+                   RATING
+              ================================================== -->
+
+              <div class="wishlist-rating" *ngIf="getRating(item) > 0">
+
+
+                <!-- FILLED STARS -->
+
+                <i class="bi bi-star-fill" *ngFor="
+                    let s of starsArray(
+                      roundedRating(item)
+                    )
+                  ">
+                </i>
+
+
+                <!-- EMPTY STARS -->
+
+                <i class="bi bi-star" *ngFor="
+                    let s of starsArray(
+                      5 - roundedRating(item)
+                    )
+                  ">
+                </i>
+
+
+                <span>
+
+                  {{
+                  getRating(item)
+                  | number:'1.1-1'
+                  }}
+
+                </span>
+
+              </div>
+
+
+
+              <!-- =================================================
+                   PRICE
+              ================================================== -->
+
+              <div class="wishlist-price-row">
+
+
+                <!-- CURRENT PRICE -->
+
+                <strong class="wishlist-price">
+
+                  ₹{{ getPrice(item) | number:'1.0-0' }}
+
+                </strong>
+
+
+                <!-- OLD PRICE -->
+
+                <del class="wishlist-old-price" *ngIf="
+                    getOldPrice(item) >
+                    getPrice(item)
+                  ">
+
+                  ₹{{ getOldPrice(item) | number:'1.0-0' }}
+
+                </del>
+
+
+                <!-- DISCOUNT -->
+
+                <span class="wishlist-discount" *ngIf="getDiscount(item) > 0">
+
+                  {{ getDiscount(item) }}% OFF
+
+                </span>
+
+              </div>
+
+
+
+              <!-- =================================================
+                   ACTION BUTTONS
+              ================================================== -->
+
+              <div class="wishlist-card-actions">
+
+
+                <!-- ADD TO CART -->
+
+                <button type="button" class="wishlist-add-cart-btn" [disabled]="
+                    item.stock === 0
+                  " (click)="
+                    addToCart(item, $event)
+                  ">
+
+                  <i class="bi bi-cart3"></i>
+
+                  <span>
+
+                    {{
+                    item.stock === 0
+                    ? 'Out of Stock'
+                    : 'Add to Cart'
+                    }}
+
+                  </span>
+
+                </button>
+
+
+
+                <!-- VIEW -->
+
+                <button type="button" class="wishlist-view-btn" (click)="
+                    $event.stopPropagation();
+                    goToProduct(item)
+                  ">
+
+                  <i class="bi bi-eye"></i>
+
+                  <span>
+                    View
+                  </span>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- =====================================================
+           EMPTY WISHLIST
+           IMPORTANT: This fixes NG9 error
+      ====================================================== -->
+
+      <ng-template #emptyWishlist>
+
+        <div class="wishlist-empty">
+
+
+          <!-- ICON -->
+
+          <div class="wishlist-empty-icon">
+
+           <img src="assets/img/wishlist-empty.png" alt="">
+          </div>
+
+
+          <!-- TITLE -->
+
+          <h2>
+            Your Wishlist is Empty
+          </h2>
+
+
+          <!-- DESCRIPTION -->
+
+          <p>
+
+            Save products you love by tapping
+            the heart icon. Your favourite
+            products will appear here.
+
+          </p>
+
+
+          <!-- BUTTON -->
+
+          <a routerLink="/products" class="wishlist-browse-btn">
+
+            Explore Products
+
+            <i class="bi bi-arrow-right"></i>
+
+          </a>
+
+        </div>
+
+      </ng-template>
+
+    </ng-container>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     TOAST NOTIFICATION
+========================================================== -->
+
+<div class="wishlist-toast" *ngIf="toastMessage" [class.toast-success]="
+    toastType === 'success'
+  " [class.toast-error]="
+    toastType === 'error'
+  ">
+
+
+  <!-- ICON -->
+
+  <i class="bi" [class.bi-check-circle-fill]="
+      toastType === 'success'
+    " [class.bi-exclamation-circle-fill]="
+      toastType === 'error'
+    ">
+  </i>
+
+
+
+  <!-- MESSAGE -->
+
+  <span class="toast-text">
+
+    {{ toastMessage }}
+
+  </span>
+
+
+
+  <!-- CLOSE -->
+
+  <button type="button" class="toast-close" aria-label="Close" (click)="closeToast()">
+
+    <i class="bi bi-x"></i>
+
+  </button>
+
+</div>

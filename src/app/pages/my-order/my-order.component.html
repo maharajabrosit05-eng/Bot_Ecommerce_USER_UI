@@ -1,0 +1,537 @@
+<section class="orders-page">
+    <div class="orders-shell">
+
+        <!-- ================= LOADING ================= -->
+        <div class="state-block text-center py-5" *ngIf="loading">
+            <div class="state-icon loading-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <div class="spinner-border spinner-border-sm text-brand mt-4" role="status"></div>
+            <p class="text-muted mt-3 mb-0">Loading your orders...</p>
+        </div>
+
+        <!-- ================= ERROR / LOGIN ================= -->
+        <div class="state-block text-center py-5" *ngIf="!loading && errorMessage">
+            <div class="state-icon error-icon">
+                <i class="bi bi-person-lock"></i>
+            </div>
+            <p class="mt-3 mb-4 text-muted">{{ errorMessage }}</p>
+            <a routerLink="/login" class="btn btn-brand px-4">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Login to continue
+            </a>
+        </div>
+
+        <p class="mt-3 mb-1 fw-bold">No orders yet</p>
+        <p class="text-muted mb-4">Everything you order will show up here.</p>
+        <ng-container *ngIf="!loading && !errorMessage">
+
+            <!-- ================= EMPTY ================= -->
+            <div class="state-block text-center py-5" *ngIf="countAll === 0">
+                <div class="orders-empty-icon">
+                    <img src="assets/img/myorder-empty.png" alt="No orders yet" />
+                </div>
+
+                <p class="mt-3 mb-1 fw-bold">No orders yet</p>
+                <p class="text-muted mb-4">Everything you order will show up here.</p>
+
+                <a routerLink="/products" class="orders-browse-btn">
+                    Start Shopping
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+            </div>
+
+            <div class="orders-columns" *ngIf="countAll > 0">
+
+                <!-- ================= LEFT: ORDER LIST ================= -->
+                <div class="orders-list-panel">
+
+                    <div class="orders-toolbar">
+                        <div class="filter-chips">
+                            <button class="chip" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>All</span>
+                                <span class="chip-count">{{ countAll }}</span>
+                            </button>
+
+                            <button class="chip" [class.active]="activeFilter === 'active'"
+                                (click)="setFilter('active')">
+                                <i class="bi bi-truck"></i>
+                                <span>Active</span>
+                                <span class="chip-count">{{ countActive }}</span>
+                            </button>
+
+                            <button class="chip" [class.active]="activeFilter === 'delivered'"
+                                (click)="setFilter('delivered')">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>Delivered</span>
+                                <span class="chip-count">{{ countDelivered }}</span>
+                            </button>
+
+
+                            <button class="chip" [class.active]="activeFilter === 'cancelled'"
+                                (click)="setFilter('cancelled')" *ngIf="countCancelled > 0">
+                                <i class="bi bi-x-circle-fill"></i>
+                                <span>Cancelled</span>
+                                <span class="chip-count">{{ countCancelled }}</span>
+                            </button>
+                        </div>
+
+                        <div class="search-box">
+                            <i class="bi bi-search"></i>
+                            <input type="text" placeholder="Search your order..." [(ngModel)]="searchTerm"
+                                (ngModelChange)="onSearchChange()" name="searchTerm" />
+                        </div>
+                    </div>
+
+                    <div class="list-empty-state" *ngIf="filteredOrders.length === 0">
+                        <i class="bi bi-search"></i>
+                        <p class="mb-0">No orders match this filter.</p>
+                    </div>
+
+                    <div class="order-mini-list" *ngIf="filteredOrders.length > 0">
+
+                        <button type="button" class="order-mini-card"
+                            *ngFor="let order of filteredOrders; trackBy: trackByOrderId"
+                            [class.active]="selectedOrderId === order.id"
+                            [ngClass]="statusClass[order.status] ? 'spine-' + statusClass[order.status] : ''"
+                            (click)="selectOrder(order)">
+
+                            <div class="mini-visual">
+                                <ng-container
+                                    *ngIf="!previewLoading[order.id] && liveResults[order.id] as preview; else miniSkeleton">
+
+                                    <ng-container *ngIf="preview.items.length; else miniNoItems">
+                                        <img [src]="preview.items[0].image" [alt]="preview.items[0].name"
+                                            class="mini-thumb" />
+                                    </ng-container>
+
+                                    <ng-template #miniNoItems>
+                                        <div class="mini-thumb mini-thumb-empty">
+                                            <i class="bi bi-box-seam-fill"></i>
+                                        </div>
+                                    </ng-template>
+                                </ng-container>
+
+                                <ng-template #miniSkeleton>
+                                    <div class="mini-thumb skeleton-box"></div>
+                                </ng-template>
+                            </div>
+
+                            <div class="mini-content">
+                                <div class="mini-topline">
+                                    <span class="order-number">Order #{{ order.id }}</span>
+                                    <span class="status-badge" [ngClass]="statusClass[order.status] || 'status-placed'">
+                                        {{ order.status }}
+                                    </span>
+                                </div>
+
+                                <ng-container *ngIf="!previewLoading[order.id] && liveResults[order.id] as preview">
+                                    <h4 class="mini-name" *ngIf="preview.items.length; else miniNoName">
+                                        {{ preview.items[0].name }}
+                                    </h4>
+                                    <ng-template #miniNoName>
+                                        <h4 class="mini-name mini-name-muted">Order #{{ order.id }}</h4>
+                                    </ng-template>
+                                </ng-container>
+
+                                <div class="mini-meta">
+                                    <span>{{ order.placedOn | date: 'mediumDate' }}</span>
+                                    <span class="mini-dot">&bull;</span>
+                                    <span>&#8377;{{ order.total | number }}</span>
+                                </div>
+                            </div>
+
+                            <i class="bi bi-chevron-right mini-arrow"></i>
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- ================= RIGHT: SELECTED ORDER DETAIL ================= -->
+                <div class="orders-detail-panel-outer">
+
+                    <ng-container *ngIf="selectedOrder as order; else noSelection">
+
+                        <div class="detail-card">
+
+                            <!-- BIG HEADER -->
+                            <div class="detail-header">
+
+                                <div class="detail-visual">
+                                    <ng-container *ngIf="liveResults[order.id] as preview; else detailSkeleton">
+                                        <ng-container *ngIf="preview.items.length; else detailNoItems">
+                                            <img [src]="preview.items[0].image" [alt]="preview.items[0].name"
+                                                class="detail-thumb" />
+                                        </ng-container>
+                                        <ng-template #detailNoItems>
+                                            <div class="detail-thumb detail-thumb-empty">
+                                                <i class="bi bi-box-seam-fill"></i>
+                                            </div>
+                                        </ng-template>
+                                    </ng-container>
+                                    <ng-template #detailSkeleton>
+                                        <div class="detail-thumb skeleton-box"></div>
+                                    </ng-template>
+                                </div>
+
+                                <div class="detail-heading">
+                                    <span class="order-number">
+                                        <i class="bi bi-receipt-cutoff"></i>
+                                        Order #{{ order.id }}
+                                    </span>
+
+                                    <ng-container *ngIf="liveResults[order.id] as preview">
+                                        <h2 class="detail-product-name">
+                                            {{ preview.items.length ? preview.items[0].name : ('Order #' + order.id) }}
+                                            <span class="detail-more" *ngIf="preview.items.length > 1">
+                                                + {{ preview.items.length - 1 }} more item{{ preview.items.length > 2 ?
+                                                's' : '' }}
+                                            </span>
+                                        </h2>
+                                    </ng-container>
+
+                                    <!-- Status badge now ALWAYS reads order.status — same source
+                                         as the mini-card badge, so they can never disagree. -->
+                                    <div class="detail-meta-row">
+                                        <span class="status-badge"
+                                            [ngClass]="statusClass[order.status] || 'status-placed'">
+                                            <i class="bi bi-box-seam-fill"></i>
+                                            {{ order.status }}
+                                        </span>
+                                        <span class="detail-meta-item">
+                                            <i class="bi bi-calendar3"></i>
+                                            {{ order.placedOn | date: 'mediumDate' }}
+                                        </span>
+                                        <span class="detail-meta-item">
+                                            <i class="bi bi-wallet2"></i>
+                                            &#8377;{{ order.total | number }}
+                                        </span>
+                                    </div>
+
+                                    <!-- CANCEL ORDER — only while the order hasn't been
+                                         delivered/cancelled/returned yet. -->
+                                    <div class="detail-actions" *ngIf="canCancelOrder(order)">
+                                        <button type="button" class="btn-cancel-order" (click)="openCancelModal()">
+                                            <i class="bi bi-x-circle"></i>
+                                            Cancel Order
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- LOADING (fetching items/history) -->
+                            <div class="detail-loading text-center py-4" *ngIf="loadingOrderId === order.id">
+                                <div class="spinner-border spinner-border-sm text-brand"></div>
+                                <p class="text-muted small mt-2 mb-0">
+                                    Fetching latest status...
+                                </p>
+                            </div>
+
+                            <!-- live is used ONLY for items/history now; status/stepper use order.status -->
+                            <div class="detail-body" *ngIf="liveResults[order.id] as live">
+
+                                <!-- SUCCESS -->
+                                <div class="delivered-banner" *ngIf="order.status === 'Delivered'">
+                                    <div class="banner-icon">
+                                        <i class="bi bi-check-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 fw-bold">Delivered Successfully!</p>
+                                        <p class="mb-0 small">
+                                            We hope you enjoy your new gear. Need to send something back? Use "Return"
+                                            on the item below.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- CANCELLED / RETURNED -->
+                                <div class="cancelled-banner"
+                                    *ngIf="order.status === 'Cancelled' || order.status === 'Returned'">
+                                    <div class="banner-icon">
+                                        <i class="bi bi-info-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 fw-bold">
+                                            This order was {{ order.status.toLowerCase() }}
+                                        </p>
+                                        <p class="mb-0 small">
+                                            Check the timeline below for details.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- TRACKING STEPPER — green(completed) / orange(current) / grey(pending) -->
+                                <div class="tracking-stepper d-flex justify-content-between position-relative mb-4"
+                                    *ngIf="order.status !== 'Cancelled' && order.status !== 'Returned'">
+
+                                    <div class="step text-center" *ngFor="let step of steps; let i = index"
+                                        [ngClass]="'step-' + stepState(order.id, step)">
+
+                                        <div class="step-icon mx-auto"
+                                            [class.animate-float]="stepState(order.id, step) === 'current'">
+
+                                            <ng-container [ngSwitch]="step">
+
+                                                <img *ngSwitchCase="'Placed'" src="assets/img/order-placed.png"
+                                                    alt="Placed" />
+
+                                                <img *ngSwitchCase="'Packed'" src="assets/img/packed.png"
+                                                    alt="Packed" />
+
+                                                <img *ngSwitchCase="'Shipped'" src="assets/img/shipped1.png"
+                                                    alt="Shipped" />
+
+                                                <img *ngSwitchCase="'Out for Delivery'"
+                                                    src="assets/img/out-for-delivery.png" alt="Out for Delivery" />
+
+                                                <img *ngSwitchCase="'Delivered'" src="assets/img/delivered.png"
+                                                    alt="Delivered" />
+
+                                                <!-- <i *ngSwitchDefault class="bi bi-circle-fill"></i> -->
+
+                                            </ng-container>
+
+                                        </div>
+
+                                        <p class="small mt-2 mb-0"
+                                            [class.fw-bold]="stepState(order.id, step) === 'current'">
+                                            {{ step }}
+                                        </p>
+                                    </div>
+
+                                    <div class="stepper-line">
+                                        <div class="stepper-line-fill"
+                                            [style.width.%]="(displayStepIndex(order.id) / (steps.length - 1)) * 100">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <p class="tracking-message text-center small mb-4" *ngIf="order.status !== 'Delivered' &&
+                           order.status !== 'Cancelled' &&
+                           order.status !== 'Returned'">
+
+                                    <i class="bi bi-lightning-charge-fill"></i>
+                                    Your order is currently
+                                    <strong>{{ order.status }}</strong>.
+                                    We'll keep it moving!
+                                </p>
+
+                                <!-- DETAIL GRID -->
+                                <div class="panel-grid">
+
+                                    <!-- LEFT -->
+                                    <div class="panel-col">
+
+                                        <div class="section-mini-heading">
+                                            <i class="bi bi-info-circle-fill"></i>
+                                            Order Details
+                                        </div>
+
+                                        <div class="info-row">
+
+                                            <div class="info-box">
+                                                <div class="info-icon address-icon">
+                                                    <i class="bi bi-geo-alt-fill"></i>
+                                                </div>
+                                                <div class="info-text">
+                                                    <p class="info-label mb-1">Shipping Address</p>
+                                                    <p class="info-value mb-0">
+                                                        {{ order.address }}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="info-box">
+                                                <div class="info-icon payment-icon">
+                                                    <i class="bi bi-credit-card-fill"></i>
+                                                </div>
+                                                <div class="info-text">
+                                                    <p class="info-label mb-1">Payment Method</p>
+                                                    <p class="info-value mb-0">
+                                                        {{ order.paymentMethod }}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="section-mini-heading">
+                                            <i class="bi bi-bag-check-fill"></i>
+                                            Items in this order
+                                        </div>
+
+                                        <!-- Item row now wraps the details link + a Return button so the
+                                             two clickable regions don't nest inside one another. Return
+                                             is only rendered when canReturnOrder(order) is true — i.e.
+                                             the order has actually been Delivered. -->
+                                        <div class="item-row-wrap" *ngFor="let item of live.items">
+
+                                            <a class="item-row" [routerLink]="[productDetailRoute, item.productCode]">
+
+                                                <img [src]="item.image" [alt]="item.name" class="tracked-thumb" />
+
+                                                <div class="flex-grow-1 min-w-0">
+                                                    <p class="mb-1 fw-semibold small text-truncate">
+                                                        {{ item.name }}
+                                                    </p>
+                                                    <p class="mb-0 text-muted small">
+                                                        Qty: {{ item.quantity }}
+                                                    </p>
+                                                </div>
+
+                                                <span class="item-price fw-bold small">
+                                                    &#8377;{{ item.price * item.quantity | number }}
+                                                </span>
+
+                                            </a>
+
+                                            <button type="button" class="btn-return-item" *ngIf="canReturnOrder(order)"
+                                                [disabled]="returningProductCode === item.productCode"
+                                                (click)="openReturnModal(item)">
+                                                <i class="bi bi-arrow-return-left"></i>
+                                                {{ returningProductCode === item.productCode ? 'Submitting...' :
+                                                'Return' }}
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- RIGHT -->
+                                    <div class="panel-col" *ngIf="live.history?.length">
+
+                                        <div class="section-mini-heading">
+                                            <i class="bi bi-clock-history"></i>
+                                            Order Timeline
+                                        </div>
+
+                                        <div class="timeline">
+
+                                            <div class="timeline-item" *ngFor="let h of live.history; let last = last"
+                                                [class.is-last]="last">
+
+                                                <div class="timeline-dot">
+                                                    <i class="bi"
+                                                        [ngClass]="historyIcons[h.Order_Status] || 'bi-circle-fill'">
+                                                    </i>
+                                                </div>
+
+                                                <div class="timeline-content">
+                                                    <p class="mb-1 fw-semibold small">
+                                                        {{ h.Order_Status }}
+                                                    </p>
+                                                    <p class="mb-0 text-muted timeline-date">
+                                                        {{ h.Changed_On | date: 'medium' }}
+                                                    </p>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #noSelection>
+                        <div class="state-block text-center py-5">
+                            <div class="state-icon">
+                                <i class="bi bi-hand-index-thumb"></i>
+                            </div>
+                            <p class="mt-3 mb-0 text-muted">Select an order from the list to view details.</p>
+                        </div>
+                    </ng-template>
+
+                </div>
+
+            </div>
+
+        </ng-container>
+
+    </div>
+
+    <!-- ================= CANCEL ORDER MODAL ================= -->
+    <div class="app-modal-backdrop" *ngIf="showCancelModal" (click)="closeCancelModal()">
+        <div class="app-modal-box" (click)="$event.stopPropagation()">
+
+            <div class="app-modal-icon danger-icon">
+                <i class="bi bi-x-circle"></i>
+            </div>
+
+            <h3 class="app-modal-title">Cancel this order?</h3>
+            <p class="app-modal-sub">
+                Order #{{ selectedOrder?.id }} will be cancelled and a refund will be initiated. This can't be undone.
+            </p>
+
+            <label class="app-modal-label" for="cancelReason">Reason (optional)</label>
+            <textarea id="cancelReason" class="app-modal-textarea" rows="3"
+                placeholder="e.g. Changed my mind, ordered by mistake..." [(ngModel)]="cancelReason" name="cancelReason"
+                [disabled]="cancelling"></textarea>
+
+            <p class="app-modal-error" *ngIf="cancelError">{{ cancelError }}</p>
+
+            <div class="app-modal-actions">
+                <button type="button" class="app-modal-btn app-modal-btn-ghost" (click)="closeCancelModal()"
+                    [disabled]="cancelling">
+                    Keep Order
+                </button>
+                <button type="button" class="app-modal-btn app-modal-btn-danger" (click)="confirmCancelOrder()"
+                    [disabled]="cancelling">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="cancelling"></span>
+                    {{ cancelling ? 'Cancelling...' : 'Yes, Cancel Order' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= RETURN ITEM MODAL ================= -->
+    <div class="app-modal-backdrop" *ngIf="showReturnModal" (click)="closeReturnModal()">
+        <div class="app-modal-box" (click)="$event.stopPropagation()">
+
+            <div class="app-modal-icon return-icon">
+                <i class="bi bi-arrow-return-left"></i>
+            </div>
+
+            <h3 class="app-modal-title">Return item</h3>
+            <p class="app-modal-sub" *ngIf="selectedReturnItem">
+                {{ selectedReturnItem.name }} — from Order #{{ selectedOrder?.id }}
+            </p>
+
+            <label class="app-modal-label" for="returnQty">Quantity to return</label>
+            <input id="returnQty" type="number" class="app-modal-input" name="returnQty" [(ngModel)]="returnQty" min="1"
+                [max]="selectedReturnItem?.quantity || 1" [disabled]="!!returningProductCode" />
+
+            <label class="app-modal-label" for="returnReason">Reason</label>
+            <textarea id="returnReason" class="app-modal-textarea" rows="3"
+                placeholder="e.g. Wrong size, item damaged, not as described..." [(ngModel)]="returnReason"
+                name="returnReason" [disabled]="!!returningProductCode"></textarea>
+
+            <p class="app-modal-error" *ngIf="returnError">{{ returnError }}</p>
+
+            <div class="app-modal-actions">
+                <button type="button" class="app-modal-btn app-modal-btn-ghost" (click)="closeReturnModal()"
+                    [disabled]="!!returningProductCode">
+                    Cancel
+                </button>
+                <button type="button" class="app-modal-btn app-modal-btn-primary" (click)="confirmReturnItem()"
+                    [disabled]="!!returningProductCode">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="returningProductCode"></span>
+                    {{ returningProductCode ? 'Submitting...' : 'Submit Return' }}
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</section>

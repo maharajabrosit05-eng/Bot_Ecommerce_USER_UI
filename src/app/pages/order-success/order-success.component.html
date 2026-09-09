@@ -1,0 +1,665 @@
+<section class="order-success-page">
+
+  <!-- =====================================================
+       BACKGROUND DECORATION
+  ====================================================== -->
+
+  <div class="success-background">
+
+    <span class="bg-circle bg-circle-1"></span>
+    <span class="bg-circle bg-circle-2"></span>
+
+    <span class="confetti confetti-1"></span>
+    <span class="confetti confetti-2"></span>
+    <span class="confetti confetti-3"></span>
+    <span class="confetti confetti-4"></span>
+    <span class="confetti confetti-5"></span>
+    <span class="confetti confetti-6"></span>
+    <span class="confetti confetti-7"></span>
+    <span class="confetti confetti-8"></span>
+
+  </div>
+
+
+  <!-- =====================================================
+       ORDER FOUND
+  ====================================================== -->
+
+  <ng-container *ngIf="order; else noOrder">
+
+    <div class="success-wrapper">
+
+
+      <!-- =================================================
+           SUCCESS HEADER
+      ================================================== -->
+
+      <div class="success-header">
+
+        <!-- SUCCESS VIDEO -->
+
+        <div class="success-badge-wrapper">
+
+          <div class="success-ring ring-one"></div>
+          <div class="success-ring ring-two"></div>
+
+          <div class="success-badge">
+
+            <video
+              class="success-video"
+              autoplay
+              muted
+              loop
+              playsinline
+            >
+              <source
+                src="../../../assets/video/success.mp4"
+                type="video/mp4"
+              />
+            </video>
+
+          </div>
+
+          <span class="success-star star-one">✦</span>
+          <span class="success-star star-two">✦</span>
+          <span class="success-star star-three">•</span>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="confirmed-label">
+
+          <i class="bi bi-check-circle-fill"></i>
+
+          ORDER CONFIRMED
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <h1>
+          Woohoo! Your order is confirmed
+        </h1>
+
+
+        <!-- GREETING -->
+
+        <p class="success-greeting">
+
+          Thank you,
+
+          <!-- <strong>
+            {{ order.address?.split(',')[0] || 'Customer' }}
+          </strong> -->
+
+          <span class="heart">♥</span>
+
+        </p>
+
+
+        <!-- DESCRIPTION -->
+
+        <p class="success-description">
+
+          We've received your order and it's now being
+          prepared for dispatch.
+
+        </p>
+
+      </div>
+
+
+
+      <!-- =================================================
+           MAIN CONTENT
+      ================================================== -->
+
+      <div class="success-grid">
+
+
+        <!-- =================================================
+             LEFT
+        ================================================== -->
+
+        <div class="success-left">
+
+
+          <!-- =================================================
+               ORDER ITEMS
+          ================================================== -->
+
+          <div class="success-card products-card">
+
+            <div class="card-header">
+
+              <div class="card-title">
+
+                <div class="card-icon blue-icon">
+                  <i class="bi bi-bag-check-fill"></i>
+                </div>
+
+                <div>
+
+                  <span>
+                    YOUR ORDER
+                  </span>
+
+                  <h2>
+                    Order Items
+                  </h2>
+
+                </div>
+
+              </div>
+
+
+              <span class="items-count">
+
+                {{ order.items?.length || 0 }}
+
+                {{ order.items?.length === 1 ? 'Item' : 'Items' }}
+
+              </span>
+
+            </div>
+
+
+            <!-- PRODUCTS -->
+
+            <div class="success-products">
+
+              <div
+                class="success-product"
+                *ngFor="let item of order.items; let i = index"
+              >
+
+                <!-- IMAGE -->
+
+                <div class="success-product-image">
+
+                  <img
+                    [src]="
+                      item.product?.image ||
+                      '../../../assets/img/product-placeholder.png'
+                    "
+                    [alt]="item.product?.name || 'Product'"
+                  />
+
+                  <span class="product-qty">
+                    ×{{ item.quantity }}
+                  </span>
+
+                </div>
+
+
+                <!-- PRODUCT INFO -->
+
+                <div class="success-product-info">
+
+                  <span class="product-number">
+                    ITEM {{ i + 1 }}
+                  </span>
+
+                  <h3>
+                    {{ item.product?.name || 'Product' }}
+                  </h3>
+
+                  <p>
+                    Quantity:
+                    <strong>
+                      {{ item.quantity }}
+                    </strong>
+                  </p>
+
+                </div>
+
+
+                <!-- PRICE -->
+
+                <div class="success-product-price">
+
+                  &#8377;{{
+                    ((item.product?.price || 0) * item.quantity)
+                    | number:'1.0-0'
+                  }}
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- =================================================
+               DELIVERY JOURNEY
+          ================================================== -->
+
+          <div class="success-card tracking-card">
+
+            <div class="card-header">
+
+              <div class="card-title">
+
+                <div class="card-icon green-icon">
+                  <i class="bi bi-truck"></i>
+                </div>
+
+                <div>
+
+                  <span>
+                    DELIVERY JOURNEY
+                  </span>
+
+                  <h2>
+                    What's happening next?
+                  </h2>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- TIMELINE -->
+
+            <div class="order-timeline">
+
+
+              <!-- STEP 1 -->
+
+              <div class="timeline-step active">
+
+                <div class="timeline-icon">
+                  <i class="bi bi-check-lg"></i>
+                </div>
+
+                <div class="timeline-content">
+
+                  <strong>
+                    Order Placed
+                  </strong>
+
+                  <span>
+                    Your order has been received
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <!-- STEP 2 -->
+
+              <div class="timeline-step active">
+
+                <div class="timeline-icon">
+                  <i class="bi bi-check-lg"></i>
+                </div>
+
+                <div class="timeline-content">
+
+                  <strong>
+                    Order Confirmed
+                  </strong>
+
+                  <span>
+                    We've confirmed your order
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <!-- STEP 3 -->
+
+              <div class="timeline-step">
+
+                <div class="timeline-icon">
+                  <i class="bi bi-box-seam"></i>
+                </div>
+
+                <div class="timeline-content">
+
+                  <strong>
+                    Packed
+                  </strong>
+
+                  <span>
+                    Your products will be packed carefully
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <!-- STEP 4 -->
+
+              <div class="timeline-step">
+
+                <div class="timeline-icon">
+                  <i class="bi bi-truck"></i>
+                </div>
+
+                <div class="timeline-content">
+
+                  <strong>
+                    Shipped
+                  </strong>
+
+                  <span>
+                    Your order will be on its way
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <!-- STEP 5 -->
+
+              <div class="timeline-step">
+
+                <div class="timeline-icon">
+                  <i class="bi bi-house-check"></i>
+                </div>
+
+                <div class="timeline-content">
+
+                  <strong>
+                    Delivered
+                  </strong>
+
+                  <span>
+                    Delivered safely to your doorstep
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT — SUMMARY
+        ================================================== -->
+
+        <aside class="success-summary">
+
+
+          <!-- SUMMARY CARD -->
+
+          <div class="success-card summary-card">
+
+            <div class="summary-heading">
+
+              <div>
+
+                <span>
+                  ORDER DETAILS
+                </span>
+
+                <h2>
+                  Order Summary
+                </h2>
+
+              </div>
+
+              <div class="summary-check">
+                <i class="bi bi-check2"></i>
+              </div>
+
+            </div>
+
+
+            <!-- ORDER ID -->
+
+            <div class="summary-info">
+
+              <div class="summary-info-icon blue">
+                <i class="bi bi-receipt"></i>
+              </div>
+
+              <div>
+
+                <span>
+                  Order ID
+                </span>
+
+                <strong>
+                  #{{ order.id }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- PAYMENT -->
+
+            <div class="summary-info">
+
+              <div class="summary-info-icon purple">
+                <i class="bi bi-credit-card"></i>
+              </div>
+
+              <div>
+
+                <span>
+                  Payment Method
+                </span>
+
+                <strong>
+                  {{ order.paymentMethod }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- DELIVERY -->
+
+            <div class="summary-info">
+
+              <div class="summary-info-icon orange">
+                <i class="bi bi-geo-alt"></i>
+              </div>
+
+              <div>
+
+                <span>
+                  Delivery Address
+                </span>
+
+                <strong class="address-text">
+                  {{ order.address }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <!-- TOTAL -->
+
+            <div class="summary-total">
+
+              <div>
+
+                <span>
+                  Total
+                </span>
+
+                <small>
+                  Inclusive of all charges
+                </small>
+
+              </div>
+
+              <strong>
+                &#8377;{{ order.total | number:'1.0-0' }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- DELIVERY INFO -->
+
+          <div class="delivery-card">
+
+            <div class="delivery-icon">
+              <i class="bi bi-box-seam-fill"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                We'll keep you updated
+              </strong>
+
+              <p>
+                You'll receive updates as your order
+                moves through each delivery stage.
+              </p>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+
+
+      <!-- =================================================
+           ACTION BUTTONS
+      ================================================== -->
+
+      <div class="success-actions">
+
+        <a
+          [routerLink]="['/my_order']"
+          [queryParams]="{ orderId: order.id }"
+          class="track-order-btn"
+        >
+
+          <span class="btn-icon">
+            <i class="bi bi-truck"></i>
+          </span>
+
+          <span>
+            My Order
+          </span>
+
+          <i class="bi bi-arrow-right btn-arrow"></i>
+
+        </a>
+
+
+        <a
+          routerLink="/products"
+          class="continue-shopping-btn"
+        >
+
+          <i class="bi bi-cart3"></i>
+
+          Continue Shopping
+
+        </a>
+
+      </div>
+
+
+
+      <!-- =================================================
+           TRUST FOOTER
+      ================================================== -->
+
+      <div class="success-trust">
+
+        <div>
+          <i class="bi bi-truck"></i>
+          <span>Fast Delivery</span>
+        </div>
+
+        <div>
+          <i class="bi bi-shield-check"></i>
+          <span>Secure Payment</span>
+        </div>
+
+        <div>
+          <i class="bi bi-arrow-repeat"></i>
+          <span>Easy Returns</span>
+        </div>
+
+        <div>
+          <i class="bi bi-headset"></i>
+          <span>Customer Support</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+
+
+  <!-- =====================================================
+       NO ORDER
+  ====================================================== -->
+
+  <ng-template #noOrder>
+
+    <div class="no-order">
+
+      <div class="no-order-icon">
+        <i class="bi bi-box-seam"></i>
+      </div>
+
+      <h2>
+        Order Not Found
+      </h2>
+
+      <p>
+        We couldn't find the order you're looking for.
+      </p>
+
+      <a
+        routerLink="/"
+        class="track-order-btn"
+      >
+
+        <i class="bi bi-house"></i>
+
+        Go Home
+
+      </a>
+
+    </div>
+
+  </ng-template>
+
+</section>

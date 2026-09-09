@@ -1,0 +1,1266 @@
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+.product-card {
+
+  width: 100%;
+
+  height: 100%;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  display: flex;
+
+  flex-direction: column;
+
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.045);
+
+  /* IMPORTANT:
+     NO TRANSFORM
+     NO HOVER MOVEMENT
+  */
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+
+}
+
+
+/* subtle hover only */
+
+.product-card:hover {
+
+  border-color: #d7dce2;
+
+  box-shadow: 0 5px 16px rgba(15, 23, 42, 0.07);
+
+  transform: none;
+
+}
+
+
+/* =========================================================
+   IMAGE AREA
+========================================================= */
+
+.product-image-area {
+
+  position: relative;
+
+  padding: 12px;
+
+  background: #fafafa;
+
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.product-image-wrapper {
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  background: #f5f5f5;
+
+  border-radius: 9px;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+.product-image {
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+
+}
+
+
+/* =========================================================
+   IMAGE FALLBACK
+========================================================= */
+
+.product-image-placeholder {
+
+  width: 100%;
+
+  height: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 5px;
+
+  color: #9ca3af;
+
+}
+
+
+.product-image-placeholder i {
+
+  font-size: 24px;
+
+}
+
+
+.product-image-placeholder span {
+
+  font-size: 10px;
+
+}
+
+
+/* =========================================================
+   OFFER BADGE
+========================================================= */
+
+.offer-badge {
+
+  position: absolute;
+
+  top: 18px;
+
+  left: 18px;
+
+  z-index: 4;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 24px;
+
+  padding: 0 8px;
+
+  border-radius: 5px;
+
+  background: #1f2937;
+
+  color: #ffffff;
+
+  font-size: 9px;
+
+  font-weight: 750;
+
+  letter-spacing: .02em;
+
+}
+
+
+/* =========================================================
+   WISHLIST
+========================================================= */
+
+.wishlist-btn {
+
+  position: absolute;
+
+  top: 17px;
+
+  right: 17px;
+
+  z-index: 5;
+
+  width: 32px;
+
+  height: 32px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: #6b7280;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 2px 7px rgba(15, 23, 42, 0.07);
+
+  transition:
+    color .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+
+}
+
+
+.wishlist-btn:hover {
+
+  color: #dc3545;
+
+  border-color: #e5e7eb;
+
+  background: #ffffff;
+
+  transform: none;
+
+}
+
+
+.wishlist-btn.active {
+
+  color: #dc3545;
+
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.product-content {
+
+  padding: 13px 14px 15px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  flex: 1;
+
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+.product-category {
+
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #9a3412;
+
+  font-size: 9px;
+
+  font-weight: 750;
+
+  text-transform: uppercase;
+
+  letter-spacing: .07em;
+
+}
+
+
+/* =========================================================
+   PRODUCT NAME
+========================================================= */
+
+.product-name {
+
+  margin: 0;
+
+  min-height: 38px;
+
+  color: #172033;
+
+  font-size: 14px;
+
+  line-height: 1.4;
+
+  font-weight: 750;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.product-brand {
+
+  margin: 4px 0 8px;
+
+  color: #8b95a1;
+
+  font-size: 10px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.product-price-row {
+
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 8px;
+
+  margin-top: auto;
+
+  padding-top: 8px;
+
+  margin-bottom: 11px;
+
+}
+
+
+.product-price {
+
+  color: #172033;
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+}
+
+
+.product-old-price {
+
+  color: #9ca3af;
+
+  font-size: 10px;
+
+}
+
+
+/* =========================================================
+   QUICK VIEW BUTTON
+========================================================= */
+
+.quick-view-btn {
+
+  width: 100%;
+
+  height: 35px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-size: 11px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease;
+
+}
+
+
+.quick-view-btn:hover {
+
+  background: #1f2937;
+
+  border-color: #1f2937;
+
+  color: #ffffff;
+
+  transform: none;
+
+}
+
+
+.quick-view-btn i {
+
+  font-size: 12px;
+
+}
+
+
+/* =========================================================
+   QUICK VIEW OVERLAY
+========================================================= */
+
+.quick-view-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  background: rgba(15, 23, 42, 0.62);
+
+  backdrop-filter: blur(4px);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 24px;
+
+  animation: overlay-in .18s ease;
+
+}
+
+
+@keyframes overlay-in {
+
+  from {
+
+    opacity: 0;
+
+  }
+
+  to {
+
+    opacity: 1;
+
+  }
+
+}
+
+
+/* =========================================================
+   QUICK VIEW MODAL
+========================================================= */
+
+.quick-view-modal {
+
+  position: relative;
+
+  width: min(900px, 100%);
+
+  max-height: 90vh;
+
+  overflow: auto;
+
+  display: grid;
+
+  grid-template-columns: 43% 57%;
+
+  background: #ffffff;
+
+  border-radius: 16px;
+
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.22);
+
+  animation: modal-in .2s ease;
+
+}
+
+
+@keyframes modal-in {
+
+  from {
+
+    opacity: 0;
+
+    transform: scale(.98);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: scale(1);
+
+  }
+
+}
+
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.quick-view-close {
+
+  position: absolute;
+
+  top: 14px;
+
+  right: 14px;
+
+  z-index: 10;
+
+  width: 32px;
+
+  height: 32px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: #64748b;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    color .2s ease;
+
+}
+
+
+.quick-view-close:hover {
+
+  background: #f3f4f6;
+
+  color: #111827;
+
+}
+
+
+/* =========================================================
+   MODAL IMAGE
+========================================================= */
+
+.quick-view-image-section {
+
+  padding: 26px;
+
+  background: #f8f9fa;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+.quick-view-image-box {
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  max-height: 500px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 11px;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+.quick-view-image {
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+
+}
+
+
+.quick-view-image-placeholder {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #9ca3af;
+
+  font-size: 35px;
+
+}
+
+
+/* =========================================================
+   MODAL DETAILS
+========================================================= */
+
+.quick-view-details {
+
+  padding: 40px 42px 34px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+.quick-view-category {
+
+  color: #9a3412;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: .08em;
+
+  margin-bottom: 8px;
+
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.quick-view-title {
+
+  margin: 0;
+
+  max-width: 500px;
+
+  color: #172033;
+
+  font-size: 27px;
+
+  line-height: 1.25;
+
+  font-weight: 800;
+
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.quick-view-brand {
+
+  margin-top: 7px;
+
+  color: #7b8491;
+
+  font-size: 11px;
+
+  font-weight: 650;
+
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.quick-view-description {
+
+  margin: 15px 0 0;
+
+  max-width: 500px;
+
+  color: #7b8491;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.quick-view-price-row {
+
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: 20px;
+
+}
+
+
+.quick-view-price {
+
+  color: #172033;
+
+  font-size: 25px;
+
+  font-weight: 800;
+
+}
+
+
+.quick-view-old-price {
+
+  color: #9ca3af;
+
+  font-size: 12px;
+
+}
+
+
+.quick-view-discount {
+
+  padding: 4px 7px;
+
+  border-radius: 5px;
+
+  background: #f3f4f6;
+
+  color: #4b5563;
+
+  font-size: 9px;
+
+  font-weight: 750;
+
+}
+
+
+/* =========================================================
+   META
+========================================================= */
+
+.quick-view-meta {
+
+  display: flex;
+
+  gap: 25px;
+
+  margin-top: 18px;
+
+  padding: 13px 0;
+
+  border-top: 1px solid #edf0f3;
+
+  border-bottom: 1px solid #edf0f3;
+
+}
+
+
+.quick-view-meta > div {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+}
+
+
+.quick-view-meta span {
+
+  color: #9ca3af;
+
+  font-size: 9px;
+
+  text-transform: uppercase;
+
+  letter-spacing: .05em;
+
+}
+
+
+.quick-view-meta strong {
+
+  color: #374151;
+
+  font-size: 11px;
+
+}
+
+
+.stock-out {
+
+  color: #dc3545 !important;
+
+}
+
+
+/* =========================================================
+   QUANTITY
+========================================================= */
+
+.quantity-section {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 18px;
+
+}
+
+
+.quantity-label {
+
+  color: #374151;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+}
+
+
+.quantity-control {
+
+  height: 35px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  border: 1px solid #dfe3e8;
+
+  border-radius: 7px;
+
+  overflow: hidden;
+
+}
+
+
+.quantity-control button {
+
+  width: 34px;
+
+  height: 100%;
+
+  border: 0;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  cursor: pointer;
+
+}
+
+
+.quantity-control button:hover {
+
+  background: #f3f4f6;
+
+}
+
+
+.quantity-control span {
+
+  min-width: 35px;
+
+  text-align: center;
+
+  color: #1f2937;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.quick-view-actions {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+
+  margin-top: 20px;
+
+}
+
+
+.modal-cart-btn,
+.modal-buy-btn {
+
+  height: 42px;
+
+  border-radius: 7px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  font-size: 11px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease;
+
+}
+
+
+.modal-cart-btn {
+
+  border: 1px solid #1f2937;
+
+  background: #1f2937;
+
+  color: #ffffff;
+
+}
+
+
+.modal-cart-btn:hover {
+
+  background: #111827;
+
+  border-color: #111827;
+
+}
+
+
+.modal-buy-btn {
+
+  border: 1px solid #d97706;
+
+  background: #d97706;
+
+  color: #ffffff;
+
+}
+
+
+.modal-buy-btn:hover {
+
+  background: #b45309;
+
+  border-color: #b45309;
+
+}
+
+
+/* =========================================================
+   MOBILE MODAL
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+  .quick-view-overlay {
+
+    padding: 14px;
+
+    align-items: center;
+
+  }
+
+
+  .quick-view-modal {
+
+    grid-template-columns: 1fr;
+
+    max-height: 92vh;
+
+    border-radius: 13px;
+
+  }
+
+
+  .quick-view-image-section {
+
+    padding: 18px;
+
+  }
+
+
+  .quick-view-image-box {
+
+    max-height: 300px;
+
+  }
+
+
+  .quick-view-details {
+
+    padding: 22px 20px 24px;
+
+  }
+
+
+  .quick-view-title {
+
+    font-size: 21px;
+
+  }
+
+
+  .quick-view-price {
+
+    font-size: 22px;
+
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .quick-view-actions {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .quick-view-modal {
+
+    max-height: 94vh;
+
+  }
+
+}
+
+/* =========================================================
+   ⭐ APPEND THESE TO YOUR EXISTING product-card.component.scss
+   (paste at the bottom — nothing above needs to change)
+========================================================= */
+
+/* NAME + BRAND ROW (name row now wraps brand alongside it) */
+
+.product-name-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+
+/* SHORT DESCRIPTION */
+
+.product-short-desc {
+  margin: 2px 0 6px;
+  color: #8b95a1;
+  font-size: 11px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+/* RATING STARS */
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: #f59e0b;
+}
+
+.product-rating .bi-star {
+  color: #d1d5db;
+}
+
+.product-rating span {
+  margin-left: 4px;
+  color: #6b7280;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   ACTIONS ROW — Add to Cart + Quick View side by side
+========================================================= */
+
+.product-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.add-cart-btn {
+  width: 100%;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #1f2937;
+  border-radius: 7px;
+  background: #1f2937;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.add-cart-btn:hover {
+  background: #111827;
+  border-color: #111827;
+}
+
+.add-cart-btn i {
+  font-size: 12px;
+}
+
+/* Quick View button becomes the secondary (outline) action now
+   that Add to Cart sits beside it */
+
+.quick-view-btn {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+
+/* =========================================================
+   TOAST (bottom-right notification)
+========================================================= */
+
+.app-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 260px;
+  max-width: 360px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #1f2937;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+  animation: toast-in .2s ease;
+}
+
+.app-toast.toast-success {
+  background: #16a34a;
+}
+
+.app-toast.toast-error {
+  background: #dc2626;
+}
+
+.app-toast .toast-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.app-toast .toast-close {
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  opacity: .8;
+  cursor: pointer;
+}
+
+.app-toast .toast-close:hover {
+  opacity: 1;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,874 @@
+<section class="products-page">
+
+  <!-- =========================================================
+       ⭐ MOBILE / TABLET TOOLBAR — Filters & Sort By buttons
+  ========================================================== -->
+
+  <div class="mobile-toolbar">
+
+    <button type="button" class="mobile-toolbar-btn" [class.active]="mobileFiltersOpen" (click)="toggleMobileFilters()">
+
+      <i class="bi bi-funnel-fill"></i>
+      <span>Filters</span>
+      <i class="bi bi-chevron-down toolbar-caret" [class.rotated]="mobileFiltersOpen"></i>
+
+    </button>
+
+    <button type="button" class="mobile-toolbar-btn" [class.active]="mobileSortOpen" (click)="toggleMobileSort()">
+
+      <i class="bi bi-sort-down"></i>
+      <span>Sort By</span>
+      <i class="bi bi-chevron-down toolbar-caret" [class.rotated]="mobileSortOpen"></i>
+
+    </button>
+
+  </div>
+
+
+  <!-- ⭐ BACKDROP — tap outside to close either mobile panel -->
+
+  <div class="mobile-panel-backdrop" *ngIf="mobileFiltersOpen || mobileSortOpen" (click)="closeMobilePanels()"></div>
+
+
+  <!-- =========================================================
+       ⭐ MOBILE / TABLET — SORT BY DROPDOWN PANEL
+  ========================================================== -->
+
+  <div class="mobile-sort-panel" [class.open]="mobileSortOpen">
+
+    <ul class="mobile-sort-list">
+
+      <li *ngFor="let opt of sortOptions" [class.selected]="sortBy === opt.value" (click)="selectSort(opt.value)">
+
+        <span>{{ opt.label }}</span>
+
+        <i class="bi bi-check-lg" *ngIf="sortBy === opt.value"></i>
+
+      </li>
+
+    </ul>
+
+  </div>
+
+
+
+  <!-- =========================================================
+       MAIN LAYOUT
+  ========================================================== -->
+
+  <div class="products-layout">
+
+
+    <!-- =======================================================
+         FILTER SIDEBAR
+    ======================================================== -->
+
+    <aside class="filters-column" [class.mobile-open]="mobileFiltersOpen">
+
+      <div class="filter-panel">
+
+
+        <!-- FILTER HEADER -->
+
+        <div class="filter-header">
+
+          <span class="filter-title">
+            <i class="bi bi-funnel-fill"></i>
+            Filters
+          </span>
+
+
+          <div class="filter-header-actions">
+
+            <button type="button" class="clear-all-btn" (click)="resetFilters()">
+              Clear All
+            </button>
+
+            <!-- ⭐ Close (mobile/tablet only) -->
+            <button type="button" class="mobile-filter-close" (click)="toggleMobileFilters()"
+              aria-label="Close filters">
+              <i class="bi bi-x-lg"></i>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="filter-divider"></div>
+
+
+
+        <!-- =====================================================
+             CATEGORY
+        ====================================================== -->
+
+        <div class="filter-block">
+
+          <button type="button" class="filter-block-header" (click)="toggleSection('category')">
+
+            <span>Category</span>
+
+            <i class="bi" [class.bi-chevron-up]="openSections['category']"
+              [class.bi-chevron-down]="!openSections['category']"></i>
+
+          </button>
+
+
+          <div class="filter-block-body" *ngIf="openSections['category']">
+
+            <ul class="check-list" *ngIf="allCategories.length > 0; else noCategory">
+
+              <li *ngFor="let cat of visibleCategories">
+
+                <label class="check-row">
+
+                  <input type="checkbox" [checked]="isCategorySelected(cat)" (change)="toggleCategory(cat)" />
+
+                  <span class="check-label">{{ cat }}</span>
+
+                  <span class="check-count">({{ getCategoryCount(cat) }})</span>
+
+                </label>
+
+              </li>
+
+            </ul>
+
+            <ng-template #noCategory>
+              <p class="empty-note">No categories</p>
+            </ng-template>
+
+            <button type="button" class="view-more-btn" *ngIf="hasMoreCategories" (click)="toggleShowAllCategories()">
+              {{ showAllCategories ? 'View Less' : 'View More' }}
+              <i class="bi" [class.bi-chevron-down]="!showAllCategories" [class.bi-chevron-up]="showAllCategories"></i>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="filter-divider"></div>
+
+
+
+        <!-- =====================================================
+             BRAND
+        ====================================================== -->
+
+        <div class="filter-block">
+
+          <button type="button" class="filter-block-header" (click)="toggleSection('brand')">
+
+            <span>Brand</span>
+
+            <i class="bi" [class.bi-chevron-up]="openSections['brand']"
+              [class.bi-chevron-down]="!openSections['brand']"></i>
+
+          </button>
+
+
+          <div class="filter-block-body" *ngIf="openSections['brand']">
+
+            <ul class="check-list" *ngIf="allBrands.length > 0; else noBrand">
+
+              <li *ngFor="let brand of visibleBrands">
+
+                <label class="check-row">
+
+                  <input type="checkbox" [checked]="isBrandSelected(brand)" (change)="toggleBrand(brand)" />
+
+                  <span class="check-label">{{ brand }}</span>
+
+                  <span class="check-count">({{ getBrandCount(brand) }})</span>
+
+                </label>
+
+              </li>
+
+            </ul>
+
+            <ng-template #noBrand>
+              <p class="empty-note">No brands</p>
+            </ng-template>
+
+            <button type="button" class="view-more-btn" *ngIf="hasMoreBrands" (click)="toggleShowAllBrands()">
+              {{ showAllBrands ? 'View Less' : 'View More' }}
+              <i class="bi" [class.bi-chevron-down]="!showAllBrands" [class.bi-chevron-up]="showAllBrands"></i>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="filter-divider"></div>
+
+
+
+        <!-- =====================================================
+             PRICE RANGE
+        ====================================================== -->
+
+        <div class="filter-block">
+
+          <button type="button" class="filter-block-header" (click)="toggleSection('price')">
+
+            <span>Price Range</span>
+
+            <i class="bi" [class.bi-chevron-up]="openSections['price']"
+              [class.bi-chevron-down]="!openSections['price']"></i>
+
+          </button>
+
+
+          <div class="filter-block-body" *ngIf="openSections['price']">
+
+            <input type="range" class="price-range-slider" [min]="minPriceLimit" [max]="maxPriceLimit" step="500"
+              [(ngModel)]="maxPrice" (ngModelChange)="applyFilters()" />
+
+            <div class="price-range-values">
+
+              <span>₹{{ minPriceLimit | number }}</span>
+
+              <span>₹{{ maxPrice | number }}</span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="filter-divider"></div>
+
+
+
+        <!-- =====================================================
+             CUSTOMER RATING
+        ====================================================== -->
+
+        <div class="filter-block">
+
+          <button type="button" class="filter-block-header" (click)="toggleSection('rating')">
+
+            <span>Customer Rating</span>
+
+            <i class="bi" [class.bi-chevron-up]="openSections['rating']"
+              [class.bi-chevron-down]="!openSections['rating']"></i>
+
+          </button>
+
+
+          <div class="filter-block-body" *ngIf="openSections['rating']">
+
+            <ul class="check-list">
+
+              <li *ngFor="let r of ratingOptions">
+
+                <label class="check-row">
+
+                  <input type="checkbox" [checked]="minRating === r" (change)="toggleRating(r)" />
+
+                  <span class="rating-stars">
+
+                    <i class="bi bi-star-fill" *ngFor="let s of starsArray(getFullStars(r))"></i>
+                    <i class="bi bi-star-half" *ngIf="hasHalfStar(r)"></i>
+                    <i class="bi bi-star" *ngFor="let s of starsArray(getEmptyStars(r))"></i>
+
+                  </span>
+
+                  <span class="check-count">&amp; Up ({{ getRatingCount(r) }})</span>
+
+                </label>
+
+              </li>
+
+            </ul>
+
+          </div>
+
+        </div>
+
+
+        <div class="filter-divider"></div>
+
+
+
+        <!-- =====================================================
+             YOU MAY LIKE IT
+        ====================================================== -->
+
+        <div class="filter-block">
+
+          <button type="button" class="filter-block-header" (click)="toggleSection('youMayLike')">
+
+            <span>You May Like</span>
+
+            <i class="bi" [class.bi-chevron-up]="openSections['youMayLike']"
+              [class.bi-chevron-down]="!openSections['youMayLike']"></i>
+
+          </button>
+
+
+          <div class="filter-block-body" *ngIf="openSections['youMayLike']">
+
+            <ul class="you-may-like-list">
+
+              <li *ngFor="let product of youMayLikeProducts" (click)="goToProduct(product)">
+
+                <div class="you-may-like-thumb">
+
+                  <img *ngIf="!productImageError[getProductKey(product)]" [src]="getProductImage(product)"
+                    [alt]="getProductName(product)" (error)="onProductImageError(product)" />
+
+                  <div class="you-may-like-no-image" *ngIf="productImageError[getProductKey(product)]">
+                    <i class="bi bi-box-seam"></i>
+                  </div>
+
+                </div>
+
+
+                <div class="you-may-like-info">
+
+                  <span class="you-may-like-name">
+                    {{ getProductName(product) }}
+                  </span>
+
+
+                  <div class="you-may-like-price-row">
+
+                    <strong>₹{{ getProductPrice(product) | number:'1.0-0' }}</strong>
+
+                    <del *ngIf="getOldPrice(product) > getProductPrice(product)">
+                      ₹{{ getOldPrice(product) | number:'1.0-0' }}
+                    </del>
+
+                  </div>
+
+                </div>
+
+              </li>
+
+            </ul>
+
+          </div>
+
+        </div>
+
+
+        <!-- APPLY FILTERS (mobile/tablet: also closes the drawer) -->
+
+        <button type="button" class="apply-filters-btn" (click)="applyFiltersAndClose()">
+          Apply Filters
+        </button>
+
+      </div>
+
+    </aside>
+
+
+
+    <!-- =========================================================
+         PRODUCTS
+    ========================================================== -->
+
+    <main class="products-column">
+
+
+
+
+
+      <!-- <div class="results-toolbar">
+
+        <p class="results-count" *ngIf="!loading">
+
+          <strong>{{ results.length }}</strong>
+
+          {{ results.length === 1 ? 'Product' : 'Products' }}
+
+          found
+
+        </p>
+
+      </div> -->
+
+
+
+      <!-- =======================================================
+           LOADING
+      ======================================================== -->
+
+      <div class="products-grid" *ngIf="loading">
+
+        <div class="product-grid-item" *ngFor="let s of skeletons">
+
+          <div class="product-skeleton">
+
+            <div class="skeleton-image"></div>
+
+            <div class="skeleton-line"></div>
+
+            <div class="skeleton-line small"></div>
+
+            <div class="skeleton-bottom"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- =======================================================
+           PRODUCTS RESULT
+      ======================================================== -->
+
+      <ng-container *ngIf="!loading">
+
+        <div class="products-grid" *ngIf="results.length > 0; else emptyState">
+
+
+          <!-- ===================================================
+               PRODUCT CARD
+          ==================================================== -->
+
+          <div class="product-grid-item" *ngFor="let product of results; let i = index">
+
+
+            <article class="product-card" (click)="goToProduct(product)">
+
+
+              <!-- =================================================
+                   PRODUCT IMAGE AREA
+              ================================================== -->
+
+              <div class="product-image-wrapper">
+
+
+                <!-- OFFER -->
+
+                <span class="offer-badge" *ngIf="getDiscount(product) > 0">
+
+                  {{ getDiscount(product) }}% OFF
+
+                </span>
+
+
+                <!-- WISHLIST -->
+
+                <button type="button" class="wishlist-btn" [class.active]="isWishlisted(product)"
+                  (click)="toggleWishlist(product, $event)" title="Wishlist">
+
+                  <i class="bi" [class.bi-heart]="!isWishlisted(product)" [class.bi-heart-fill]="isWishlisted(product)">
+                  </i>
+
+                </button>
+
+
+                <!-- IMAGE -->
+
+                <img *ngIf="!productImageError[getProductKey(product)]" [src]="getProductImage(product)"
+                  [alt]="getProductName(product)" class="product-image" (error)="onProductImageError(product)" />
+
+
+                <!-- NO IMAGE -->
+
+                <div class="product-no-image" *ngIf="productImageError[getProductKey(product)]">
+
+                  <i class="bi bi-box-seam"></i>
+
+                  <span>No image available</span>
+
+                </div>
+
+              </div>
+
+
+
+              <!-- =================================================
+                   PRODUCT DETAILS
+              ================================================== -->
+
+              <div class="product-card-body">
+
+
+                <!-- CATEGORY -->
+
+                <span class="product-category">
+
+                  {{ getCategory(product) }}
+
+                </span>
+
+
+                <!-- NAME + BRAND -->
+
+                <div class="product-name-row">
+
+                  <h3 class="product-name">
+
+                    {{ getProductName(product) }}
+
+                  </h3>
+
+
+                  <span class="product-brand" *ngIf="getBrand(product)">
+
+                    {{ getBrand(product) }}
+
+                  </span>
+
+                </div>
+
+
+                <!-- SHORT DESCRIPTION -->
+
+                <p class="product-short-desc">
+
+                  {{ getShortDescription(product) }}
+
+                </p>
+
+
+                <!-- ⭐ RATING — half-star support -->
+
+                <div class="product-rating">
+
+                  <i class="bi bi-star-fill" *ngFor="let s of starsArray(getFullStars(getRating(product)))"></i>
+
+                  <i class="bi bi-star-half" *ngIf="hasHalfStar(getRating(product))"></i>
+
+                  <i class="bi bi-star" *ngFor="let s of starsArray(getEmptyStars(getRating(product)))"></i>
+
+                  <span *ngIf="getRating(product) > 0">{{ getRating(product) | number:'1.1-1' }}</span>
+
+                </div>
+
+
+                <!-- PRICE -->
+
+                <div class="product-price-row">
+
+                  <strong class="product-price">₹{{ getProductPrice(product) | number:'1.0-0' }}</strong>
+
+                  <del class="product-old-price" *ngIf="getOldPrice(product) > getProductPrice(product)">
+                    ₹{{ getOldPrice(product) | number:'1.0-0' }}
+                  </del>
+
+                  <span class="product-discount" *ngIf="getDiscount(product) > 0">
+                    {{ getDiscount(product) }}% OFF
+                  </span>
+
+                </div>
+
+
+                <!-- ⭐ ACTIONS — mobile: icon-only, same row -->
+
+                <div class="product-card-actions">
+
+                  <button type="button" class="add-cart-btn" (click)="addToCart(product, $event)" title="Add to Cart">
+
+                    <i class="bi bi-cart3"></i>
+                    <span>Add to Cart</span>
+
+                  </button>
+
+
+                  <button type="button" class="quick-view-btn" (click)="openQuickView(product, $event)"
+                    title="Quick View">
+
+                    <i class="bi bi-eye"></i>
+                    <span>Quick View</span>
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             EMPTY STATE
+        ====================================================== -->
+
+        <ng-template #emptyState>
+
+          <div class="empty-products">
+
+            <div class="empty-icon">
+              <img src="assets/img/product-empty.png" alt="No products found" />
+            </div>
+
+            <div class="empty-content">
+
+              <h5>No products found</h5>
+
+              <p>
+                No products match your current filters.
+                Try changing your search or filters.
+              </p>
+
+              <button type="button" class="clear-filters-btn" (click)="resetFilters()">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                Clear Filters
+              </button>
+
+            </div>
+
+          </div>
+
+        </ng-template>
+
+      </ng-container>
+
+    </main>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     QUICK VIEW MODAL
+========================================================== -->
+
+<div class="quick-view-backdrop" *ngIf="quickViewOpen" (click)="closeQuickView()">
+
+
+  <div class="quick-view-modal" (click)="$event.stopPropagation()">
+
+
+    <!-- CLOSE -->
+
+    <button type="button" class="quick-view-close" (click)="closeQuickView()" aria-label="Close">
+
+      <i class="bi bi-x-lg"></i>
+
+    </button>
+
+
+
+    <!-- =======================================================
+         QUICK VIEW IMAGE
+    ======================================================== -->
+
+    <div class="quick-view-image-area">
+
+
+      <span class="quick-view-offer" *ngIf="selectedProduct && getDiscount(selectedProduct) > 0">
+
+        {{ getDiscount(selectedProduct) }}% OFF
+
+      </span>
+
+
+      <img *ngIf="
+          selectedProduct &&
+          !quickViewImageError
+        " [src]="getProductImage(selectedProduct)" [alt]="getProductName(selectedProduct)" class="quick-view-image"
+        (error)="quickViewImageError = true" />
+
+
+      <div class="quick-view-no-image" *ngIf="
+          selectedProduct &&
+          quickViewImageError
+        ">
+
+        <i class="bi bi-box-seam"></i>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =======================================================
+         QUICK VIEW DETAILS
+    ======================================================== -->
+
+    <div class="quick-view-details" *ngIf="selectedProduct">
+
+
+      <span class="quick-view-category">
+
+        {{ getCategory(selectedProduct) }}
+
+      </span>
+
+
+      <h2>
+
+        {{ getProductName(selectedProduct) }}
+
+      </h2>
+
+
+      <div class="quick-view-brand" *ngIf="getBrand(selectedProduct)">
+
+        {{ getBrand(selectedProduct) }}
+
+      </div>
+
+
+      <p class="quick-view-description">
+
+        {{ getProductDescription(selectedProduct) }}
+
+      </p>
+
+
+      <!-- ⭐ RATING — half-star support -->
+
+      <div class="quick-view-rating" *ngIf="getRating(selectedProduct) > 0">
+
+        <i class="bi bi-star-fill" *ngFor="let s of starsArray(getFullStars(getRating(selectedProduct)))"></i>
+
+        <i class="bi bi-star-half" *ngIf="hasHalfStar(getRating(selectedProduct))"></i>
+
+        <i class="bi bi-star" *ngFor="let s of starsArray(getEmptyStars(getRating(selectedProduct)))"></i>
+
+        <span>
+          {{ getRating(selectedProduct) | number:'1.1-1' }}
+        </span>
+
+      </div>
+
+
+
+      <!-- PRICE -->
+
+      <div class="quick-view-price-row">
+
+        <strong>
+
+          ₹{{ getProductPrice(selectedProduct) | number:'1.0-0' }}
+
+        </strong>
+
+
+        <del *ngIf="
+            getOldPrice(selectedProduct) >
+            getProductPrice(selectedProduct)
+          ">
+
+          ₹{{ getOldPrice(selectedProduct) | number:'1.0-0' }}
+
+        </del>
+
+      </div>
+
+
+
+      <!-- PRODUCT CODE -->
+
+      <div class="quick-view-code" *ngIf="getProductCode(selectedProduct)">
+
+        Product Code:
+        <strong>
+          {{ getProductCode(selectedProduct) }}
+        </strong>
+
+      </div>
+
+
+
+      <!-- QUANTITY -->
+
+      <div class="quick-view-quantity">
+
+        <span>
+          Quantity
+        </span>
+
+
+        <div class="quantity-control">
+
+          <button type="button" (click)="decreaseQuantity()">
+
+            −
+
+          </button>
+
+
+          <span>
+            {{ quickViewQuantity }}
+          </span>
+
+
+          <button type="button" (click)="increaseQuantity()">
+
+            +
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- ACTIONS -->
+
+      <div class="quick-view-actions">
+
+
+        <button type="button" class="quick-add-cart-btn" (click)="addSelectedProductToCart()">
+
+          <i class="bi bi-cart3"></i>
+
+          Add to Cart
+
+        </button>
+
+
+        <button type="button" class="quick-buy-btn" (click)="buySelectedProduct()">
+
+          <i class="bi bi-lightning-fill"></i>
+
+          Buy Now
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ⭐ ADVERTISEMENT — Slot_No 6 (Products page) -->
+<app-ad-banner [slotNo]="6"></app-ad-banner>
+
+
+<!-- =========================================================
+     ⭐ TOAST NOTIFICATION (bottom-right, replaces alert())
+========================================================== -->
+
+<div class="app-toast" *ngIf="toastMessage" [class.toast-success]="toastType === 'success'"
+  [class.toast-error]="toastType === 'error'">
+
+  <i class="bi" [class.bi-check-circle-fill]="toastType === 'success'"
+    [class.bi-exclamation-circle-fill]="toastType === 'error'"></i>
+
+  <span class="toast-text">
+    {{ toastMessage }}
+  </span>
+
+  <button type="button" class="toast-close" (click)="closeToast()" aria-label="Close">
+    <i class="bi bi-x"></i>
+  </button>
+
+</div>

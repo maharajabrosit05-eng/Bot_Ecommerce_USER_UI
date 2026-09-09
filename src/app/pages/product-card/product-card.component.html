@@ -1,0 +1,332 @@
+<div class="product-card" (click)="goToProduct()">
+
+
+  <!-- =====================================================
+       PRODUCT IMAGE AREA
+  ====================================================== -->
+
+  <div class="product-image-area">
+
+
+    <!-- OFFER -->
+    <span class="offer-badge" *ngIf="getDiscount(product) > 0">
+
+      {{ getDiscount(product) }}% OFF
+
+    </span>
+
+
+    <!-- WISHLIST -->
+    <button type="button" class="wishlist-btn" [class.active]="isWishlisted()" (click)="toggleWishlist($event)"
+      title="Wishlist">
+
+      <i class="bi" [class.bi-heart]="!isWishlisted()" [class.bi-heart-fill]="isWishlisted()">
+      </i>
+
+    </button>
+
+
+    <!-- PRODUCT IMAGE -->
+
+    <div class="product-image-wrapper">
+
+      <img *ngIf="getProductImage(product) && !imageError" [src]="getProductImage(product)"
+        [alt]="getProductName(product)" class="product-image" (error)="onImageError()" />
+
+
+      <!-- FALLBACK -->
+
+      <div class="product-image-placeholder" *ngIf="!getProductImage(product) || imageError">
+
+        <i class="bi bi-image"></i>
+
+        <span>No Image</span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       PRODUCT CONTENT
+  ====================================================== -->
+
+  <div class="product-content">
+
+
+    <!-- CATEGORY -->
+
+    <span class="product-category" *ngIf="getCategory(product)">
+
+      {{ getCategory(product) }}
+
+    </span>
+
+
+    <!-- NAME + BRAND -->
+
+    <div class="product-name-row">
+
+      <h3 class="product-name">
+
+        {{ getProductName(product) }}
+
+      </h3>
+
+
+      <span class="product-brand" *ngIf="getBrand(product)">
+
+        {{ getBrand(product) }}
+
+      </span>
+
+    </div>
+
+
+    <!-- SHORT DESCRIPTION -->
+
+    <p class="product-short-desc" *ngIf="getShortDescription(product)">
+
+      {{ getShortDescription(product) }}
+
+    </p>
+
+
+    <!-- RATING -->
+
+    <div class="product-rating">
+
+      <i class="bi bi-star-fill" *ngFor="let s of starsArray(getRoundedRating(product))"></i>
+
+      <i class="bi bi-star" *ngFor="let s of starsArray(5 - getRoundedRating(product))"></i>
+
+      <span *ngIf="getRating(product) > 0">{{ getRating(product) | number:'1.1-1' }}</span>
+
+    </div>
+
+
+    <!-- PRICE -->
+
+    <div class="product-price-row">
+
+      <strong class="product-price">
+
+        ₹{{ getProductPrice(product) | number:'1.0-0' }}
+
+      </strong>
+
+
+      <del class="product-old-price" *ngIf="getOldPrice(product) > getProductPrice(product)">
+
+        ₹{{ getOldPrice(product) | number:'1.0-0' }}
+
+      </del>
+
+    </div>
+
+
+    <!-- =================================================
+         ACTIONS — Add to Cart + Quick View
+    ================================================== -->
+
+    <div class="product-card-actions">
+
+      <button type="button" class="add-cart-btn" (click)="addToCart($event)">
+
+        <i class="bi bi-cart3"></i>
+        <span>Add to Cart</span>
+
+      </button>
+
+
+      <button type="button" class="quick-view-btn" (click)="openQuickView($event)">
+
+        <i class="bi bi-eye"></i>
+        <span>Quick View</span>
+
+      </button>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     QUICK VIEW MODAL
+====================================================== -->
+
+<div class="quick-view-overlay" *ngIf="quickViewOpen" (click)="closeQuickView()">
+
+
+  <div class="quick-view-modal" (click)="$event.stopPropagation()">
+
+
+    <!-- CLOSE -->
+
+    <button type="button" class="quick-view-close" (click)="closeQuickView()" aria-label="Close">
+
+      <i class="bi bi-x-lg"></i>
+
+    </button>
+
+
+    <!-- IMAGE -->
+
+    <div class="quick-view-image-section">
+
+      <div class="quick-view-image-box">
+
+        <img *ngIf="getProductImage(product) && !imageError" [src]="getProductImage(product)"
+          [alt]="getProductName(product)" class="quick-view-image" (error)="onImageError()" />
+
+
+        <div class="quick-view-image-placeholder" *ngIf="!getProductImage(product) || imageError">
+
+          <i class="bi bi-image"></i>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- DETAILS -->
+
+    <div class="quick-view-details">
+
+
+      <span class="quick-view-category" *ngIf="getCategory(product)">
+
+        {{ getCategory(product) }}
+
+      </span>
+
+
+      <h2 class="quick-view-title">
+
+        {{ getProductName(product) }}
+
+      </h2>
+
+
+      <div class="quick-view-brand" *ngIf="getBrand(product)">
+
+        {{ getBrand(product) }}
+
+      </div>
+
+
+      <p class="quick-view-description" *ngIf="getProductDescription(product)">
+
+        {{ getProductDescription(product) }}
+
+      </p>
+
+
+      <div class="quick-view-price-row">
+
+        <strong class="quick-view-price">
+
+          ₹{{ getProductPrice(product) | number:'1.0-0' }}
+
+        </strong>
+
+
+        <del class="quick-view-old-price" *ngIf="getOldPrice(product) > getProductPrice(product)">
+
+          ₹{{ getOldPrice(product) | number:'1.0-0' }}
+
+        </del>
+
+
+        <span class="quick-view-discount" *ngIf="getDiscount(product) > 0">
+
+          {{ getDiscount(product) }}% OFF
+
+        </span>
+
+      </div>
+
+
+      <div class="quick-view-meta">
+
+        <div *ngIf="product?.sku">
+          <span>SKU</span>
+          <strong>{{ product.sku }}</strong>
+        </div>
+
+        <div *ngIf="product?.stock !== undefined">
+          <span>Availability</span>
+          <strong [class.stock-out]="product.stock <= 0">
+            {{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="quantity-section">
+
+        <span class="quantity-label">Quantity</span>
+
+        <div class="quantity-control">
+
+          <button type="button" (click)="decreaseQuantity()">
+            <i class="bi bi-dash"></i>
+          </button>
+
+          <span>{{ quantity }}</span>
+
+          <button type="button" (click)="increaseQuantity()">
+            <i class="bi bi-plus"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="quick-view-actions">
+
+        <button type="button" class="modal-cart-btn" (click)="addToCart($event)">
+          <i class="bi bi-bag-plus"></i>
+          Add to Cart
+        </button>
+
+        <button type="button" class="modal-buy-btn" (click)="buyNow($event)">
+          Buy Now
+          <i class="bi bi-arrow-right"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+====================================================== -->
+
+<div class="app-toast" *ngIf="toastMessage" [class.toast-success]="toastType === 'success'"
+  [class.toast-error]="toastType === 'error'">
+
+  <i class="bi" [class.bi-check-circle-fill]="toastType === 'success'"
+    [class.bi-exclamation-circle-fill]="toastType === 'error'"></i>
+
+  <span class="toast-text">{{ toastMessage }}</span>
+
+  <button type="button" class="toast-close" (click)="closeToast()" aria-label="Close">
+    <i class="bi bi-x"></i>
+  </button>
+
+</div>

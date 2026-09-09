@@ -1,0 +1,661 @@
+/* =========================================================
+   HOST
+========================================================= */
+
+:host {
+
+  display: block;
+
+  width: 100%;
+
+}
+
+
+/* =========================================================
+   CATEGORY BAR
+========================================================= */
+
+.category-bar {
+
+  width: 100%;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #edf0f3;
+
+  /* Lives inside .app-header-stack (app.component), which is itself
+     position: fixed at the top of the viewport — so this only needs
+     to sit statically in that stack, right below the navbar. No own
+     top offset needed anymore, and it never scrolls independently. */
+  position: static;
+
+  z-index: 1049;
+
+}
+
+
+/* =========================================================
+   CATEGORY TRACK
+========================================================= */
+
+.category-bar-track {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 16px;
+
+  padding: 8px 20px;
+
+  overflow-x: auto;
+
+  overflow-y: hidden;
+
+  scrollbar-width: thin;
+
+  scroll-behavior: smooth;
+
+  transition: padding 0.25s ease;
+
+}
+
+
+/* =========================================================
+   WEBKIT SCROLLBAR
+========================================================= */
+
+.category-bar-track::-webkit-scrollbar {
+
+  height: 4px;
+
+}
+
+
+.category-bar-track::-webkit-scrollbar-track {
+
+  background: transparent;
+
+}
+
+
+.category-bar-track::-webkit-scrollbar-thumb {
+
+  background: #d7dce3;
+
+  border-radius: 10px;
+
+}
+
+
+/* =========================================================
+   CATEGORY ITEM
+========================================================= */
+
+.category-bar-item {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  flex: 0 0 auto;
+
+  width: 76px;
+
+  min-width: 76px;
+
+  text-decoration: none;
+
+  padding: 4px 4px 8px;
+
+  border-radius: 10px;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.2s ease,
+    gap 0.25s ease,
+    padding 0.25s ease;
+
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.category-bar-item:hover {
+
+  background: #f8f9fb;
+
+}
+
+
+/* =========================================================
+   CATEGORY IMAGE CONTAINER
+   (fixed square so the circle is a true circle — previous
+   width/min-width mismatch made it slightly oval)
+========================================================= */
+
+.category-bar-icon {
+
+  width: 58px;
+
+  height: 58px;
+
+  min-width: 58px;
+
+  min-height: 58px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+
+}
+
+
+/* =========================================================
+   ACTUAL PNG IMAGE
+========================================================= */
+
+.category-icon-image {
+
+  width: 42px;
+
+  height: 42px;
+
+  max-width: 42px;
+
+  max-height: 42px;
+
+  object-fit: contain;
+
+  display: block;
+
+  transition:
+    transform 0.2s ease;
+
+}
+
+
+/* =========================================================
+   FALLBACK BOOTSTRAP ICON
+   Shown whenever a category has no mapped image, or the
+   mapped image itself fails to load.
+========================================================= */
+
+.category-fallback-icon {
+
+  color: #e63946;
+
+  font-size: 1.25rem;
+
+}
+
+
+/* =========================================================
+   HOVER IMAGE
+========================================================= */
+
+.category-bar-item:hover
+.category-bar-icon {
+
+  background: rgba(
+    230,
+    57,
+    70,
+    0.08
+  );
+
+  transform: translateY(-2px);
+
+}
+
+
+.category-bar-item:hover
+.category-icon-image {
+
+  transform: scale(1.08);
+
+}
+
+
+/* =========================================================
+   CATEGORY NAME — DESKTOP
+========================================================= */
+
+.category-bar-name {
+
+  width: 100%;
+
+  display: block;
+
+  color: #1f2937;
+
+  font-size: 0.7rem;
+
+  font-weight: 700;
+
+  text-align: center;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  line-height: 1.2;
+
+}
+
+
+/* =========================================================
+   IMPORTANT
+   DESKTOP:
+   Show complete category name wherever possible.
+========================================================= */
+
+@media (min-width: 992px) {
+
+  .category-bar-item {
+
+    width: auto;
+
+    min-width: 76px;
+
+  }
+
+
+  .category-bar-name {
+
+    width: auto;
+
+    max-width: 140px;
+
+    overflow: visible;
+
+    text-overflow: clip;
+
+  }
+
+}
+
+
+/* =========================================================
+   ⭐ COMPACT MODE (on scroll)
+   Icon disappears completely — display:none is used instead
+   of width/height/opacity tricks so it's a clean, instant
+   vanish with zero leftover space, and ONLY the category
+   name stays visible.
+========================================================= */
+
+.category-bar.is-compact
+.category-bar-icon {
+
+  display: none;
+
+}
+
+
+.category-bar.is-compact
+.category-bar-item {
+
+  gap: 0;
+
+  padding-top: 6px;
+
+  padding-bottom: 6px;
+
+  justify-content: center;
+
+}
+
+
+/* =========================================================
+   COMPACT TRACK
+========================================================= */
+
+.category-bar.is-compact
+.category-bar-track {
+
+  padding-top: 6px;
+
+  padding-bottom: 6px;
+
+}
+
+
+/* =========================================================
+   TABLET
+   768px - 991px
+========================================================= */
+
+@media (min-width: 768px)
+and (max-width: 991.98px) {
+
+  .category-bar-track {
+
+    padding: 8px 18px;
+
+    gap: 10px;
+
+  }
+
+
+  .category-bar-item {
+
+    width: 82px;
+
+    min-width: 82px;
+
+    padding: 4px 3px 8px;
+
+  }
+
+
+  .category-bar-icon {
+
+    width: 44px;
+
+    height: 44px;
+
+    min-width: 44px;
+
+    min-height: 44px;
+
+  }
+
+
+  .category-icon-image {
+
+    width: 30px;
+
+    height: 30px;
+
+    max-width: 30px;
+
+    max-height: 30px;
+
+  }
+
+
+  .category-fallback-icon {
+
+    font-size: 1.1rem;
+
+  }
+
+
+  /*
+     TABLET:
+     Long names become:
+
+     "HEAD PHONES..."
+     "MOTHERBO..."
+     "OTHER BO..."
+  */
+
+  .category-bar-name {
+
+    width: 82px;
+
+    max-width: 82px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 0.66rem;
+
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   <= 767px
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+  .category-bar-track {
+
+    padding: 7px 12px;
+
+    gap: 5px;
+
+    scrollbar-width: none;
+
+  }
+
+
+  .category-bar-track::-webkit-scrollbar {
+
+    display: none;
+
+  }
+
+
+  .category-bar-item {
+
+    width: 68px;
+
+    min-width: 68px;
+
+    padding: 3px 2px 7px;
+
+    gap: 5px;
+
+  }
+
+
+  /* =======================================================
+     MOBILE IMAGE
+  ======================================================= */
+
+  .category-bar-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    min-width: 40px;
+
+    min-height: 40px;
+
+    border-radius: 50%;
+
+  }
+
+
+  .category-icon-image {
+
+    width: 28px;
+
+    height: 28px;
+
+    max-width: 28px;
+
+    max-height: 28px;
+
+    object-fit: contain;
+
+  }
+
+
+  .category-fallback-icon {
+
+    font-size: 1rem;
+
+  }
+
+
+  /* =======================================================
+     MOBILE CATEGORY NAME
+
+     FULL NAME:
+     "KEYBOARD"
+
+     LONG NAME:
+     "HEAD PH..."
+
+     No layout breaking.
+  ======================================================= */
+
+  .category-bar-name {
+
+    width: 68px;
+
+    max-width: 68px;
+
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    text-align: center;
+
+    font-size: 0.61rem;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   <= 380px
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .category-bar-track {
+
+    padding-left: 9px;
+
+    padding-right: 9px;
+
+    gap: 3px;
+
+  }
+
+
+  .category-bar-item {
+
+    width: 63px;
+
+    min-width: 63px;
+
+  }
+
+
+  .category-bar-icon {
+
+    width: 38px;
+
+    height: 38px;
+
+    min-width: 38px;
+
+    min-height: 38px;
+
+  }
+
+
+  .category-icon-image {
+
+    width: 26px;
+
+    height: 26px;
+
+    max-width: 26px;
+
+    max-height: 26px;
+
+  }
+
+
+  .category-fallback-icon {
+
+    font-size: 0.9rem;
+
+  }
+
+
+  .category-bar-name {
+
+    width: 63px;
+
+    max-width: 63px;
+
+    font-size: 0.58rem;
+
+  }
+
+}
+
+
+/* =========================================================
+   LAPTOP
+   >= 992px
+========================================================= */
+
+@media (min-width: 992px) {
+
+  .category-bar-track {
+
+    padding-left: 60px;
+
+    padding-right: 60px;
+
+  }
+
+}
+
+
+/* =========================================================
+   WIDE DESKTOP
+   >= 1400px
+========================================================= */
+
+@media (min-width: 1400px) {
+
+  .category-bar-track {
+
+    padding-left: 250px;
+
+    padding-right: 250px;
+
+  }
+
+}

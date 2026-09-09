@@ -1,0 +1,78 @@
+/* =========================================================
+   ⭐ AD BANNER — same visual language as the Home page ad
+   slots (auto-rotating slider + dots).
+========================================================= */
+
+.ad-banner-wrap {
+  width: 100%;
+  margin: 0 0 24px;
+}
+
+.ad-slider-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-md, 12px);
+  background: #f3f5f8;
+}
+
+.ad-slider-track {
+  display: flex;
+  height: 100%;
+  transition: transform .75s cubic-bezier(.22, .61, .36, 1);
+  will-change: transform;
+}
+
+.ad-slide {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  display: block;
+  flex: 0 0 100%;
+}
+
+.ad-banner-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #f3f5f8;
+}
+
+.ad-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.ad-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #d7dce3;
+  cursor: pointer;
+  transition: width .25s ease, background .25s ease;
+}
+
+.ad-dot:hover {
+  background: #b6bec9;
+}
+
+.ad-dot.active {
+  width: 22px;
+  border-radius: 6px;
+  background: var(--brand-primary, #0b5fff);
+}
+
+@media (max-width: 575.98px) {
+  .ad-slider-viewport {
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+  }
+}

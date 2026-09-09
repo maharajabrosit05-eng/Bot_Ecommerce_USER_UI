@@ -1,0 +1,217 @@
+<div
+  class="surface-card h-100 position-relative overflow-hidden product-card"
+>
+
+  <!-- ==========================================================
+       PRODUCT TAG
+       ========================================================== -->
+
+  <ng-container *ngIf="product.tag as tag">
+
+    <span
+      class="badge position-absolute m-2 top-0 start-0 z-2"
+      [ngClass]="{
+        'bg-success': tag === 'New',
+        'bg-brand': tag === 'Best Seller',
+        'bg-danger': tag === 'Hot',
+        'bg-dark': tag === 'Limited'
+      }"
+    >
+      {{ tag }}
+    </span>
+
+  </ng-container>
+
+
+  <!-- ==========================================================
+       WISHLIST BUTTON
+       ========================================================== -->
+
+  <button
+    type="button"
+    class="wishlist-btn position-absolute top-0 end-0 m-2 z-2"
+    [class.active]="wishlistService.isWishlisted(product.id)"
+    (click)="toggleWishlist($event)"
+    title="Add to wishlist"
+  >
+
+    <i
+      class="bi"
+      [ngClass]="
+        wishlistService.isWishlisted(product.id)
+          ? 'bi-heart-fill'
+          : 'bi-heart'
+      "
+    ></i>
+
+  </button>
+
+
+  <!-- ==========================================================
+       PRODUCT IMAGE
+       ========================================================== -->
+
+  <a
+    [routerLink]="['/product', product.id]"
+    class="text-decoration-none text-dark d-block"
+  >
+
+    <div class="product-img-wrap">
+
+      <img
+        [src]="product.image"
+        [alt]="product.name"
+        class="product-img"
+        loading="lazy"
+      />
+
+    </div>
+
+  </a>
+
+
+  <!-- ==========================================================
+       PRODUCT INFORMATION
+       ========================================================== -->
+
+  <div class="p-3">
+
+    <!-- ========================================================
+         BRAND + CATEGORY + PRODUCT NAME
+         ======================================================== -->
+
+    <a
+      [routerLink]="['/product', product.id]"
+      class="text-decoration-none text-dark"
+    >
+
+      <p class="text-muted small mb-1">
+        {{ product.brand }}
+        &middot;
+        {{ product.category }}
+      </p>
+
+      <h6 class="fw-semibold mb-1 product-name">
+        {{ product.name }}
+      </h6>
+
+    </a>
+
+
+    <!-- ========================================================
+         STAR RATING
+         ======================================================== -->
+
+    <app-star-rating
+      [rating]="product.rating ?? 0"
+      [reviews]="product.reviews"
+    >
+    </app-star-rating>
+
+
+    <!-- ========================================================
+         PRICE
+         ======================================================== -->
+
+    <div
+      class="d-flex align-items-baseline gap-2 mt-2"
+    >
+
+      <!-- Current Price -->
+
+      <span class="price-new fs-5">
+        &#8377;{{ product.price | number }}
+      </span>
+
+
+      <!-- Old Price -->
+
+      <span
+        class="price-old"
+        *ngIf="product.oldPrice"
+      >
+        &#8377;{{ product.oldPrice | number }}
+      </span>
+
+
+      <!-- Discount -->
+
+      <span
+        class="badge badge-discount"
+        *ngIf="discountPercent as d"
+      >
+        {{ d }}% off
+      </span>
+
+    </div>
+
+
+    <!-- ========================================================
+         STOCK STATUS
+         ======================================================== -->
+
+    <div
+      class="mt-2"
+      *ngIf="
+        product.stock !== undefined &&
+        product.stock !== null &&
+        product.stock <= 0;
+        else inStock
+      "
+    >
+
+      <span class="badge bg-secondary">
+        Out of stock
+      </span>
+
+    </div>
+
+
+    <!-- ========================================================
+         IN STOCK
+         ======================================================== -->
+
+    <ng-template #inStock>
+
+      <button
+        type="button"
+        class="btn btn-brand btn-sm w-100 mt-2
+               d-flex align-items-center
+               justify-content-center gap-1"
+        [disabled]="addingToCart"
+        (click)="addToCart($event)"
+      >
+
+        <!-- Cart / Success Icon -->
+
+        <i
+          class="bi"
+          [ngClass]="{
+            'bi-check2': justAdded,
+            'bi-cart-plus': !justAdded
+          }"
+        >
+        </i>
+
+
+        <!-- Button Text -->
+
+        <span>
+
+          {{
+            justAdded
+              ? 'Added!'
+              : addingToCart
+                ? 'Adding...'
+                : 'Add to Cart'
+          }}
+
+        </span>
+
+      </button>
+
+    </ng-template>
+
+  </div>
+
+</div>

@@ -1,0 +1,12 @@
+<span class="d-inline-flex align-items-center gap-1">
+  <ng-container *ngFor="let s of stars">
+    <i class="bi" [ngClass]="{
+      'bi-star-fill text-warning': starType(s) === 'full',
+      'bi-star-half text-warning': starType(s) === 'half',
+      'bi-star text-muted': starType(s) === 'empty'
+    }"></i>
+  </ng-container>
+  <span class="small text-muted ms-1" *ngIf="reviews !== undefined">
+    {{ rating.toFixed(1) }} ({{ reviews }})
+  </span>
+</span>

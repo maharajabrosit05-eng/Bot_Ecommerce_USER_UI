@@ -1,0 +1,813 @@
+<section class="profile-page">
+
+  <div class="profile-container">
+
+    <!-- =====================================================
+         BREADCRUMB
+    ====================================================== -->
+    <!-- <div class="breadcrumb-row">
+      <a routerLink="/" class="breadcrumb-link">Home</a>
+
+      <i class="bi bi-chevron-right"></i>
+
+      <span>My Account</span>
+
+      <i class="bi bi-chevron-right"></i>
+
+      <strong>Profile</strong>
+    </div> -->
+
+
+    <!-- =====================================================
+         LOADING
+    ====================================================== -->
+    <div *ngIf="loading" class="state-card">
+
+      <div class="loading-spinner"></div>
+
+      <h4>Loading your profile...</h4>
+
+      <p>Please wait while we load your account details.</p>
+
+    </div>
+
+
+    <!-- =====================================================
+         LOGIN REQUIRED / ERROR
+    ====================================================== -->
+<div *ngIf="!loading && errorMessage" class="state-card error-state">
+
+  <div class="state-icon error-icon">
+    <img src="assets/img/no-profile.png" alt="">
+  </div>
+
+  <h4>Profile unavailable</h4>
+
+  <p>{{ errorMessage }}</p>
+
+  <button
+    type="button"
+    class="btn btn-brand"
+    (click)="router.navigate(['/login'])">
+
+    <i class="bi bi-box-arrow-in-right"></i>
+    Login
+
+  </button>
+
+</div>
+
+
+    <!-- =====================================================
+         MAIN PROFILE
+    ====================================================== -->
+    <ng-container *ngIf="!loading && !errorMessage">
+
+      <!-- ===================================================
+           PAGE TITLE
+      ==================================================== -->
+      <div class="page-heading">
+
+        <div>
+          <h1>My Profile</h1>
+
+          <p>
+            Manage your personal information and account settings
+          </p>
+        </div>
+
+        <!-- <div class="profile-code" *ngIf="profile.Customer_Code">
+          <span>Customer ID</span>
+          <strong>{{ profile.Customer_Code }}</strong>
+        </div> -->
+
+      </div>
+
+
+      <!-- ===================================================
+           PROFILE SUMMARY
+      ==================================================== -->
+      <div class="profile-summary-card">
+
+        <div class="profile-avatar">
+
+          <span>
+            {{ initials }}
+          </span>
+
+          <div class="avatar-camera">
+            <i class="bi bi-camera"></i>
+          </div>
+
+        </div>
+
+
+        <div class="profile-summary-info">
+
+          <h2>
+            {{ profile.Customer_Name || 'Customer' }}
+          </h2>
+
+          <span class="customer-badge">
+            <i class="bi bi-person"></i>
+            Customer
+          </span>
+
+          <div class="summary-details">
+
+            <div>
+              <i class="bi bi-envelope"></i>
+              <span>
+                {{ profile.Email_Id || 'Email not available' }}
+              </span>
+            </div>
+
+            <div>
+              <i class="bi bi-telephone"></i>
+              <span>
+                {{ profile.Mobile_No || 'Mobile number not available' }}
+              </span>
+            </div>
+
+            <div>
+              <i class="bi bi-geo-alt"></i>
+              <span>
+                {{ profile.Billing_City || 'Chennai' }},
+                {{ profile.Billing_State || 'Tamil Nadu' }}
+                <ng-container *ngIf="profile.Billing_Zipcode">
+                  - {{ profile.Billing_Zipcode }}
+                </ng-container>
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="summary-action">
+
+          <button *ngIf="!editMode" type="button" class="outline-btn" (click)="startEdit()">
+
+            <i class="bi bi-pencil"></i>
+
+            Edit Profile
+
+          </button>
+
+          <div *ngIf="editMode" class="editing-badge">
+
+            <i class="bi bi-pencil-square"></i>
+
+            Editing
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================
+           QUICK ACTIONS
+      ==================================================== -->
+      <div class="profile-card quick-actions-card">
+
+        <div class="card-heading">
+
+          <div>
+
+            <h3>
+              Quick Actions
+            </h3>
+
+            <p>
+              Manage your account and preferences
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="quick-actions-grid">
+
+          <!-- ORDERS -->
+          <button type="button" class="quick-action" (click)="router.navigate(['/my_order'])">
+
+            <div class="quick-icon blue">
+              <i class="bi bi-box-seam"></i>
+            </div>
+
+            <div class="quick-content">
+
+              <strong>My Orders</strong>
+
+              <small>
+                View and track your orders
+              </small>
+
+            </div>
+
+            <i class="bi bi-chevron-right arrow"></i>
+
+          </button>
+
+
+          <!-- WISHLIST -->
+          <button type="button" class="quick-action" (click)="router.navigate(['/wishlist'])">
+
+            <div class="quick-icon red">
+              <i class="bi bi-heart"></i>
+            </div>
+
+            <div class="quick-content">
+
+              <strong>My Wishlist</strong>
+
+              <small>
+                View your saved products
+              </small>
+
+            </div>
+
+            <i class="bi bi-chevron-right arrow"></i>
+
+          </button>
+
+
+          <!-- ADDRESSES -->
+          <button type="button" class="quick-action" (click)="scrollToSection('addressCard')">
+
+            <div class="quick-icon green">
+              <i class="bi bi-geo-alt"></i>
+            </div>
+
+            <div class="quick-content">
+
+              <strong>View Address</strong>
+
+              <small>
+                Manage delivery addresses
+              </small>
+
+            </div>
+
+            <i class="bi bi-chevron-right arrow"></i>
+
+          </button>
+
+
+          <!-- PERSONAL INFORMATION -->
+          <button type="button" class="quick-action" (click)="scrollToSection('personalInfoCard')">
+
+            <div class="quick-icon blue">
+              <i class="bi bi-person-vcard"></i>
+            </div>
+
+            <div class="quick-content">
+
+              <strong>Personal Information</strong>
+
+              <small>
+                View and edit your basic details
+              </small>
+
+            </div>
+
+            <i class="bi bi-chevron-right arrow"></i>
+
+          </button>
+
+
+          <!-- PASSWORD -->
+          <button type="button" class="quick-action" (click)="router.navigate(['/change-password'])">
+
+            <div class="quick-icon purple">
+              <i class="bi bi-lock"></i>
+            </div>
+
+            <div class="quick-content">
+
+              <strong>Change Password</strong>
+
+              <small>
+                Update your account password
+              </small>
+
+            </div>
+
+            <i class="bi bi-chevron-right arrow"></i>
+
+          </button>
+
+
+          <!-- HELP -->
+          <button type="button" class="quick-action" (click)="router.navigate(['/help'])">
+
+            <div class="quick-icon orange">
+              <i class="bi bi-headset"></i>
+            </div>
+
+            <div class="quick-content">
+
+              <strong>Help & Support</strong>
+
+              <small>
+                Get help with your orders
+              </small>
+
+            </div>
+
+            <i class="bi bi-chevron-right arrow"></i>
+
+          </button>
+
+
+          <!-- CONTACT US -->
+          <button type="button" class="quick-action" (click)="router.navigate(['/contact'])">
+
+            <div class="quick-icon teal">
+              <i class="bi bi-chat-dots"></i>
+            </div>
+
+            <div class="quick-content">
+
+              <strong>Contact Us</strong>
+
+              <small>
+                Reach our support team directly
+              </small>
+
+            </div>
+
+            <i class="bi bi-chevron-right arrow"></i>
+
+          </button>
+
+          <!-- SETTINGS -->
+          <button type="button" class="quick-action" (click)="router.navigate(['/account-settings'])">
+
+            <div class="quick-icon gray">
+              <i class="bi bi-gear"></i>
+            </div>
+
+            <div class="quick-content">
+
+              <strong>Account Settings</strong>
+
+              <small>
+                Manage your preferences
+              </small>
+
+            </div>
+
+            <i class="bi bi-chevron-right arrow"></i>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           EDIT FORM
+      ==================================================== -->
+      <form #profileForm="ngForm" (ngSubmit)="saveProfile(profileForm)" novalidate>
+
+
+        <!-- =================================================
+             PERSONAL INFORMATION
+        ================================================== -->
+        <div class="profile-card mobile-collapsible" id="personalInfoCard"
+          [class.section-visible]="visibleSections.has('personalInfoCard')">
+
+          <div class="card-heading">
+
+            <div>
+              <h3>
+                <i class="bi bi-person-vcard"></i>
+                Personal Information
+              </h3>
+
+              <p>
+                Your basic account information
+              </p>
+            </div>
+
+          </div>
+
+
+          <div class="form-grid">
+
+            <!-- FULL NAME -->
+            <div class="form-group">
+
+              <label>
+                Full Name
+                <span>*</span>
+              </label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-person"></i>
+
+                <input type="text" name="Customer_Name" class="form-control" [(ngModel)]="profile.Customer_Name"
+                  #customerName="ngModel" [readonly]="!editMode" required minlength="2"
+                  placeholder="Enter your full name">
+
+              </div>
+
+              <small class="validation-error" *ngIf="customerName.invalid && customerName.touched">
+
+                Please enter your name.
+
+              </small>
+
+            </div>
+
+
+            <!-- EMAIL -->
+            <div class="form-group">
+
+              <label>
+                Email Address
+                <span>*</span>
+              </label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-envelope"></i>
+
+                <input type="email" name="Email_Id" class="form-control" [(ngModel)]="profile.Email_Id" #email="ngModel"
+                  [readonly]="!editMode" required email placeholder="Enter your email">
+
+              </div>
+
+              <small class="validation-error" *ngIf="email.invalid && email.touched">
+
+                Please enter a valid email address.
+
+              </small>
+
+            </div>
+
+
+            <!-- MOBILE -->
+            <div class="form-group">
+
+              <label>
+                Mobile Number
+              </label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-telephone"></i>
+
+                <input type="text" name="Mobile_No" class="form-control" [(ngModel)]="profile.Mobile_No"
+                  [readonly]="!editMode" maxlength="10" placeholder="Enter your mobile number">
+
+              </div>
+
+            </div>
+
+
+            <!-- CUSTOMER CODE -->
+            <div class="form-group">
+
+              <label>
+                Customer ID
+              </label>
+
+              <div class="input-wrapper readonly-field">
+
+                <i class="bi bi-person-badge"></i>
+
+                <input type="text" name="Customer_Code" class="form-control" [(ngModel)]="profile.Customer_Code"
+                  readonly>
+
+              </div>
+
+              <small class="field-hint">
+                Customer ID cannot be changed.
+              </small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BILLING ADDRESS
+        ================================================== -->
+        <div class="profile-card mobile-collapsible" id="addressCard"
+          [class.section-visible]="visibleSections.has('addressCard')">
+
+          <div class="card-heading">
+
+            <div>
+
+              <h3>
+                <i class="bi bi-house-door"></i>
+                Billing Address
+              </h3>
+
+              <p>
+                Address used for your billing information
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-grid">
+
+            <!-- ADDRESS -->
+            <div class="form-group full-width">
+
+              <label>
+                Address
+              </label>
+
+              <div class="input-wrapper textarea-wrapper">
+
+                <i class="bi bi-geo-alt"></i>
+
+                <textarea name="Billing_Address" class="form-control" [(ngModel)]="profile.Billing_Address"
+                  [readonly]="!editMode" (ngModelChange)="syncShippingFromBilling()" rows="3"
+                  placeholder="Enter your billing address">
+                </textarea>
+
+              </div>
+
+            </div>
+
+
+            <!-- CITY -->
+            <div class="form-group">
+
+              <label>City</label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-buildings"></i>
+
+                <input type="text" name="Billing_City" class="form-control" [(ngModel)]="profile.Billing_City"
+                  [readonly]="!editMode" (ngModelChange)="syncShippingFromBilling()" placeholder="Enter city">
+
+              </div>
+
+            </div>
+
+
+            <!-- STATE -->
+            <div class="form-group">
+
+              <label>State</label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-map"></i>
+
+                <input type="text" name="Billing_State" class="form-control" [(ngModel)]="profile.Billing_State"
+                  [readonly]="!editMode" (ngModelChange)="syncShippingFromBilling()" placeholder="Enter state">
+
+              </div>
+
+            </div>
+
+
+            <!-- PINCODE -->
+            <div class="form-group">
+
+              <label>PIN Code</label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-mailbox"></i>
+
+                <input type="text" name="Billing_Zipcode" class="form-control" [(ngModel)]="profile.Billing_Zipcode"
+                  [readonly]="!editMode" (ngModelChange)="syncShippingFromBilling()" maxlength="6"
+                  placeholder="Enter PIN code">
+
+              </div>
+
+            </div>
+
+
+            <!-- GST -->
+            <div class="form-group">
+
+              <label class="checkbox-label">
+
+                <input type="checkbox" name="hasGst" [(ngModel)]="hasGst" [disabled]="!editMode"
+                  (ngModelChange)="onHasGstChange()">
+
+                <span>Have GST Number?</span>
+
+              </label>
+
+              <div class="input-wrapper" *ngIf="hasGst">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+                <input type="text" name="GSTIN_Number" class="form-control" [(ngModel)]="profile.GSTIN_Number"
+                  [readonly]="!editMode" placeholder="Enter GSTIN number">
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SHIPPING ADDRESS
+        ================================================== -->
+        <div class="profile-card mobile-collapsible" id="shippingAddressCard"
+          [class.section-visible]="visibleSections.has('shippingAddressCard')">
+
+          <div class="card-heading address-heading">
+
+            <div>
+
+              <h3>
+                <i class="bi bi-truck"></i>
+                Shipping Address
+              </h3>
+
+              <p>
+                Address used for product delivery
+              </p>
+
+            </div>
+
+
+            <label class="same-billing">
+
+              <input type="checkbox" name="sameAsBilling" [(ngModel)]="sameAsBilling" [disabled]="!editMode"
+                (ngModelChange)="onSameAsBillingChange()">
+
+              <span>
+                Same as billing address
+              </span>
+
+            </label>
+
+          </div>
+
+
+          <div class="form-grid">
+
+            <!-- SHIPPING ADDRESS -->
+            <div class="form-group full-width">
+
+              <label>Address</label>
+
+              <div class="input-wrapper textarea-wrapper">
+
+                <i class="bi bi-geo-alt"></i>
+
+                <textarea name="Shipping_Address" class="form-control" [(ngModel)]="profile.Shipping_Address"
+                  [readonly]="!editMode || sameAsBilling" rows="3" placeholder="Enter shipping address">
+                </textarea>
+
+              </div>
+
+            </div>
+
+
+            <!-- SHIPPING CITY -->
+            <div class="form-group">
+
+              <label>City</label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-buildings"></i>
+
+                <input type="text" name="Shipping_City" class="form-control" [(ngModel)]="profile.Shipping_City"
+                  [readonly]="!editMode || sameAsBilling" placeholder="Enter city">
+
+              </div>
+
+            </div>
+
+
+            <!-- SHIPPING STATE -->
+            <div class="form-group">
+
+              <label>State</label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-map"></i>
+
+                <input type="text" name="Shipping_State" class="form-control" [(ngModel)]="profile.Shipping_State"
+                  [readonly]="!editMode || sameAsBilling" placeholder="Enter state">
+
+              </div>
+
+            </div>
+
+
+            <!-- SHIPPING PIN -->
+            <div class="form-group">
+
+              <label>PIN Code</label>
+
+              <div class="input-wrapper">
+
+                <i class="bi bi-mailbox"></i>
+
+                <input type="text" name="Shipping_Zipcode" class="form-control" [(ngModel)]="profile.Shipping_Zipcode"
+                  [readonly]="!editMode || sameAsBilling" maxlength="6" placeholder="Enter PIN code">
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             EDIT ACTIONS
+        ================================================== -->
+        <div class="edit-actions" *ngIf="editMode">
+
+          <button type="button" class="cancel-btn" (click)="cancelEdit(profileForm)" [disabled]="saving">
+
+            <i class="bi bi-x-lg"></i>
+
+            Cancel
+
+          </button>
+
+
+          <button type="submit" class="save-btn" [disabled]="saving">
+
+            <span class="button-spinner" *ngIf="saving">
+            </span>
+
+            <i class="bi bi-check-lg" *ngIf="!saving">
+            </i>
+
+            {{ saving ? 'Saving...' : 'Save Changes' }}
+
+          </button>
+
+        </div>
+
+      </form>
+
+
+
+
+
+      <!-- ===================================================
+           ACCOUNT / LOGOUT
+      ==================================================== -->
+      <div class="account-footer-card">
+
+        <div class="account-footer-info">
+
+          <div class="account-footer-icon">
+            <i class="bi bi-shield-check"></i>
+          </div>
+
+          <div>
+
+            <strong>Your account is secure</strong>
+
+            <p>
+              Keep your profile information up to date for a better
+              shopping experience.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button type="button" class="logout-btn" (click)="logout()">
+
+          <i class="bi bi-box-arrow-right"></i>
+
+          Logout
+
+        </button>
+
+      </div>
+
+    </ng-container>
+
+  </div>
+
+</section>

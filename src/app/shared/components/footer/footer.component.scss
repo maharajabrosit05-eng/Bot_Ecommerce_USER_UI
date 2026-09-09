@@ -1,0 +1,688 @@
+/* =========================================================
+   PROFESSIONAL FOOTER
+========================================================= */
+
+footer {
+  width: 100%;
+  margin-top: 40px;
+  background: #ffffff;
+  color: #172033;
+  border-top: 1px solid #e5e9f0;
+}
+
+/* =========================================================
+   FOOTER CONTAINER
+========================================================= */
+
+footer .container {
+  width: 100%;
+  max-width: 1500px;
+  padding-left: 55px;
+  padding-right: 55px;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   GENERAL LINKS
+========================================================= */
+
+footer a {
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+footer a:hover {
+  color: var(--brand-primary, #0d6efd) !important;
+}
+
+
+/* =========================================================
+   FOOTER BRAND
+========================================================= */
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.footer-logo-img {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.footer-brand h2 {
+  font-size: 21px;
+  font-weight: 800 !important;
+  color: #111827 !important;
+  letter-spacing: -0.3px;
+}
+
+.footer-brand h2 .text-brand {
+  color: #0d6efd !important;
+}
+
+
+/* =========================================================
+   FOOTER DESCRIPTION
+========================================================= */
+
+footer p {
+  line-height: 1.65;
+}
+
+footer .text-dark.small {
+  color: #374151 !important;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+========================================================= */
+
+footer h6 {
+  color: #111827 !important;
+  font-size: 15px;
+  font-weight: 800 !important;
+  letter-spacing: 0.1px;
+  margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   LIST
+========================================================= */
+
+footer ul {
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+footer li {
+  color: #374151 !important;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+  margin-bottom: 9px;
+}
+
+
+/* =========================================================
+   SHOP LINKS
+========================================================= */
+
+footer .col-lg-2 a {
+  color: #374151 !important;
+  font-weight: 550;
+}
+
+footer .col-lg-2 a:hover {
+  color: #0d6efd !important;
+}
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+footer .col-lg-3:last-child li {
+  color: #374151 !important;
+  font-weight: 500;
+}
+
+footer .col-lg-3:last-child li i {
+  color: #0d6efd;
+  font-size: 13px;
+}
+
+footer .col-lg-3:last-child a {
+  color: #374151 !important;
+  font-weight: 500;
+}
+
+footer .col-lg-3:last-child a:hover {
+  color: #0d6efd !important;
+}
+
+
+/* =========================================================
+   SOCIAL MEDIA
+========================================================= */
+
+footer .social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  text-decoration: none;
+
+  border-radius: 50%;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    background 0.2s ease;
+}
+
+footer .social-link:hover {
+  transform: translateY(-3px);
+  opacity: 0.9;
+}
+
+footer .social-link img {
+  width: 27px;
+  height: 27px;
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+footer hr {
+  border: 0;
+  border-top: 1px solid #dfe4ec !important;
+  opacity: 1;
+  margin-top: 28px;
+  margin-bottom: 18px;
+}
+
+
+/* =========================================================
+   POLICY LINKS
+========================================================= */
+
+.footer-policy-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 9px;
+
+  margin-top: 0 !important;
+  margin-bottom: 9px !important;
+
+  position: relative;
+  top: -2px;
+}
+
+.footer-policy-link {
+  color: #1f2937 !important;
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 700 !important;
+
+  line-height: 1.3;
+
+  transition:
+    color 0.2s ease,
+    text-decoration 0.2s ease;
+}
+
+.footer-policy-link:hover {
+  color: #0d6efd !important;
+  text-decoration: underline;
+}
+
+.footer-divider {
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   COPYRIGHT
+========================================================= */
+
+footer .text-center.text-dark.small {
+  color: #4b5563 !important;
+
+  font-size: 11px !important;
+  font-weight: 600;
+
+  line-height: 1.5;
+
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+
+  position: relative;
+  top: 0;
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (min-width: 1200px) {
+
+  footer .container {
+    max-width: 1550px;
+
+    padding-left: 65px;
+    padding-right: 65px;
+  }
+
+  footer .row {
+    --bs-gutter-x: 4rem;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+
+  footer .container {
+    max-width: 100%;
+
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  footer .row {
+    --bs-gutter-x: 2.5rem;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+  /*
+   * IMPORTANT
+   * Bottom navigation is fixed at the bottom.
+   * Extra bottom padding prevents footer content
+   * from being hidden behind that navigation.
+   */
+
+  footer {
+    width: 100%;
+    margin-top: 25px;
+
+    padding-bottom: 85px !important;
+  }
+
+
+  /* =====================================================
+     MOBILE CONTAINER
+  ===================================================== */
+
+  footer .container {
+    width: 100%;
+    max-width: 100%;
+
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+
+  /* =====================================================
+     TWO COLUMN MOBILE LAYOUT
+  ===================================================== */
+
+  footer .row {
+    display: grid;
+
+    grid-template-columns:
+      minmax(0, 1.25fr)
+      minmax(0, 1fr);
+
+    gap: 24px 18px;
+
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+
+  footer .row > [class*="col-"] {
+    width: 100%;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    margin: 0;
+  }
+
+
+  /* =====================================================
+     BRAND
+  ===================================================== */
+
+  .footer-brand {
+    gap: 7px;
+
+    margin-bottom: 12px !important;
+  }
+
+  .footer-logo-img {
+    width: 31px;
+    height: 31px;
+    border-radius: 6px;
+  }
+
+  .footer-brand h2 {
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #111827 !important;
+  }
+
+  .footer-brand h2 .text-brand {
+    color: #0d6efd !important;
+  }
+
+
+  /* =====================================================
+     DESCRIPTION
+  ===================================================== */
+
+  footer .text-dark.small {
+    color: #374151 !important;
+
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+
+    line-height: 1.55;
+  }
+
+
+  /* =====================================================
+     SOCIAL ICONS
+  ===================================================== */
+
+  footer .d-flex.gap-3.fs-5 {
+    gap: 8px !important;
+  }
+
+  footer .social-link {
+    width: 28px;
+    height: 28px;
+  }
+
+  footer .social-link img {
+    width: 23px;
+    height: 23px;
+  }
+
+
+  /* =====================================================
+     HEADINGS
+  ===================================================== */
+
+  footer h6 {
+    color: #111827 !important;
+
+    font-size: 12px !important;
+    font-weight: 800 !important;
+
+    margin-bottom: 10px !important;
+  }
+
+
+  /* =====================================================
+     LIST TEXT
+  ===================================================== */
+
+  footer ul.small {
+    font-size: 10px !important;
+  }
+
+  footer li {
+    color: #374151 !important;
+
+    font-size: 10px !important;
+    font-weight: 600 !important;
+
+    line-height: 1.45;
+
+    margin-bottom: 7px !important;
+  }
+
+
+  /* =====================================================
+     SHOP LINKS
+  ===================================================== */
+
+  footer .col-lg-2 a {
+    color: #374151 !important;
+    font-weight: 650 !important;
+  }
+
+
+  /* =====================================================
+     CONTACT
+  ===================================================== */
+
+  footer .col-lg-3:last-child li {
+    color: #374151 !important;
+    font-weight: 600 !important;
+  }
+
+  footer .col-lg-3:last-child li i {
+    color: #0d6efd !important;
+    font-size: 9px;
+    margin-right: 3px !important;
+  }
+
+  footer .col-lg-3:last-child a {
+    color: #374151 !important;
+    font-weight: 600 !important;
+  }
+
+
+  /* =====================================================
+     DIVIDER
+  ===================================================== */
+
+  footer hr {
+    margin-top: 16px !important;
+    margin-bottom: 10px !important;
+
+    border-top: 1px solid #dfe4ec !important;
+  }
+
+
+  /* =====================================================
+     POLICY LINKS
+  ===================================================== */
+
+  .footer-policy-links {
+    gap: 5px;
+
+    margin-top: 0 !important;
+    margin-bottom: 6px !important;
+
+    top: 0;
+  }
+
+  .footer-policy-link {
+    color: #1f2937 !important;
+
+    font-size: 10px !important;
+    font-weight: 750 !important;
+
+    line-height: 1.2;
+  }
+
+  .footer-divider {
+    color: #9ca3af;
+
+    font-size: 10px !important;
+    font-weight: 600;
+  }
+
+
+  /* =====================================================
+     COPYRIGHT
+  ===================================================== */
+
+  footer .text-center.text-dark.small {
+    color: #4b5563 !important;
+
+    font-size: 8.5px !important;
+    font-weight: 600 !important;
+
+    line-height: 1.4;
+
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+
+    top: 0;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  footer {
+    /*
+     * Keep enough empty space above the fixed
+     * mobile bottom navigation.
+     */
+    padding-bottom: 88px !important;
+  }
+
+  footer .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+
+  footer .row {
+    grid-template-columns:
+      minmax(0, 1.22fr)
+      minmax(0, 1fr);
+
+    gap: 20px 12px;
+  }
+
+
+  .footer-brand h2 {
+    font-size: 15px !important;
+  }
+
+  .footer-logo-img {
+    width: 29px;
+    height: 29px;
+  }
+
+  footer .text-dark.small {
+    font-size: 9.5px !important;
+    font-weight: 600 !important;
+  }
+
+  footer h6 {
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+  }
+
+  footer ul.small {
+    font-size: 9.5px !important;
+  }
+
+  footer li {
+    font-size: 9.5px !important;
+    font-weight: 600 !important;
+    margin-bottom: 6px !important;
+  }
+
+  footer .social-link img {
+    width: 22px;
+    height: 22px;
+  }
+
+  footer hr {
+    margin-top: 12px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .footer-policy-link,
+  .footer-divider {
+    font-size: 9px !important;
+  }
+
+  footer .text-center.text-dark.small {
+    font-size: 8px !important;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 340px) {
+
+  footer {
+    padding-bottom: 90px !important;
+  }
+
+  footer .row {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 10px;
+  }
+
+  .footer-brand h2 {
+    font-size: 14px !important;
+  }
+
+  footer .text-dark.small {
+    font-size: 9px !important;
+  }
+
+  footer h6 {
+    font-size: 11px !important;
+  }
+
+  footer ul.small {
+    font-size: 8.5px !important;
+  }
+
+  footer li {
+    font-size: 8.5px !important;
+  }
+
+  footer .social-link img {
+    width: 21px;
+    height: 21px;
+  }
+
+  .footer-policy-link,
+  .footer-divider {
+    font-size: 8.5px !important;
+  }
+
+  footer .text-center.text-dark.small {
+    font-size: 7.5px !important;
+  }
+
+}

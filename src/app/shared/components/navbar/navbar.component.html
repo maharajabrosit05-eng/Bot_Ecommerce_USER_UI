@@ -1,0 +1,149 @@
+<nav class="navbar">
+
+  <div class="navbar-top-row">
+
+    <!-- LOGO -->
+    <!-- <a class="navbar-brand-logo d-flex align-items-center" routerLink="/">
+      <img src="assets/img/bros-logo.jpg" class="brand-logo-img" alt="Bros IT Solutions" />
+      <span class="brand-name d-none d-lg-inline">BROS IT<span class="text-brand"> SOLUTIONS</span></span>
+    </a> -->
+
+    <!-- 1. SEARCH BOX (left) -->
+    <div class="navbar-search-wrap">
+
+      <i class="bi bi-search search-leading-icon"></i>
+
+      <input type="search" autocomplete="off" placeholder="Search for products, brands and more"
+        [(ngModel)]="searchTerm" (ngModelChange)="searchProducts()" (focus)="onSearchFocus()" (blur)="onSearchBlur()" />
+
+      <!-- <button type="button" *ngIf="searchTerm" class="clear-search-btn" (click)="clearSearch()">
+        <i class="bi bi-x-circle-fill"></i>
+      </button> -->
+
+      <!-- RESULTS DROPDOWN -->
+      <div class="navbar-search-dropdown" *ngIf="searchFocused && searchTerm.trim()">
+
+        <div class="search-loading" *ngIf="searchLoading">
+          <div class="spinner-border spinner-border-sm"></div>
+          <span>Searching products...</span>
+        </div>
+
+        <ng-container *ngIf="!searchLoading">
+
+          <div class="search-result-header" *ngIf="filteredProducts.length > 0">
+            <span>{{ filteredProducts.length }} product{{ filteredProducts.length > 1 ? 's' : '' }} found</span>
+          </div>
+
+          <div class="search-product-list" *ngIf="filteredProducts.length > 0">
+            <button type="button" class="search-product-item" *ngFor="let product of filteredProducts"
+              (mousedown)="selectProduct(product)">
+
+              <div class="search-product-image">
+                <img *ngIf="getProductImage(product)" [src]="getProductImage(product)" [alt]="getProductName(product)"
+                  (error)="onImageError($event)" />
+                <div class="product-no-image" *ngIf="!getProductImage(product)"><i class="bi bi-box-seam"></i></div>
+              </div>
+
+              <div class="search-product-info">
+                <h6>{{ getProductName(product) }}</h6>
+                <span class="product-code">{{ getProductCode(product) }}</span>
+                <div class="product-bottom">
+                  <strong>₹{{ getProductPrice(product) | number:'1.2-2' }}</strong>
+                  <span class="view-product">View <i class="bi bi-arrow-right"></i></span>
+                </div>
+              </div>
+
+            </button>
+          </div>
+
+          <div class="search-no-results" *ngIf="filteredProducts.length === 0">
+            <div class="no-result-icon"><i class="bi bi-search"></i></div>
+            <h6>No Products Found</h6>
+            <p>No products match "<strong>{{ searchTerm }}</strong>"</p>
+          </div>
+
+        </ng-container>
+
+      </div>
+
+    </div>
+
+    <!-- 2. CATEGORY ICON STRIP — right after search on desktop/laptop,
+         wraps to its own full-width row on tablet/mobile -->
+
+
+    <!-- 3. ACTION ICONS (right) — hidden on mobile, see bottom nav -->
+    <div class="navbar-actions d-none d-md-flex">
+
+      <!-- WISHLIST -->
+
+      <a routerLink="/products" routerLinkActive="active" class="navbar-icon-btn position-relative">
+        <i class="bi bi-grid-3x3-gap"></i>
+
+      </a>
+
+
+      <a routerLink="/wishlist" class="navbar-icon-btn position-relative" title="Wishlist">
+        <i class="bi bi-heart"></i>
+        <span *ngIf="wishlistService.totalCount() > 0" class="badge rounded-pill bg-danger cart-badge">
+          {{ wishlistService.totalCount() }}
+        </span>
+      </a>
+
+      <!-- CART -->
+      <a routerLink="/cart" class="navbar-icon-btn position-relative" title="Cart">
+        <i class="bi bi-cart3"></i>
+        <span *ngIf="commonService.totalCount() > 0" class="badge rounded-pill bg-brand cart-badge">
+          {{ commonService.totalCount() }}
+        </span>
+      </a>
+
+      <!-- LOGIN / USER ACCOUNT -->
+      <ng-container *ngIf="!isLoggedIn; else userMenu">
+
+        <a routerLink="/login" class="navbar-login" title="Login" aria-label="Login">
+          <i class="bi bi-person"></i>
+          <span>Login</span>
+        </a>
+
+      </ng-container>
+
+      <ng-template #userMenu>
+
+        <div class="navbar-user-menu" tabindex="0">
+
+          <button type="button" class="navbar-user-trigger" title="Account">
+            <i class="bi bi-person-check"></i>
+            <span class="user-name-text">{{ customerName }}</span>
+            <i class="bi bi-chevron-down user-caret"></i>
+          </button>
+
+          <div class="user-dropdown-menu">
+
+            <a routerLink="/profile" class="user-dropdown-item">
+              <i class="bi bi-person"></i>
+              My Profile
+            </a>
+
+            <a routerLink="/my_order" class="user-dropdown-item">
+              <i class="bi bi-box-seam"></i>
+              My Orders
+            </a>
+
+            <button type="button" class="user-dropdown-item logout-item" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i>
+              Logout
+            </button>
+
+          </div>
+
+        </div>
+
+      </ng-template>
+
+    </div>
+
+
+  </div>
+
+</nav>

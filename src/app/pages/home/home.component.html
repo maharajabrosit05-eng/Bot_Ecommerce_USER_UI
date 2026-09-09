@@ -1,0 +1,715 @@
+<!-- =========================================================
+     HOME PAGE
+========================================================= -->
+
+<div class="home-page">
+
+  <!-- =======================================================
+       HERO SECTION
+  ======================================================== -->
+
+  <section class="hero" aria-label="Featured products">
+
+    <div class="hero-slider-viewport">
+      <div class="hero-slider-track" [style.transform]="'translateX(-' + (activeSlide * 100) + '%)'">
+        <div class="hero-bg-slide" *ngFor="let slide of heroSlides; let i = index" [class.active]="i === activeSlide">
+          <a *ngIf="heroSlideLinks[i]" [attr.href]="heroSlideLinks[i]" class="hero-bg-link">
+            <img [src]="slide" alt="Featured banner" class="hero-bg-image" loading="eager"
+              (error)="onHeroImageError(i)" />
+          </a>
+
+          <img *ngIf="!heroSlideLinks[i]" [src]="slide" alt="Featured product" class="hero-bg-image" loading="eager"
+            (error)="onHeroImageError(i)" />
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-dots" *ngIf="heroSlides.length > 1">
+      <button type="button" class="hero-dot" *ngFor="let slide of heroSlides; let i = index"
+        [class.active]="i === activeSlide" (click)="goToSlide(i)" [attr.aria-label]="'Go to slide ' + (i + 1)"></button>
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       SHOP BY BRAND
+  ========================================================== -->
+
+  <section class="showcase-section" *ngIf="allBrands.length">
+
+    <div class="home-content">
+
+      <div class="section-heading">
+        <span class="section-eyebrow">EXPLORE</span>
+        <h2 class="section-title">Shop by Brand</h2>
+      </div>
+
+      <div class="showcase-scroller">
+
+        <button type="button" class="showcase-nav prev" (click)="scrollTrack(brandTrack, -1)" aria-label="Scroll left">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <!-- <div class="showcase-track" #brandTrack>
+
+          <a *ngFor="let brand of allBrands" [routerLink]="['/products']" [queryParams]="{ brand: brand }"
+            class="showcase-card">
+
+            <div class="showcase-card-image">
+              <img *ngIf="getBrandImage(brand)" [src]="getBrandImage(brand)" [alt]="brand" />
+              <i *ngIf="!getBrandImage(brand)" class="bi bi-award-fill"></i>
+            </div>
+
+            <span class="showcase-card-name">{{ brand }}</span>
+            <span class="showcase-card-count">{{ getBrandCount(brand) }} items</span>
+
+          </a>
+
+        </div> -->
+
+        <div class="showcase-track" #brandTrack>
+
+          <!-- ORIGINAL LIST -->
+          <ng-container *ngFor="let brand of allBrands">
+
+            <a [routerLink]="['/products']" [queryParams]="{ brand: brand }" class="showcase-card">
+
+              <div class="showcase-card-image">
+
+                <img *ngIf="getBrandImage(brand)" [src]="getBrandImage(brand)" [alt]="brand" />
+
+                <i *ngIf="!getBrandImage(brand)" class="bi bi-award-fill"></i>
+
+              </div>
+
+              <span class="showcase-card-name">
+                {{ brand }}
+              </span>
+
+              <span class="showcase-card-count">
+                {{ getBrandCount(brand) }} items
+              </span>
+
+            </a>
+
+          </ng-container>
+
+
+          <!-- DUPLICATE LIST FOR SEAMLESS INFINITE SCROLL -->
+          <ng-container *ngFor="let brand of allBrands">
+
+            <a [routerLink]="['/products']" [queryParams]="{ brand: brand }" class="showcase-card" aria-hidden="true"
+              tabindex="-1">
+
+              <div class="showcase-card-image">
+
+                <img *ngIf="getBrandImage(brand)" [src]="getBrandImage(brand)" [alt]="brand" />
+
+                <i *ngIf="!getBrandImage(brand)" class="bi bi-award-fill"></i>
+
+              </div>
+
+              <span class="showcase-card-name">
+                {{ brand }}
+              </span>
+
+              <span class="showcase-card-count">
+                {{ getBrandCount(brand) }} items
+              </span>
+
+            </a>
+
+          </ng-container>
+
+        </div>
+
+        <button type="button" class="showcase-nav next" (click)="scrollTrack(brandTrack, 1)" aria-label="Scroll right">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- =========================================================
+       ⭐ AD SLOT 1 — below hero (Slot_No = 1) — full-bleed width
+       auto-rotating slider, same as hero
+  ========================================================== -->
+
+  <div class="home-content-full">
+
+    <ng-container *ngIf="getAdsBySlot(1).length; else adSlot1Empty">
+
+      <div class="ad-slider-viewport">
+        <div class="ad-slider-track" [style.transform]="'translateX(-' + ((adActiveIndex[1] || 0) * 100) + '%)'">
+          <a class="ad-slide" *ngFor="let ad of getAdsBySlot(1)" [attr.href]="ad.Redirect_Url || null">
+            <img *ngIf="!adImageError[getAdKey(ad)]" [src]="getAdImage(ad)" [alt]="ad.Ad_Title || 'Advertisement'"
+              class="ad-banner-img" (error)="onAdImageError(ad)" />
+          </a>
+        </div>
+      </div>
+
+      <div class="ad-dots" *ngIf="getAdsBySlot(1).length > 1">
+        <button type="button" class="ad-dot" *ngFor="let ad of getAdsBySlot(1); let i = index"
+          [class.active]="i === (adActiveIndex[1] || 0)" (click)="goToAdSlide(1, i)"
+          [attr.aria-label]="'Go to ad ' + (i + 1)"></button>
+      </div>
+
+    </ng-container>
+
+    <ng-template #adSlot1Empty>
+      <div class="ad-slot">
+        <span class="ad-slot-label">Advertisement Space</span>
+      </div>
+    </ng-template>
+
+  </div>
+
+
+  <!-- =========================================================
+       ⭐ LOADING STATE
+  ========================================================== -->
+
+  <section class="showcase-section" *ngIf="loading">
+
+    <div class="home-content">
+
+      <div class="section-heading">
+        <span class="section-eyebrow">LOADING</span>
+        <h2 class="section-title">Fetching the latest products...</h2>
+      </div>
+
+      <div class="home-product-grid">
+
+        <div class="home-product-skeleton" *ngFor="let s of skeletons">
+
+          <div class="skeleton-image"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line small"></div>
+          <div class="skeleton-bottom"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <ng-container *ngIf="!loading">
+
+
+    <!-- =========================================================
+         SHOP BY CATEGORY
+    ========================================================== -->
+
+    <section class="showcase-section" *ngIf="allCategories.length">
+
+      <div class="home-content">
+
+        <div class="section-heading">
+          <span class="section-eyebrow">EXPLORE</span>
+          <h2 class="section-title">Shop by Category</h2>
+        </div>
+
+        <div class="showcase-scroller">
+
+          <button type="button" class="showcase-nav prev" (click)="scrollTrack(categoryTrack, -1)"
+            aria-label="Scroll left">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <!-- <div class="showcase-track" #categoryTrack>
+
+            <a *ngFor="let cat of allCategories" [routerLink]="['/products']" [queryParams]="{ category: cat }"
+              class="showcase-card">
+
+              <div class="showcase-card-image">
+                <img *ngIf="getCategoryImage(cat)" [src]="getCategoryImage(cat)" [alt]="cat" />
+                <i *ngIf="!getCategoryImage(cat)" class="bi bi-grid-3x3-gap-fill"></i>
+              </div>
+
+              <span class="showcase-card-name">{{ cat }}</span>
+              <span class="showcase-card-count">{{ getCategoryCount(cat) }} items</span>
+
+            </a>
+
+          </div> -->
+
+          <div class="showcase-track" #categoryTrack>
+
+            <!-- ORIGINAL LIST -->
+            <ng-container *ngFor="let cat of allCategories">
+
+              <a [routerLink]="['/products']" [queryParams]="{ category: cat }" class="showcase-card">
+
+                <div class="showcase-card-image">
+
+                  <img *ngIf="getCategoryImage(cat)" [src]="getCategoryImage(cat)" [alt]="cat" />
+
+                  <i *ngIf="!getCategoryImage(cat)" class="bi bi-grid-3x3-gap-fill"></i>
+
+                </div>
+
+                <span class="showcase-card-name">
+                  {{ cat }}
+                </span>
+
+                <span class="showcase-card-count">
+                  {{ getCategoryCount(cat) }} items
+                </span>
+
+              </a>
+
+            </ng-container>
+
+
+            <!-- DUPLICATE LIST FOR SEAMLESS INFINITE SCROLL -->
+            <ng-container *ngFor="let cat of allCategories">
+
+              <a [routerLink]="['/products']" [queryParams]="{ category: cat }" class="showcase-card" aria-hidden="true"
+                tabindex="-1">
+
+                <div class="showcase-card-image">
+
+                  <img *ngIf="getCategoryImage(cat)" [src]="getCategoryImage(cat)" [alt]="cat" />
+
+                  <i *ngIf="!getCategoryImage(cat)" class="bi bi-grid-3x3-gap-fill"></i>
+
+                </div>
+
+                <span class="showcase-card-name">
+                  {{ cat }}
+                </span>
+
+                <span class="showcase-card-count">
+                  {{ getCategoryCount(cat) }} items
+                </span>
+
+              </a>
+
+            </ng-container>
+
+          </div>
+
+          <button type="button" class="showcase-nav next" (click)="scrollTrack(categoryTrack, 1)"
+            aria-label="Scroll right">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         ⭐ AD SLOT 2 — full-bleed width (Slot_No = 2)
+    ========================================================== -->
+
+    <div class="home-content-full" *ngIf="categoryGroups.length">
+
+      <ng-container *ngIf="getAdsBySlot(2).length; else adSlot2Empty">
+
+        <div class="ad-slider-viewport">
+          <div class="ad-slider-track" [style.transform]="'translateX(-' + ((adActiveIndex[2] || 0) * 100) + '%)'">
+            <a class="ad-slide" *ngFor="let ad of getAdsBySlot(2)" [attr.href]="ad.Redirect_Url || null">
+              <img *ngIf="!adImageError[getAdKey(ad)]" [src]="getAdImage(ad)" [alt]="ad.Ad_Title || 'Advertisement'"
+                class="ad-banner-img" (error)="onAdImageError(ad)" />
+            </a>
+          </div>
+        </div>
+
+        <div class="ad-dots" *ngIf="getAdsBySlot(2).length > 1">
+          <button type="button" class="ad-dot" *ngFor="let ad of getAdsBySlot(2); let i = index"
+            [class.active]="i === (adActiveIndex[2] || 0)" (click)="goToAdSlide(2, i)"
+            [attr.aria-label]="'Go to ad ' + (i + 1)"></button>
+        </div>
+
+      </ng-container>
+
+      <ng-template #adSlot2Empty>
+        <div class="ad-slot">
+          <span class="ad-slot-label">Advertisement Space</span>
+        </div>
+      </ng-template>
+
+    </div>
+
+
+    <!-- =========================================================
+         PRODUCTS — GROUPED BY CATEGORY (real API products)
+    ========================================================== -->
+
+    <ng-container *ngFor="let group of categoryGroups; let i = index">
+
+      <section class="category-products-section">
+
+        <div class="home-content">
+
+          <div class="section-header">
+
+            <div>
+              <span class="section-eyebrow">CATEGORY</span>
+              <h2 class="section-title">{{ group.category }}</h2>
+            </div>
+
+            <a routerLink="/products" [queryParams]="{ category: group.category }" class="view-all-btn">
+              View All
+              <i class="bi bi-arrow-right"></i>
+            </a>
+
+          </div>
+
+          <div class="home-product-grid">
+
+            <article class="home-product-card" *ngFor="let product of group.products" (click)="goToProduct(product)">
+
+              <div class="home-product-image-wrapper">
+
+                <span class="home-offer-badge" *ngIf="getDiscount(product) > 0">
+                  {{ getDiscount(product) }}% OFF
+                </span>
+
+                <button type="button" class="home-wishlist-btn" [class.active]="isWishlisted(product)"
+                  (click)="toggleWishlist(product, $event)" title="Wishlist">
+                  <i class="bi" [class.bi-heart]="!isWishlisted(product)"
+                    [class.bi-heart-fill]="isWishlisted(product)"></i>
+                </button>
+
+                <img *ngIf="!productImageError[getProductKey(product)]" [src]="getProductImage(product)"
+                  [alt]="getProductName(product)" class="home-product-image" loading="lazy"
+                  (error)="onProductImageError(product)" />
+
+                <div class="home-product-no-image" *ngIf="productImageError[getProductKey(product)]">
+                  <i class="bi bi-box-seam"></i>
+                </div>
+
+              </div>
+
+              <div class="home-product-body">
+
+                <span class="home-product-brand" *ngIf="getBrand(product)">{{ getBrand(product) }}</span>
+
+                <h3 class="home-product-name">{{ getProductName(product) }}</h3>
+
+                <p class="home-product-desc" *ngIf="product.description">{{ product.description }}</p>
+
+                <div class="home-product-rating">
+                  <i class="bi bi-star-fill" *ngFor="let s of starsArray(getFullStars(product))"></i>
+                  <i class="bi bi-star-half" *ngIf="getHasHalfStar(product)"></i>
+                  <i class="bi bi-star" *ngFor="let s of starsArray(getEmptyStars(product))"></i>
+                  <span *ngIf="getRating(product) > 0">{{ getRating(product) | number:'1.1-1' }}</span>
+                </div>
+
+                <div class="home-product-price-row">
+                  <strong class="home-product-price">₹{{ getProductPrice(product) | number:'1.0-0' }}</strong>
+                  <del class="home-product-old-price" *ngIf="getOldPrice(product) > getProductPrice(product)">
+                    ₹{{ getOldPrice(product) | number:'1.0-0' }}
+                  </del>
+                </div>
+
+                <button type="button" class="home-add-cart-btn" [class.out-of-stock]="product.stock === 0"
+                  [disabled]="product.stock === 0" (click)="addToCart(product, $event)">
+                  <i class="bi" [class.bi-cart3]="product.stock !== 0" [class.bi-x-circle]="product.stock === 0"></i>
+                  <span>{{ product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}</span>
+                </button>
+
+              </div>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ⭐ AD SLOT 3 — inserted ONCE only (after the 2nd category
+           group, or after the last one if there's only one category) -->
+
+      <div class="home-content-full" *ngIf="shouldShowCategoryAd(i)">
+
+        <ng-container *ngIf="getAdsBySlot(3).length; else adSlot3Empty">
+
+          <div class="ad-slider-viewport">
+            <div class="ad-slider-track" [style.transform]="'translateX(-' + ((adActiveIndex[3] || 0) * 100) + '%)'">
+              <a class="ad-slide" *ngFor="let ad of getAdsBySlot(3)" [attr.href]="ad.Redirect_Url || null">
+                <img *ngIf="!adImageError[getAdKey(ad)]" [src]="getAdImage(ad)" [alt]="ad.Ad_Title || 'Advertisement'"
+                  class="ad-banner-img" (error)="onAdImageError(ad)" />
+              </a>
+            </div>
+          </div>
+
+          <div class="ad-dots" *ngIf="getAdsBySlot(3).length > 1">
+            <button type="button" class="ad-dot" *ngFor="let ad of getAdsBySlot(3); let i = index"
+              [class.active]="i === (adActiveIndex[3] || 0)" (click)="goToAdSlide(3, i)"
+              [attr.aria-label]="'Go to ad ' + (i + 1)"></button>
+          </div>
+
+        </ng-container>
+
+        <ng-template #adSlot3Empty>
+          <div class="ad-slot">
+            <span class="ad-slot-label">Advertisement Space</span>
+          </div>
+        </ng-template>
+
+      </div>
+
+    </ng-container>
+
+
+    <!-- =========================================================
+         EMPTY STATE — no products from API
+    ========================================================== -->
+
+    <section class="showcase-section" *ngIf="!categoryGroups.length">
+
+      <div class="home-content">
+
+        <div class="home-empty-state">
+
+          <i class="bi bi-box-seam"></i>
+
+          <h3>No products available right now</h3>
+
+          <p>Please check back shortly, or browse the full catalog.</p>
+
+          <a routerLink="/products" class="view-all-btn">
+            Browse Products
+            <i class="bi bi-arrow-right"></i>
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         COMBO / DEAL BANNER
+    ========================================================== -->
+
+    <section class="combo-banner">
+
+      <div class="home-content">
+
+        <div class="combo-banner-inner">
+
+          <div class="combo-banner-copy">
+
+            <span class="section-eyebrow combo-eyebrow">BUILD &amp; SAVE</span>
+
+            <h2 class="combo-title">
+              Bundle a CPU + Motherboard + RAM
+              <br class="d-none d-md-block" />
+              &amp; unlock combo pricing
+            </h2>
+
+            <p class="combo-desc">
+              Mix and match components for your next build. Combo discount
+              is applied automatically at checkout — no coupon needed.
+            </p>
+
+            <a routerLink="/products" class="btn-brand-cart combo-cta">
+              Explore Combo Deals
+              <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+
+          </div>
+
+          <div class="combo-banner-icon">
+            <i class="bi bi-cpu"></i>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         WHY CHOOSE US
+    ========================================================== -->
+
+    <section class="why-us-section">
+
+      <div class="home-content">
+
+        <div class="section-heading text-center">
+          <span class="section-eyebrow">WHY ELECTROSHOP</span>
+          <h2 class="section-title section-title-center">Built on Trust, Backed by Support</h2>
+          <p class="section-subtitle">
+            Every part we sell is 100% genuine and covered by manufacturer
+            warranty — that's a promise.
+          </p>
+        </div>
+
+        <div class="row g-3 g-md-4">
+
+          <div class="col-6 col-lg-3" *ngFor="let item of whyChooseUs">
+            <div class="why-us-card">
+              <div class="why-us-icon"><i class="bi" [ngClass]="item.icon"></i></div>
+              <h6 class="why-us-title">{{ item.title }}</h6>
+              <p class="why-us-desc">{{ item.desc }}</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         ⭐ AD SLOT 4 — full-bleed width (Slot_No = 4)
+    ========================================================== -->
+
+    <div class="home-content-full">
+
+      <ng-container *ngIf="getAdsBySlot(4).length; else adSlot4Empty">
+
+        <div class="ad-slider-viewport">
+          <div class="ad-slider-track" [style.transform]="'translateX(-' + ((adActiveIndex[4] || 0) * 100) + '%)'">
+            <a class="ad-slide" *ngFor="let ad of getAdsBySlot(4)" [attr.href]="ad.Redirect_Url || null">
+              <img *ngIf="!adImageError[getAdKey(ad)]" [src]="getAdImage(ad)" [alt]="ad.Ad_Title || 'Advertisement'"
+                class="ad-banner-img" (error)="onAdImageError(ad)" />
+            </a>
+          </div>
+        </div>
+
+        <div class="ad-dots" *ngIf="getAdsBySlot(4).length > 1">
+          <button type="button" class="ad-dot" *ngFor="let ad of getAdsBySlot(4); let i = index"
+            [class.active]="i === (adActiveIndex[4] || 0)" (click)="goToAdSlide(4, i)"
+            [attr.aria-label]="'Go to ad ' + (i + 1)"></button>
+        </div>
+
+      </ng-container>
+
+      <ng-template #adSlot4Empty>
+        <div class="ad-slot">
+          <span class="ad-slot-label">Advertisement Space</span>
+        </div>
+      </ng-template>
+
+    </div>
+
+
+    <!-- =========================================================
+         TESTIMONIALS
+    ========================================================== -->
+
+    <section class="testimonials-section">
+
+      <div class="home-content">
+
+        <div class="section-heading text-center">
+          <span class="section-eyebrow">CUSTOMER LOVE</span>
+          <h2 class="section-title section-title-center">What Our Customers Say</h2>
+        </div>
+
+        <div class="row g-3 g-md-4">
+
+          <div class="col-md-4" *ngFor="let review of testimonials">
+            <div class="testimonial-card">
+
+              <div class="testimonial-stars">
+                <i class="bi bi-star-fill" *ngFor="let star of getStars(review.rating)"></i>
+              </div>
+
+              <p class="testimonial-text">"{{ review.text }}"</p>
+
+              <div class="testimonial-author">
+                <div class="testimonial-avatar">{{ review.name.charAt(0) }}</div>
+                <div>
+                  <p class="testimonial-name">{{ review.name }}</p>
+                  <small class="testimonial-role">{{ review.role }}</small>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         ⭐ AD SLOT 5 — full-bleed width (Slot_No = 5)
+    ========================================================== -->
+
+    <div class="home-content-full">
+
+      <ng-container *ngIf="getAdsBySlot(5).length; else adSlot5Empty">
+
+        <div class="ad-slider-viewport">
+          <div class="ad-slider-track" [style.transform]="'translateX(-' + ((adActiveIndex[5] || 0) * 100) + '%)'">
+            <a class="ad-slide" *ngFor="let ad of getAdsBySlot(5)" [attr.href]="ad.Redirect_Url || null">
+              <img *ngIf="!adImageError[getAdKey(ad)]" [src]="getAdImage(ad)" [alt]="ad.Ad_Title || 'Advertisement'"
+                class="ad-banner-img" (error)="onAdImageError(ad)" />
+            </a>
+          </div>
+        </div>
+
+        <div class="ad-dots" *ngIf="getAdsBySlot(5).length > 1">
+          <button type="button" class="ad-dot" *ngFor="let ad of getAdsBySlot(5); let i = index"
+            [class.active]="i === (adActiveIndex[5] || 0)" (click)="goToAdSlide(5, i)"
+            [attr.aria-label]="'Go to ad ' + (i + 1)"></button>
+        </div>
+
+      </ng-container>
+
+      <ng-template #adSlot5Empty>
+        <div class="ad-slot">
+          <span class="ad-slot-label">Advertisement Space</span>
+        </div>
+      </ng-template>
+
+    </div>
+
+
+  </ng-container>
+
+</div>
+
+
+<!-- =========================================================
+     ⭐ SCROLL TO TOP BUTTON
+========================================================== -->
+
+<button type="button" class="scroll-top-btn" *ngIf="showScrollTop" (click)="scrollToTop()" title="Back to top"
+  aria-label="Back to top">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+
+<!-- =========================================================
+     ⭐ TOAST NOTIFICATION
+========================================================== -->
+
+<div class="app-toast" *ngIf="toastMessage" [class.toast-success]="toastType === 'success'"
+  [class.toast-error]="toastType === 'error'">
+
+  <i class="bi" [class.bi-check-circle-fill]="toastType === 'success'"
+    [class.bi-exclamation-circle-fill]="toastType === 'error'"></i>
+
+  <span class="toast-text">{{ toastMessage }}</span>
+
+  <button type="button" class="toast-close" (click)="closeToast()" aria-label="Close">
+    <i class="bi bi-x"></i>
+  </button>
+
+</div>

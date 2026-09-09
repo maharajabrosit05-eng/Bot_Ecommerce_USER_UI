@@ -1,0 +1,75 @@
+<ng-container *ngIf="!isLoginPage">
+
+     <!-- ⭐ TOP ANNOUNCEMENT BAR — normal document flow now, NOT fixed/sticky.
+          It scrolls away with the rest of the page as soon as the user
+          scrolls down, same as any other in-page content. -->
+     <div class="announcement-bar">
+
+          <div class="announcement-container">
+
+               <div class="announcement-brand-row">
+
+                    <a routerLink="/" class="announcement-brand">
+                         <img src="../assets/img/bros-logo.jpg" alt="Bros IT Solutions" class="announcement-logo" />
+                         <span class="announcement-brand-name">
+                              BROS IT<span class="text-brand"> SOLUTIONS</span>
+                         </span>
+                    </a>
+
+                    <a routerLink="/my_order" class="announcement-order-icon" aria-label="My Orders">
+                         <i class="bi bi-bag-check-fill"></i>
+                    </a>
+
+               </div>
+
+               <a routerLink="/profile" class="announcement-address">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <span class="address-label">Deliver to</span>
+                    <span class="address-value">Select delivery address</span>
+                    <i class="bi bi-chevron-down address-caret"></i>
+               </a>
+
+               <div class="announcement-right">
+
+                    <i class="bi bi-headset"></i>
+
+                    <span>Need Help?</span>
+
+                    <a routerLink="/contact">
+                         Contact Us
+                    </a>
+
+               </div>
+
+          </div>
+
+     </div>
+
+     <!-- ⭐ NAVBAR + CATEGORY BAR — this is the part that must NOT scroll
+          away (kept exactly like before). It's "sticky" instead of
+          "fixed": it sits in normal flow right under the announcement
+          bar, then locks to the top of the viewport once the page is
+          scrolled up to it — same pinned behaviour as today, but the
+          announcement bar above it is now free to scroll off first.
+          Its live height is measured below and fed into --header-height
+          (used by sticky/fixed panels on the Products page). -->
+     <div class="app-sticky-nav" #headerStack *ngIf="showNavAndCategoryBar">
+          <app-navbar></app-navbar>
+          <app-category-bar></app-category-bar>
+     </div>
+
+</ng-container>
+
+
+<main class="app-main" [style.--header-height.px]="isLoginPage ? 0 : headerHeight">
+
+     <router-outlet></router-outlet>
+
+</main>
+
+
+<app-footer *ngIf="!isLoginPage"></app-footer>
+
+<app-login-popup *ngIf="!isLoginPage"></app-login-popup>
+
+<app-mobile-bottom-nav *ngIf="!isLoginPage"></app-mobile-bottom-nav>

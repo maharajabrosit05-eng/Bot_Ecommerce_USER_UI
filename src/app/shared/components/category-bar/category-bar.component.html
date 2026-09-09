@@ -1,0 +1,59 @@
+<!-- =========================================================
+     CATEGORY BAR
+========================================================= -->
+
+<div
+  class="category-bar"
+  [class.is-compact]="isScrolled"
+  *ngIf="!loading && categories.length"
+>
+
+  <div class="category-bar-track">
+
+    <a
+    
+      *ngFor="let cat of categories"
+      [routerLink]="['/products']"
+      [queryParams]="{ category: cat.name }"
+      class="category-bar-item"
+      [title]="cat.name"
+    >
+
+      <!-- ===================================================
+           CATEGORY IMAGE
+      =================================================== -->
+
+      <div class="category-bar-icon">
+
+        <img
+          *ngIf="cat.icon && !imageErrorMap[cat.name]"
+          [src]="cat.icon"
+          [alt]="cat.name"
+          class="category-icon-image"
+          (error)="onImageError(cat.name)"
+        />
+
+        <!-- ⭐ Fallback icon — shows whenever there's no mapped
+             image, or the mapped image itself failed to load,
+             so a category is NEVER left completely blank. -->
+        <i
+          *ngIf="!cat.icon || imageErrorMap[cat.name]"
+          class="bi bi-box-seam category-fallback-icon"
+        ></i>
+
+      </div>
+
+
+      <!-- ===================================================
+           CATEGORY NAME
+      =================================================== -->
+
+      <span class="category-bar-name">
+        {{ cat.name }}
+      </span>
+
+    </a>
+
+  </div>
+
+</div>

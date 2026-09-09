@@ -1,0 +1,931 @@
+<section class="contact-page">
+
+  <!-- =====================================================
+       HERO SECTION
+  ====================================================== -->
+
+  <section class="contact-hero">
+
+    <div class="container">
+
+      <div class="hero-grid">
+
+        <div class="hero-content">
+
+          <h1>Contact Us</h1>
+
+          <p>
+            We're here to help! Reach out to us for any questions,
+            support, orders or product-related inquiries.
+            Our team will get back to you as soon as possible.
+          </p>
+
+          <div class="hero-stats">
+
+            <div class="hero-stat">
+              <strong>&lt; 24 hrs</strong>
+              <span>Average email response</span>
+            </div>
+
+            <div class="hero-stat">
+              <strong>Mon – Sat</strong>
+              <span>9:00 AM – 7:00 PM</span>
+            </div>
+
+            <div class="hero-stat">
+              <strong>Chennai</strong>
+              <span>Visit our store in person</span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="hero-media">
+          <img src="assets/img/bros-office.png" alt="BROS IT SOLUTIONS office">
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       CONTACT INFORMATION CARDS
+  ====================================================== -->
+
+  <section class="contact-info-section">
+
+    <div class="container">
+
+      <div class="contact-info-grid">
+
+        <!-- CALL -->
+        <div class="info-card">
+
+          <div class="info-icon phone-icon">
+            <i class="bi bi-telephone"></i>
+          </div>
+
+          <div class="info-content">
+
+            <h3>Call Us</h3>
+
+            <div class="value-row">
+
+              <a
+                href="tel:+919600151940"
+                class="contact-value">
+                +91 96001 51940
+              </a>
+
+              <button
+                type="button"
+                class="copy-btn"
+                [class.copied]="copiedKey === 'phone1'"
+                (click)="copyValue('phone1', '+919600151940', $event)"
+                aria-label="Copy phone number">
+                <i
+                  class="bi"
+                  [class.bi-clipboard]="copiedKey !== 'phone1'"
+                  [class.bi-check-lg]="copiedKey === 'phone1'">
+                </i>
+              </button>
+
+            </div>
+
+            <div class="value-row">
+
+              <a
+                href="tel:+919363617197"
+                class="contact-value">
+                +91 93636 17197
+              </a>
+
+              <button
+                type="button"
+                class="copy-btn"
+                [class.copied]="copiedKey === 'phone2'"
+                (click)="copyValue('phone2', '+919363617197', $event)"
+                aria-label="Copy phone number">
+                <i
+                  class="bi"
+                  [class.bi-clipboard]="copiedKey !== 'phone2'"
+                  [class.bi-check-lg]="copiedKey === 'phone2'">
+                </i>
+              </button>
+
+            </div>
+
+            <p>
+              Mon - Sat, 9:00 AM - 7:00 PM
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- WHATSAPP -->
+        <div
+          class="info-card clickable"
+          (click)="openWhatsApp()">
+
+          <div class="info-icon whatsapp-icon">
+            <i class="bi bi-whatsapp"></i>
+            <span class="live-dot" aria-hidden="true"></span>
+          </div>
+
+          <div class="info-content">
+
+            <h3>WhatsApp</h3>
+
+            <span class="contact-value">
+              +91 93636 17197
+            </span>
+
+            <p>
+              Quick support on WhatsApp
+            </p>
+
+          </div>
+
+          <i class="bi bi-arrow-up-right open-arrow"></i>
+
+        </div>
+
+
+        <!-- EMAIL -->
+        <div
+          class="info-card clickable"
+          (click)="openEmail()">
+
+          <div class="info-icon email-icon">
+            <i class="bi bi-envelope"></i>
+          </div>
+
+          <div class="info-content">
+
+            <h3>Email Us</h3>
+
+            <span class="contact-value email-value">
+              admin&#64;brositsolutions.com
+            </span>
+
+            <p>
+              We usually respond within 24 hours
+            </p>
+
+          </div>
+
+          <i class="bi bi-arrow-up-right open-arrow"></i>
+
+        </div>
+
+
+        <!-- LOCATION -->
+        <div class="info-card">
+
+          <div class="info-icon location-icon">
+            <i class="bi bi-geo-alt"></i>
+          </div>
+
+          <div class="info-content">
+
+            <h3>Our Location</h3>
+
+            <span class="contact-value">
+              Chennai, Tamil Nadu, India
+            </span>
+
+            <p>
+              Visit our store for better support
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       MESSAGE + MAP SECTION
+  ====================================================== -->
+
+  <section class="message-map-section">
+
+    <div class="container">
+
+      <div class="message-map-grid">
+
+
+        <!-- =================================================
+             SEND MESSAGE
+        ================================================== -->
+
+        <div class="content-card message-card">
+
+          <div class="section-heading">
+
+            <h2>Send Us a Message</h2>
+
+            <p>
+              Fill in the details below and we'll get back to you shortly.
+            </p>
+
+          </div>
+
+
+          <!-- PREFILLED HINT (shown once for a logged-in customer) -->
+          <div
+            *ngIf="detailsPrefilled && !submitted"
+            class="prefill-hint">
+
+            <i class="bi bi-person-check"></i>
+
+            <span>We've filled in your saved details — feel free to edit them.</span>
+
+          </div>
+
+
+          <!-- SUBMIT ERROR -->
+          <div
+            *ngIf="submitError"
+            class="submit-error-box">
+
+            <i class="bi bi-exclamation-triangle"></i>
+
+            <span>{{ submitError }}</span>
+
+          </div>
+
+
+          <!-- SUCCESS -->
+          <div
+            *ngIf="submitted"
+            class="success-box">
+
+            <div class="success-icon">
+              <i class="bi bi-check-lg"></i>
+            </div>
+
+            <div>
+
+              <h3>Message Sent Successfully!</h3>
+
+              <p>
+                Thank you for contacting BROS IT SOLUTIONS.
+                Our team will get back to you shortly.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- FORM -->
+          <form
+            *ngIf="!submitted"
+            [formGroup]="form"
+            (ngSubmit)="onSubmit()">
+
+
+            <div class="form-grid">
+
+
+              <!-- NAME -->
+              <div class="form-group">
+
+                <label>
+                  Full Name
+                  <span>*</span>
+                </label>
+
+                <div
+                  class="input-wrapper"
+                  [class.input-error]="
+                    f['name'].touched &&
+                    f['name'].invalid
+                  "
+                  [class.input-valid]="
+                    f['name'].touched &&
+                    f['name'].valid
+                  ">
+
+                  <i class="bi bi-person"></i>
+
+                  <input
+                    type="text"
+                    formControlName="name"
+                    placeholder="Enter your full name"
+                  />
+
+                </div>
+
+                <small
+                  *ngIf="
+                    f['name'].touched &&
+                    f['name'].errors?.['required']
+                  "
+                  class="error-text">
+
+                  Full name is required.
+
+                </small>
+
+                <small
+                  *ngIf="
+                    f['name'].touched &&
+                    f['name'].errors?.['minlength']
+                  "
+                  class="error-text">
+
+                  Name must contain at least 2 characters.
+
+                </small>
+
+              </div>
+
+
+              <!-- EMAIL -->
+              <div class="form-group">
+
+                <label>
+                  Email Address
+                  <span>*</span>
+                </label>
+
+                <div
+                  class="input-wrapper"
+                  [class.input-error]="
+                    f['email'].touched &&
+                    f['email'].invalid
+                  "
+                  [class.input-valid]="
+                    f['email'].touched &&
+                    f['email'].valid
+                  ">
+
+                  <i class="bi bi-envelope"></i>
+
+                  <input
+                    type="email"
+                    formControlName="email"
+                    placeholder="Enter your email"
+                  />
+
+                </div>
+
+                <small
+                  *ngIf="
+                    f['email'].touched &&
+                    f['email'].errors?.['required']
+                  "
+                  class="error-text">
+
+                  Email address is required.
+
+                </small>
+
+                <small
+                  *ngIf="
+                    f['email'].touched &&
+                    f['email'].errors?.['email']
+                  "
+                  class="error-text">
+
+                  Please enter a valid email address.
+
+                </small>
+
+              </div>
+
+
+              <!-- PHONE -->
+              <div class="form-group">
+
+                <label>
+                  Phone Number
+                </label>
+
+                <div
+                  class="input-wrapper"
+                  [class.input-error]="
+                    f['phone'].touched &&
+                    f['phone'].invalid
+                  ">
+
+                  <i class="bi bi-telephone"></i>
+
+                  <input
+                    type="tel"
+                    maxlength="10"
+                    formControlName="phone"
+                    placeholder="Enter your phone number"
+                  />
+
+                </div>
+
+                <small
+                  *ngIf="
+                    f['phone'].touched &&
+                    f['phone'].invalid
+                  "
+                  class="error-text">
+
+                  Enter a valid 10-digit phone number.
+
+                </small>
+
+              </div>
+
+
+              <!-- SUBJECT -->
+              <div class="form-group">
+
+                <label>
+                  Subject
+                  <span>*</span>
+                </label>
+
+                <div
+                  class="input-wrapper select-wrapper"
+                  [class.input-error]="
+                    f['subject'].touched &&
+                    f['subject'].invalid
+                  ">
+
+                  <i class="bi bi-list"></i>
+
+                  <select formControlName="subject">
+
+                    <option value="">
+                      Select a subject
+                    </option>
+
+                    <option value="Product Enquiry">
+                      Product Enquiry
+                    </option>
+
+                    <option value="Order Support">
+                      Order Support
+                    </option>
+
+                    <option value="Delivery">
+                      Delivery
+                    </option>
+
+                    <option value="Return & Refund">
+                      Return & Refund
+                    </option>
+
+                    <option value="Warranty">
+                      Warranty
+                    </option>
+
+                    <option value="Payment">
+                      Payment
+                    </option>
+
+                    <option value="Technical Support">
+                      Technical Support
+                    </option>
+
+                    <option value="Other">
+                      Other
+                    </option>
+
+                  </select>
+
+                  <i class="bi bi-chevron-down select-arrow"></i>
+
+                </div>
+
+                <small
+                  *ngIf="
+                    f['subject'].touched &&
+                    f['subject'].invalid
+                  "
+                  class="error-text">
+
+                  Please select a subject.
+
+                </small>
+
+              </div>
+
+
+              <!-- MESSAGE -->
+              <div class="form-group full-width">
+
+                <label>
+                  Your Message
+                  <span>*</span>
+                </label>
+
+                <div
+                  class="input-wrapper textarea-wrapper"
+                  [class.input-error]="
+                    f['message'].touched &&
+                    f['message'].invalid
+                  ">
+
+                  <i class="bi bi-chat-square-text"></i>
+
+                  <textarea
+                    rows="5"
+                    [maxlength]="messageMaxLength"
+                    formControlName="message"
+                    placeholder="Type your message here..."
+                  ></textarea>
+
+                </div>
+
+                <div class="textarea-meta">
+
+                  <small
+                    *ngIf="
+                      f['message'].touched &&
+                      f['message'].errors?.['required']
+                    "
+                    class="error-text">
+
+                    Message is required.
+
+                  </small>
+
+                  <small
+                    *ngIf="
+                      f['message'].touched &&
+                      f['message'].errors?.['minlength']
+                    "
+                    class="error-text">
+
+                    Message must contain at least 10 characters.
+
+                  </small>
+
+                  <span class="char-count">
+                    {{ messageLength }}/{{ messageMaxLength }}
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+            <button
+              type="submit"
+              class="send-btn"
+              [disabled]="submitting">
+
+              <ng-container *ngIf="!submitting">
+
+                <i class="bi bi-send"></i>
+
+                <span>Send Message</span>
+
+              </ng-container>
+
+
+              <ng-container *ngIf="submitting">
+
+                <span
+                  class="spinner-border spinner-border-sm">
+                </span>
+
+                <span>Sending...</span>
+
+              </ng-container>
+
+            </button>
+
+          </form>
+
+
+          <!-- SEND ANOTHER -->
+          <button
+            *ngIf="submitted"
+            type="button"
+            class="another-message-btn"
+            (click)="sendAnother()">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Send Another Message
+
+          </button>
+
+        </div>
+
+
+        <!-- =================================================
+             FIND US
+        ================================================== -->
+
+        <div class="content-card find-card">
+
+          <div class="section-heading">
+
+            <h2>Find Us</h2>
+
+            <p>
+              Visit our store or find us on the map.
+            </p>
+
+          </div>
+
+
+          <!-- MAP -->
+          <div class="map-container">
+
+            <iframe
+              title="BROS IT SOLUTIONS Location"
+              src="https://www.google.com/maps?q=BROS%20IT%20SOLUTIONS%2C%20First%20Floor%20Flat%20No.23%2C%20Ponnan%20Kinaru%20Street%2C%20Villivakkam%2C%20Chennai%20600049&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+
+            <button
+              type="button"
+              class="map-overlay-btn"
+              (click)="openMap()">
+
+              <i class="bi bi-map"></i>
+
+              View Larger Map
+
+            </button>
+
+          </div>
+
+
+          <!-- LOCATION BOX -->
+          <div class="location-box">
+
+            <div class="location-box-icon">
+
+              <i class="bi bi-geo-alt"></i>
+
+            </div>
+
+            <div class="location-box-content">
+
+              <h3>BROS IT SOLUTIONS</h3>
+
+              <p>
+                Chennai, Tamil Nadu, India - 6000XX
+              </p>
+
+              <span>
+                Visit us for product enquiries,
+                bulk orders and in-store support.
+              </span>
+
+              <button
+                type="button"
+                class="direction-btn"
+                (click)="openMap()">
+
+                <i class="bi bi-map"></i>
+
+                Get Directions
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FAQ + QUICK LINKS
+  ====================================================== -->
+
+  <section class="faq-links-section">
+
+    <div class="container">
+
+      <div class="faq-links-grid">
+
+
+        <!-- =================================================
+             FAQ
+        ================================================== -->
+
+        <div class="content-card faq-card">
+
+          <div class="section-heading">
+
+            <h2>Frequently Asked Questions</h2>
+
+            <p>
+              Quick answers to common questions.
+            </p>
+
+          </div>
+
+
+          <div class="faq-list">
+
+            <div
+              class="faq-item"
+              *ngFor="let faq of faqs; let i = index"
+              [class.active]="openFaq === i">
+
+
+              <button
+                type="button"
+                class="faq-question"
+                [attr.aria-expanded]="openFaq === i"
+                (click)="toggleFaq(i)">
+
+                <span>
+                  {{ faq.question }}
+                </span>
+
+                <i
+                  class="bi"
+                  [class.bi-chevron-down]="openFaq !== i"
+                  [class.bi-chevron-up]="openFaq === i">
+                </i>
+
+              </button>
+
+
+              <div class="faq-answer-wrapper">
+
+                <div class="faq-answer">
+
+                  <p>
+                    {{ faq.answer }}
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             QUICK LINKS
+        ================================================== -->
+
+        <div class="content-card quick-card">
+
+          <div class="section-heading">
+
+            <h2>Quick Links</h2>
+
+            <p>
+              Need help with something specific?
+            </p>
+
+          </div>
+
+
+          <div class="quick-links-grid">
+
+
+            <!-- TRACK ORDER -->
+            <button
+              type="button"
+              class="quick-link"
+              (click)="goToOrder()">
+
+              <div class="quick-icon">
+
+                <i class="bi bi-box-seam"></i>
+
+              </div>
+
+              <div class="quick-content">
+
+                <h3>Track Your Order</h3>
+
+                <p>
+                  Check your order status
+                </p>
+
+              </div>
+
+              <i class="bi bi-chevron-right arrow"></i>
+
+            </button>
+
+
+            <!-- RETURNS -->
+            <button
+              type="button"
+              class="quick-link"
+              (click)="goToReturns()">
+
+              <div class="quick-icon">
+
+                <i class="bi bi-arrow-return-left"></i>
+
+              </div>
+
+              <div class="quick-content">
+
+                <h3>Returns & Refunds</h3>
+
+                <p>
+                  Learn about our return policy
+                </p>
+
+              </div>
+
+              <i class="bi bi-chevron-right arrow"></i>
+
+            </button>
+
+
+            <!-- PRODUCT SUPPORT -->
+            <button
+              type="button"
+              class="quick-link"
+              (click)="goToProducts()">
+
+              <div class="quick-icon">
+
+                <i class="bi bi-headset"></i>
+
+              </div>
+
+              <div class="quick-content">
+
+                <h3>Product Support</h3>
+
+                <p>
+                  Get help with your product
+                </p>
+
+              </div>
+
+              <i class="bi bi-chevron-right arrow"></i>
+
+            </button>
+
+
+            <!-- WARRANTY -->
+            <button
+              type="button"
+              class="quick-link"
+              (click)="goToWarranty()">
+
+              <div class="quick-icon">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+              </div>
+
+              <div class="quick-content">
+
+                <h3>Warranty Information</h3>
+
+                <p>
+                  Check warranty details
+                </p>
+
+              </div>
+
+              <i class="bi bi-chevron-right arrow"></i>
+
+            </button>
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</section>

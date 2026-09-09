@@ -1,0 +1,91 @@
+<section class="settings-page">
+
+  <div class="settings-container">
+
+    <!-- =====================================================
+         BREADCRUMB / BACK
+    ====================================================== -->
+    <button type="button" class="back-link" (click)="router.navigate(['/profile'])">
+      <i class="bi bi-arrow-left"></i>
+      Back to Profile
+    </button>
+
+
+    <!-- =====================================================
+         PAGE HEADING
+    ====================================================== -->
+    <div class="page-heading">
+      <div>
+        <h1>Account Settings</h1>
+        <p>Manage how the app looks and feels for you</p>
+      </div>
+    </div>
+
+
+    <!-- =====================================================
+         THEME CARD
+    ====================================================== -->
+    <div class="settings-card">
+
+      <div class="card-heading">
+        <div>
+          <h3>
+            <i class="bi bi-palette2"></i>
+            Appearance
+          </h3>
+          <p>Choose how ElectroShop looks on this device</p>
+        </div>
+      </div>
+
+
+      <div class="theme-options">
+
+        <!-- LIGHT -->
+        <button type="button" class="theme-option" [class.active]="!isDark" (click)="selectTheme('light')">
+
+          <div class="theme-preview theme-preview-light">
+            <span class="preview-bar"></span>
+            <span class="preview-line"></span>
+            <span class="preview-line short"></span>
+          </div>
+
+          <div class="theme-option-info">
+            <i class="bi bi-sun-fill"></i>
+            <span>Light Mode</span>
+          </div>
+
+          <i class="bi bi-check-circle-fill check-icon" *ngIf="!isDark"></i>
+
+        </button>
+
+
+        <!-- DARK -->
+        <button type="button" class="theme-option" [class.active]="isDark" (click)="selectTheme('dark')">
+
+          <div class="theme-preview theme-preview-dark">
+            <span class="preview-bar"></span>
+            <span class="preview-line"></span>
+            <span class="preview-line short"></span>
+          </div>
+
+          <div class="theme-option-info">
+            <i class="bi bi-moon-stars-fill"></i>
+            <span>Dark Mode</span>
+          </div>
+
+          <i class="bi bi-check-circle-fill check-icon" *ngIf="isDark"></i>
+
+        </button>
+
+      </div>
+
+      <p class="theme-hint">
+        <i class="bi bi-info-circle"></i>
+        Your choice is saved on this device and applied automatically the next time you visit.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>

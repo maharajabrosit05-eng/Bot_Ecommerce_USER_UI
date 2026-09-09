@@ -1,0 +1,3315 @@
+/* =========================================================
+   COLOR TOKENS (matches reference design)
+========================================================= */
+
+$navy: #0e1c3f;
+$navy-dark: #0a1530;
+$red: #dc2626;
+$red-dark: #b91c1c;
+$green: #15803d;
+$blue-label: #1d4ed8;
+$text-dark: #1e293b;
+$text-muted: #64748b;
+$border: #e2e8f0;
+$search_border: #47494b;
+
+$bg-soft: #f8fafc;
+
+
+/* =========================================================
+   PRODUCTS PAGE
+========================================================= */
+
+.products-page {
+
+  width: 100%;
+
+  padding: 24px 34px 50px;
+
+  background: #ffffff;
+
+  min-height: calc(100vh - 80px);
+
+}
+
+
+/* =========================================================
+   ⭐ MOBILE / TABLET TOOLBAR (Filters + Sort By buttons)
+========================================================= */
+
+.mobile-toolbar {
+
+  display: none;
+
+  width: 100%;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-bottom: 4px;
+  background: #ffffff;
+  border-bottom: 1px solid $border;
+  position: sticky;
+  top: var(--header-height, 0px);
+  z-index: 40;
+
+}
+
+
+.mobile-toolbar-btn {
+
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 42px;
+  border: 1.5px solid $border;
+  border-radius: 8px;
+  background: #ffffff;
+  color: $text-dark;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+
+}
+
+
+.mobile-toolbar-btn i:first-child {
+
+  font-size: 13px;
+  color: $navy;
+
+}
+
+
+.mobile-toolbar-btn .toolbar-caret {
+
+  font-size: 10px;
+  color: #94a3b8;
+  transition: transform 0.25s ease;
+
+}
+
+
+.mobile-toolbar-btn .toolbar-caret.rotated {
+
+  transform: rotate(180deg);
+
+}
+
+
+.mobile-toolbar-btn.active {
+
+  background: $navy;
+  border-color: $navy;
+  color: #ffffff;
+
+}
+
+
+.mobile-toolbar-btn.active i:first-child,
+.mobile-toolbar-btn.active .toolbar-caret {
+
+  color: #ffffff;
+
+}
+
+
+/* =========================================================
+   ⭐ BACKDROP — tap outside to close (mobile/tablet only)
+========================================================= */
+
+.mobile-panel-backdrop {
+
+  display: none;
+
+  position: fixed;
+  top: var(--header-height, 0px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  background: rgba(15, 23, 42, 0.45);
+
+}
+
+
+/* =========================================================
+   ⭐ MOBILE SORT DROPDOWN PANEL
+========================================================= */
+
+.mobile-sort-panel {
+
+  display: none;
+
+  position: relative;
+  z-index: 50;
+
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+
+  background: #ffffff;
+  border-bottom: 1px solid $border;
+
+  transition: max-height 0.32s ease, opacity 0.22s ease;
+
+}
+
+
+.mobile-sort-panel.open {
+
+  max-height: 400px;
+  opacity: 1;
+  box-shadow: 0 14px 26px rgba(15, 23, 42, 0.1);
+
+}
+
+
+.mobile-sort-list {
+
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+
+}
+
+
+.mobile-sort-list li {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  color: $text-dark;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+}
+
+
+.mobile-sort-list li:hover {
+
+  background: $bg-soft;
+
+}
+
+
+.mobile-sort-list li.selected {
+
+  color: $navy;
+  font-weight: 750;
+
+}
+
+
+.mobile-sort-list li.selected i {
+
+  color: $navy;
+
+}
+
+
+/* =========================================================
+   TOP SEARCH BAR (BELOW NAVBAR)
+========================================================= */
+
+.top-search-bar {
+
+  width: 100%;
+
+  margin-bottom: 18px;
+
+  position: relative;
+
+  z-index: 20;
+
+}
+
+
+.top-search-inner {
+
+  display: flex;
+
+  align-items: stretch;
+
+  width: 100%;
+
+  height: 48px;
+
+  background: #ffffff;
+
+  border: 1.5px solid $search_border;
+
+  border-radius: 8px;
+
+  overflow: visible;
+
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+}
+
+
+.top-search-inner:focus-within {
+
+  border-color: $navy;
+
+  box-shadow: 0 0 0 3px rgba(14, 28, 63, 0.1);
+
+}
+
+
+.top-category-select {
+
+  width: 200px;
+
+  flex-shrink: 0;
+
+}
+
+::ng-deep .top-category-select .ng-select-container {
+
+  height: 48px !important;
+
+  min-height: 48px !important;
+
+  border: 0 !important;
+
+  border-radius: 8px 0 0 8px !important;
+
+  background: #ffffff !important;
+
+  font-size: 12.5px !important;
+
+  font-weight: 600 !important;
+
+  color: $text-dark !important;
+
+  padding: 0 4px 0 16px !important;
+
+}
+
+::ng-deep .top-category-select .ng-placeholder {
+  color: $text-dark !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+}
+
+::ng-deep .top-category-select.ng-select-focused .ng-select-container {
+  box-shadow: none !important;
+}
+
+::ng-deep .ng-dropdown-panel {
+  z-index: 10000 !important;
+}
+
+
+.top-search-divider {
+
+  width: 1px;
+
+  flex-shrink: 0;
+
+  background: $border;
+
+  margin: 9px 0;
+
+}
+
+
+.top-search-input {
+
+  flex: 1;
+
+  min-width: 0;
+
+  height: 100%;
+
+  border: 0;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #0f172a;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+  padding: 0 16px;
+
+}
+
+
+.top-search-input::placeholder {
+
+  color: #a0aabd;
+
+}
+
+
+.top-search-btn {
+
+  flex-shrink: 0;
+
+  width: 130px;
+
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 0;
+
+  border-radius: 0 8px 8px 0;
+
+  background: $red;
+
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.18s ease;
+
+}
+
+
+.top-search-btn:hover {
+
+  background: $red-dark;
+
+}
+
+
+@media (max-width: 575.98px) {
+
+  .top-search-inner {
+
+    height: auto;
+
+    flex-wrap: wrap;
+
+  }
+
+
+  .top-category-select {
+
+    width: 100%;
+
+  }
+
+  ::ng-deep .top-category-select .ng-select-container {
+    border-bottom: 1px solid $border !important;
+    border-radius: 8px 8px 0 0 !important;
+  }
+
+
+  .top-search-divider {
+
+    display: none;
+
+  }
+
+
+  .top-search-input {
+
+    height: 46px;
+
+    width: 100%;
+
+  }
+
+
+  .top-search-btn {
+
+    width: 100%;
+
+    height: 42px;
+
+    border-radius: 0 0 8px 8px;
+
+  }
+
+}
+
+
+/* =========================================================
+   BREADCRUMB
+========================================================= */
+
+.breadcrumb-row {
+
+  margin: 12px 0 18px;
+
+}
+
+
+.breadcrumb-nav {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+}
+
+
+.breadcrumb-nav a {
+
+  color: $text-muted;
+
+  text-decoration: none;
+
+}
+
+
+.breadcrumb-nav a:hover {
+
+  color: $navy;
+
+}
+
+
+.breadcrumb-nav i {
+
+  color: #cbd5e1;
+
+  font-size: 9px;
+
+}
+
+
+.breadcrumb-nav span {
+
+  color: $text-dark;
+
+  font-weight: 700;
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.products-header {
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 22px;
+
+}
+
+
+.header-promo-banner {
+
+  flex: 1 1 auto;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  min-height: 56px;
+
+  padding: 10px 22px;
+
+  margin: 0 18px;
+
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #fff1f1 0%, #ffe4e6 100%);
+
+  border: 1px solid rgba($red, 0.15);
+
+}
+
+
+.header-promo-banner .banner-icon {
+
+  font-size: 22px;
+
+  color: $red;
+
+  flex-shrink: 0;
+
+}
+
+
+.header-promo-banner .banner-text {
+
+  display: flex;
+
+  flex-direction: column;
+
+  line-height: 1.3;
+
+}
+
+
+.header-promo-banner .banner-text strong {
+
+  font-size: 13.5px;
+
+  color: #0f172a;
+
+}
+
+
+.header-promo-banner .banner-text span {
+
+  font-size: 11.5px;
+
+  color: $text-muted;
+
+}
+
+
+@media (max-width: 900px) {
+
+  .header-promo-banner {
+
+    display: none;
+
+  }
+
+}
+
+
+.section-title {
+
+  position: relative;
+
+  margin: 0;
+
+  padding-bottom: 8px;
+
+  color: #0f172a;
+
+  font-size: 27px;
+
+  font-weight: 800;
+
+  letter-spacing: -0.4px;
+
+}
+
+
+.section-title::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  bottom: 0;
+
+  width: 34px;
+
+  height: 3px;
+
+  border-radius: 2px;
+
+  background: $red;
+
+}
+
+
+.section-subtitle {
+
+  margin: 4px 0 0;
+
+  color: $text-muted;
+
+  font-size: 12.5px;
+
+}
+
+
+/* =========================================================
+   SORT
+========================================================= */
+
+.header-sort-wrapper {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+}
+
+
+.header-sort-label {
+
+  color: $text-muted;
+
+  font-size: 12.5px;
+
+  font-weight: 600;
+
+}
+
+
+.header-sort-select {
+
+  min-width: 180px;
+}
+
+::ng-deep .header-sort-select .ng-select-container {
+
+  border-radius: 6px !important;
+  border: 1.5px solid $border !important;
+  min-height: 38px !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: $text-dark !important;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+::ng-deep .header-sort-select .ng-select-container:hover {
+  border-color: #94a3b8 !important;
+}
+
+::ng-deep .header-sort-select.ng-select-focused .ng-select-container {
+  border-color: $navy !important;
+  box-shadow: 0 0 0 3px rgba(14, 28, 63, 0.1) !important;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.products-layout {
+
+  display: grid;
+
+  grid-template-columns: 270px minmax(0, 1fr);
+
+  gap: 28px;
+
+  align-items: start;
+
+}
+
+
+/* =========================================================
+   FILTER PANEL
+========================================================= */
+
+.filters-column {
+
+  min-width: 0;
+
+  position: sticky;
+
+  top: 16px;
+
+}
+
+
+.filter-panel {
+
+  background: #ffffff;
+
+  border: 1.5px solid $border;
+
+  border-radius: 10px;
+
+  padding: 18px 18px 20px;
+
+}
+
+
+.filter-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 8px;
+
+}
+
+
+.filter-header-actions {
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+}
+
+
+.filter-title {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #0f172a;
+
+  font-size: 15px;
+
+  font-weight: 800;
+
+}
+
+
+.filter-title i {
+
+  color: $navy;
+
+  font-size: 14px;
+
+}
+
+
+.clear-all-btn {
+
+  border: 0;
+
+  background: transparent;
+
+  color: $red;
+
+  font-size: 11.5px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  padding: 0;
+
+  transition: color 0.2s ease;
+
+}
+
+
+.clear-all-btn:hover {
+
+  color: $red-dark;
+
+  text-decoration: underline;
+
+}
+
+
+.mobile-filter-close {
+
+  display: none;
+
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: $bg-soft;
+  color: $text-dark;
+  cursor: pointer;
+  font-size: 12px;
+
+}
+
+
+.mobile-filter-close:hover {
+
+  background: #e2e8f0;
+
+}
+
+
+.filter-divider {
+
+  height: 1px;
+
+  background: $border;
+
+  margin: 14px 0;
+
+}
+
+
+/* =========================================================
+   FILTER BLOCK (CATEGORY / BRAND / PRICE / RATING / LIKE)
+========================================================= */
+
+.filter-block {
+
+  width: 100%;
+
+}
+
+
+.filter-block-header {
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 8px;
+
+  padding: 0 0 12px;
+
+  border: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  color: $text-dark;
+
+  font-size: 13px;
+
+  font-weight: 750;
+
+}
+
+
+.filter-block-header i {
+
+  color: $text-muted;
+
+  font-size: 12px;
+
+}
+
+
+.filter-block-body {
+
+  padding-bottom: 4px;
+
+}
+
+
+.empty-note {
+
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 10.5px;
+
+}
+
+
+/* =========================================================
+   CHECKBOX LISTS (CATEGORY / BRAND / RATING)
+========================================================= */
+
+.check-list {
+
+  list-style: none;
+
+  margin: 0;
+
+  padding: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 11px;
+
+}
+
+
+.check-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  cursor: pointer;
+
+  color: $text-dark;
+
+  font-size: 12.5px;
+
+  font-weight: 500;
+
+}
+
+
+.check-row input[type="checkbox"] {
+
+  width: 15px;
+
+  height: 15px;
+
+  accent-color: $navy;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+
+}
+
+
+.check-label {
+
+  flex: 1;
+
+}
+
+
+.check-count {
+
+  color: #94a3b8;
+
+  font-size: 11.5px;
+
+  font-weight: 500;
+
+}
+
+
+.view-more-btn {
+
+  margin-top: 12px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: $red;
+
+  font-size: 11.5px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  padding: 0;
+
+}
+
+
+.view-more-btn:hover {
+
+  color: $red-dark;
+
+}
+
+
+/* =========================================================
+   RATING STARS (IN CHECKBOX LIST)
+========================================================= */
+
+.rating-stars {
+
+  display: inline-flex;
+
+  gap: 1px;
+
+}
+
+
+.rating-stars i {
+
+  color: #f59e0b;
+
+  font-size: 11px;
+
+}
+
+
+/* =========================================================
+   PRICE RANGE SLIDER
+========================================================= */
+
+.price-range-slider {
+
+  -webkit-appearance: none;
+
+  appearance: none;
+
+  width: 100%;
+
+  height: 6px;
+
+  margin-top: 6px;
+
+  border-radius: 4px;
+
+  background: linear-gradient(90deg, $red, #f87171);
+
+  outline: none;
+
+  cursor: pointer;
+
+}
+
+
+.price-range-slider::-webkit-slider-thumb {
+
+  -webkit-appearance: none;
+
+  appearance: none;
+
+  width: 18px;
+
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  border: 3px solid $red;
+
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+
+  cursor: pointer;
+
+}
+
+
+.price-range-slider::-moz-range-thumb {
+
+  width: 18px;
+
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  border: 3px solid $red;
+
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+
+  cursor: pointer;
+
+}
+
+
+.price-range-values {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 9px;
+
+  color: $text-muted;
+
+  font-size: 11px;
+
+  font-weight: 650;
+
+}
+
+
+/* =========================================================
+   YOU MAY LIKE IT
+========================================================= */
+
+.you-may-like-list {
+
+  list-style: none;
+
+  margin: 0;
+
+  padding: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  max-height: 320px;
+
+  overflow-y: auto;
+
+}
+
+
+.you-may-like-list li {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  padding: 4px;
+
+  border-radius: 8px;
+
+  transition: background 0.15s ease;
+
+}
+
+
+.you-may-like-list li:hover {
+
+  background: $bg-soft;
+
+}
+
+
+.you-may-like-thumb {
+
+  flex-shrink: 0;
+
+  width: 46px;
+
+  height: 46px;
+
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  background: $bg-soft;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+.you-may-like-thumb img {
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+}
+
+
+.you-may-like-no-image {
+
+  color: #cbd5e1;
+
+  font-size: 16px;
+
+}
+
+
+.you-may-like-info {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+  min-width: 0;
+
+}
+
+
+.you-may-like-name {
+
+  color: $text-dark;
+
+  font-size: 11px;
+
+  font-weight: 650;
+
+  line-height: 1.3;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+}
+
+
+.you-may-like-price-row {
+
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 6px;
+
+}
+
+
+.you-may-like-price-row strong {
+
+  color: $green;
+
+  font-size: 11.5px;
+
+  font-weight: 800;
+
+}
+
+
+.you-may-like-price-row del {
+
+  color: #94a3b8;
+
+  font-size: 9.5px;
+
+}
+
+
+/* =========================================================
+   APPLY FILTERS
+========================================================= */
+
+.apply-filters-btn {
+
+  width: 100%;
+
+  height: 42px;
+
+  margin-top: 18px;
+
+  border: 0;
+
+  border-radius: 6px;
+
+  background: $navy;
+
+  color: #ffffff;
+
+  font-size: 12.5px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.18s ease;
+
+}
+
+
+.apply-filters-btn:hover {
+
+  background: $navy-dark;
+
+}
+
+
+/* =========================================================
+   PRODUCTS COLUMN
+========================================================= */
+
+.products-column {
+
+  min-width: 0;
+
+}
+
+
+.results-toolbar {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  min-height: 25px;
+
+  margin-bottom: 14px;
+
+}
+
+
+.results-count {
+
+  color: $text-muted;
+
+  font-size: 12px;
+
+}
+
+
+.results-count strong {
+
+  color: $text-dark;
+
+  font-weight: 750;
+
+}
+
+
+/* =========================================================
+   PRODUCTS GRID
+========================================================= */
+
+.products-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 20px;
+
+  align-items: stretch;
+
+}
+
+
+.product-grid-item {
+
+  min-width: 0;
+
+  height: 100%;
+
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+.product-card {
+
+  position: relative;
+
+  width: 100%;
+
+  height: 100%;
+
+  background: #ffffff;
+
+  border: 1.5px solid $border;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  display: flex;
+
+  flex-direction: column;
+
+  cursor: pointer;
+
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+}
+
+
+.product-card:hover {
+
+  border-color: #cbd5e1;
+
+  box-shadow:
+    0 10px 26px rgba(15, 23, 42, 0.1);
+
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.product-image-wrapper {
+
+  position: relative;
+
+  width: 100%;
+
+  height: 130px;
+
+  flex-shrink: 0;
+
+  padding: 8px;
+
+  background: $bg-soft;
+
+}
+
+
+.product-image {
+
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: contain;
+
+  border-radius: 6px;
+
+}
+
+
+/* =========================================================
+   OFFER BADGE - TOP LEFT
+========================================================= */
+
+.offer-badge {
+
+  position: absolute;
+
+  top: 10px;
+
+  left: 10px;
+
+  z-index: 3;
+
+  min-width: 48px;
+
+  height: 24px;
+
+  padding: 0 9px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: $red;
+
+  color: #fcfcfc;
+
+  border-radius: 4px;
+
+  font-size: 10px;
+
+  font-weight: 750;
+
+  letter-spacing: 0.1px;
+
+}
+
+
+/* =========================================================
+   WISHLIST
+========================================================= */
+
+.wishlist-btn {
+
+  position: absolute;
+
+  top: 9px;
+
+  right: 9px;
+
+  z-index: 4;
+
+  width: 30px;
+
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid $border;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  color: #94a3b8;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  transition: color 0.18s ease, border-color 0.18s ease;
+
+}
+
+
+.wishlist-btn:hover {
+
+  color: $red;
+
+  border-color: #fecaca;
+
+}
+
+
+.wishlist-btn.active {
+
+  color: $red;
+
+  border-color: #fecaca;
+
+}
+
+
+/* =========================================================
+   NO IMAGE
+========================================================= */
+
+.product-no-image {
+
+  width: 100%;
+
+  height: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 4px;
+
+  color: #cbd5e1;
+
+  font-size: 22px;
+
+}
+
+
+.product-no-image span {
+
+  color: #b7c0cd;
+
+  font-size: 9px;
+
+  font-weight: 600;
+
+}
+
+
+/* =========================================================
+   PRODUCT BODY
+========================================================= */
+
+.product-card-body {
+
+  display: flex;
+
+  flex-direction: column;
+
+  flex: 1;
+
+  padding: 12px 13px 13px;
+
+}
+
+
+.product-category {
+
+  color: $blue-label;
+
+  font-size: 9.5px;
+
+  font-weight: 750;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.4px;
+
+  margin-bottom: 4px;
+
+  line-height: 1.2;
+
+}
+
+
+.product-name-row {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 8px;
+
+}
+
+
+.product-name {
+
+  margin: 0;
+
+  flex: 1;
+
+  min-width: 0;
+
+  min-height: 34px;
+
+  color: #172033;
+
+  font-size: 13px;
+
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+}
+
+
+.product-brand {
+
+  flex-shrink: 0;
+
+  margin-top: 1px;
+
+  color: $text-muted;
+
+  font-size: 10.5px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+}
+
+
+.product-short-desc {
+
+  margin: 6px 0 0;
+
+  min-height: 32px;
+
+  color: #94a3b8;
+
+  font-size: 10.5px;
+
+  line-height: 1.5;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+}
+
+
+/* =========================================================
+   ⭐ RATING — half-star support (bi-star-half)
+========================================================= */
+
+.product-rating {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 2px;
+
+  margin-top: 8px;
+
+  color: $text-dark;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+}
+
+
+.product-rating i {
+
+  font-size: 10px;
+
+}
+
+
+.product-rating i.bi-star-fill,
+.product-rating i.bi-star-half {
+
+  color: #f59e0b;
+
+}
+
+
+.product-rating i.bi-star {
+
+  color: #d1d5db;
+
+}
+
+
+.product-rating span {
+
+  margin-left: 4px;
+
+}
+
+
+.quick-view-rating i.bi-star-fill,
+.quick-view-rating i.bi-star-half {
+
+  color: #f59e0b;
+
+}
+
+
+.quick-view-rating i.bi-star {
+
+  color: #d1d5db;
+
+}
+
+
+/* =========================================================
+   PRICE ROW
+========================================================= */
+
+.product-price-row {
+
+  display: flex;
+
+  align-items: baseline;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-top: auto;
+
+  padding-top: 10px;
+
+}
+
+
+.product-price {
+
+  color: $green;
+
+  font-size: 17px;
+
+  font-weight: 900;
+
+  letter-spacing: -0.3px;
+
+}
+
+
+.product-old-price {
+
+  color: #94a3b8;
+
+  font-size: 11px;
+
+  font-weight: 500;
+
+}
+
+
+.product-discount {
+
+  color: $red;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+}
+
+
+/* =========================================================
+   ⭐ CARD ACTIONS (ADD TO CART + QUICK VIEW)
+   Always side-by-side. On mobile, text hides — icon only.
+   Add to Cart back to the original navy color.
+========================================================= */
+
+.product-card-actions {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 8px;
+
+  margin-top: 10px;
+
+}
+
+
+.add-cart-btn,
+.quick-view-btn {
+
+  height: 34px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  border-radius: 6px;
+
+  font-size: 10.5px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+
+}
+
+
+.add-cart-btn {
+
+  border: 1px solid $navy;
+
+  background: $navy;
+
+  color: #ffffff;
+
+}
+
+
+.add-cart-btn:hover {
+
+  background: $navy-dark;
+
+  border-color: $navy-dark;
+
+}
+
+
+.quick-view-btn {
+
+  border: 1.5px solid $border;
+
+  background: #ffffff;
+
+  color: $text-dark;
+
+}
+
+
+.quick-view-btn:hover {
+
+  border-color: $navy;
+
+  color: $navy;
+
+}
+
+
+/* =========================================================
+   QUICK VIEW BACKDROP
+========================================================= */
+
+.quick-view-backdrop {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.58);
+
+  backdrop-filter: blur(3px);
+
+}
+
+
+/* =========================================================
+   QUICK VIEW MODAL
+========================================================= */
+
+.quick-view-modal {
+
+  position: relative;
+
+  width: min(760px, 100%);
+
+  max-height: calc(100vh - 40px);
+
+  display: grid;
+
+  grid-template-columns: 42% 58%;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 25px 70px rgba(15, 23, 42, 0.22);
+
+}
+
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+.quick-view-close {
+
+  position: absolute;
+
+  top: 13px;
+
+  right: 13px;
+
+  z-index: 10;
+
+  width: 29px;
+
+  height: 29px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid $text-dark;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: $text-dark;
+
+  cursor: pointer;
+
+  font-size: 10px;
+
+}
+
+
+.quick-view-close:hover {
+
+  color: #ffffff;
+
+  background: $navy;
+
+  border-color: $navy;
+
+}
+
+
+/* =========================================================
+   QUICK VIEW IMAGE
+========================================================= */
+
+.quick-view-image-area {
+
+  position: relative;
+
+  min-height: 390px;
+
+  padding: 25px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: $bg-soft;
+
+}
+
+
+.quick-view-image {
+
+  width: 100%;
+
+  height: 100%;
+
+  max-height: 340px;
+
+  object-fit: contain;
+
+}
+
+
+.quick-view-offer {
+
+  position: absolute;
+
+  top: 20px;
+
+  left: 20px;
+
+  z-index: 3;
+
+  padding: 6px 10px;
+
+  border-radius: 4px;
+
+  background: $red;
+
+  color: #ffffff;
+
+  font-size: 10px;
+
+  font-weight: 750;
+
+}
+
+
+.quick-view-no-image {
+
+  color: #cbd5e1;
+
+  font-size: 60px;
+
+}
+
+
+/* =========================================================
+   QUICK VIEW DETAILS
+========================================================= */
+
+.quick-view-details {
+
+  padding: 42px 34px 30px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+}
+
+
+.quick-view-category {
+
+  margin-bottom: 7px;
+
+  color: $blue-label;
+
+  font-size: 10px;
+
+  font-weight: 750;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.7px;
+
+}
+
+
+.quick-view-details h2 {
+
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 25px;
+
+  line-height: 1.25;
+
+  font-weight: 750;
+
+}
+
+
+.quick-view-brand {
+
+  margin-top: 7px;
+
+  color: $text-muted;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+}
+
+
+.quick-view-description {
+
+  margin: 15px 0 0;
+
+  color: $text-muted;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+
+}
+
+
+.quick-view-rating {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  margin-top: 12px;
+
+  color: $text-muted;
+
+  font-size: 11px;
+
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.quick-view-price-row {
+
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 10px;
+
+  margin-top: 17px;
+
+}
+
+
+.quick-view-price-row strong {
+
+  color: $green;
+
+  font-size: 27px;
+
+  font-weight: 900;
+
+  letter-spacing: -0.4px;
+
+}
+
+
+.quick-view-price-row del {
+
+  color: #94a3b8;
+
+  font-size: 12px;
+
+}
+
+
+/* =========================================================
+   PRODUCT CODE
+========================================================= */
+
+.quick-view-code {
+
+  margin-top: 8px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+
+}
+
+
+.quick-view-code strong {
+
+  color: $text-muted;
+
+}
+
+
+/* =========================================================
+   QUANTITY
+========================================================= */
+
+.quick-view-quantity {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 18px;
+
+}
+
+
+.quick-view-quantity > span {
+
+  color: #475569;
+
+  font-size: 11px;
+
+  font-weight: 650;
+
+}
+
+
+.quantity-control {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  border: 1px solid $border;
+
+  border-radius: 6px;
+
+  overflow: hidden;
+
+}
+
+
+.quantity-control button {
+
+  width: 32px;
+
+  height: 30px;
+
+  border: 0;
+
+  background: $bg-soft;
+
+  color: #475569;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+}
+
+
+.quantity-control button:hover {
+
+  background: #f1f5f9;
+
+}
+
+
+.quantity-control span {
+
+  width: 35px;
+
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-left: 1px solid $border;
+
+  border-right: 1px solid $border;
+
+  color: $text-dark;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quick-view-actions {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+
+  margin-top: 20px;
+
+}
+
+
+.quick-add-cart-btn,
+.quick-buy-btn {
+  height: 39px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.quick-add-cart-btn {
+  border: 1px solid $navy;
+  background: $navy;
+  color: #ffffff;
+}
+
+.quick-add-cart-btn:hover {
+  background: $navy-dark;
+  border-color: $navy-dark;
+}
+
+
+.quick-buy-btn {
+  border: 1px solid $green;
+  background: $green;
+  color: #ffffff;
+}
+
+.quick-buy-btn:hover {
+  background: #0f5c2c;
+  border-color: #0f5c2c;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-products {
+
+  min-height: 300px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid $border;
+
+  border-radius: 10px;
+
+}
+
+
+.empty-icon {
+
+  width: 46px;
+
+  height: 46px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f1f5f9;
+
+  color: $text-muted;
+
+}
+
+
+.empty-products h5 {
+
+  margin: 13px 0 5px;
+
+  color: #334155;
+
+  font-size: 15px;
+
+}
+
+
+.empty-products p {
+
+  max-width: 350px;
+
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+
+  line-height: 1.6;
+
+}
+
+
+.clear-filters-btn {
+
+  margin-top: 14px;
+
+  height: 34px;
+
+  padding: 0 13px;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  color: #475569;
+
+  font-size: 10px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+
+}
+
+
+.clear-filters-btn:hover {
+
+  background: $bg-soft;
+
+}
+
+
+/* =========================================================
+   SKELETON
+========================================================= */
+
+.product-skeleton {
+
+  height: 100%;
+
+  min-height: 280px;
+
+  padding: 10px;
+
+  border: 1px solid $border;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+}
+
+
+.skeleton-image {
+
+  width: 100%;
+
+  height: 130px;
+
+  border-radius: 6px;
+
+  background: #eef2f6;
+
+}
+
+
+.skeleton-line {
+
+  width: 75%;
+
+  height: 11px;
+
+  margin-top: 15px;
+
+  border-radius: 4px;
+
+  background: #eef2f6;
+
+}
+
+
+.skeleton-line.small {
+
+  width: 45%;
+
+  margin-top: 8px;
+
+}
+
+
+.skeleton-bottom {
+
+  width: 55%;
+
+  height: 25px;
+
+  margin-top: 18px;
+
+  border-radius: 4px;
+
+  background: #eef2f6;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   Desktop  (>1200px)     -> 4 cards/row, sidebar filters
+   Laptop   (992-1200px)  -> 3 cards/row, sidebar filters
+   Tablet   (768-991.98)  -> ⭐ 3 cards/row, floating filter
+                              drawer, shorter cards
+   Mobile   (<=767.98)    -> ⭐ 2 cards/row, floating filter
+                              drawer, icon-only Add-to-Cart/
+                              Quick-View, shorter cards
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .products-grid {
+
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+  }
+
+}
+
+
+/* ⭐ TABLET — drawer filters kick in here, but grid stays 3-wide */
+
+@media (max-width: 991.98px) {
+
+  .products-page {
+
+    padding: 0 14px 40px;
+
+  }
+
+
+  .mobile-toolbar {
+    display: flex;
+  }
+
+  .mobile-panel-backdrop {
+    display: block;
+  }
+
+  .mobile-sort-panel {
+    display: block;
+  }
+
+  .mobile-filter-close {
+    display: flex;
+  }
+
+
+  .products-layout {
+
+    display: block;
+
+  }
+
+
+  /* =======================================================
+     ⭐ FILTERS DRAWER — now floats OVER the page (fixed)
+     instead of pushing the product grid down. This fixes
+     the "squished / same issue" look, because the panel no
+     longer lives inside the normal page flow.
+  ======================================================== */
+
+  .filters-column {
+
+    position: fixed;
+    top: var(--header-height, 66px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900; // below the fixed navbar/header stack (1060) — filter never covers it
+
+    display: flex;
+    justify-content: center;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: opacity 0.25s ease;
+
+  }
+
+  .filters-column.mobile-open {
+
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+  }
+
+
+  .filter-panel {
+
+    width: 100%;
+    max-height: calc(100vh - var(--header-height, 66px) - 20px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    margin: 10px 20px 18px;
+    padding: 18px 16px 20px;
+
+    border-radius: 14px;
+    border: 1px solid $border;
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.18);
+
+  }
+
+
+  /* ⭐ FIX — "Apply Filters" button not visible on mobile.
+     The mobile bottom nav (app-mobile-bottom-nav) is fixed to
+     the bottom of the screen, 60px tall, with a HIGHER z-index
+     (1200) than this drawer (900) — so it was sitting on top of
+     and hiding the bottom of the filter panel (where the Apply
+     Filters button lives). Only applies ≤767.98px, since the
+     bottom nav itself only shows at that breakpoint (tablet
+     doesn't need this adjustment). */
+  @media (max-width: 767.98px) {
+
+    .filters-column {
+      bottom: 60px;
+    }
+
+    .filter-panel {
+      max-height: calc(100vh - var(--header-height, 66px) - 20px - 60px);
+    }
+
+  }
+
+
+  /* ⭐ On wider mobiles / tablets, give the floating card
+        generous left/right breathing room (250px each side)
+        so it reads as a centred panel, not a full-bleed sheet. */
+
+  @media (min-width: 700px) {
+
+    .filter-panel {
+
+      margin: 10px 250px 18px;
+
+    }
+
+  }
+
+
+  /* ⭐ More breathing room inside each filter section */
+
+  .filter-block-header {
+
+    padding: 10px 0;
+    font-size: 13.5px;
+
+  }
+
+
+  .check-list {
+
+    gap: 14px;
+
+  }
+
+
+  .filter-block-body {
+
+    padding: 4px 2px 10px;
+
+  }
+
+
+  /* ⭐ Tablet — 3 cards per row, slightly shorter cards */
+
+  .products-grid {
+
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+  }
+
+
+  .product-image-wrapper {
+
+    height: 110px;
+
+  }
+
+
+  .product-card-body {
+
+    padding: 10px 10px 11px;
+
+  }
+
+
+  .product-short-desc {
+
+    display: none;
+
+  }
+
+
+  .product-name {
+
+    min-height: 30px;
+
+  }
+
+
+  .quick-view-modal {
+
+    width: min(680px, 100%);
+
+  }
+
+}
+
+
+@media (max-width: 767.98px) {
+
+  .products-header {
+
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+  }
+
+
+  .header-sort-wrapper {
+
+    width: 100%;
+
+    justify-content: space-between;
+
+  }
+
+
+  .results-toolbar {
+
+    padding: 0 2px;
+
+  }
+
+
+  /* ⭐ Mobile — 2 cards per row */
+
+  .products-grid {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+  }
+
+
+  /* ⭐ Icon-only Add to Cart / Quick View on mobile — same row */
+
+  .add-cart-btn span,
+  .quick-view-btn span {
+
+    display: none;
+
+  }
+
+  .add-cart-btn,
+  .quick-view-btn {
+
+    gap: 0;
+    font-size: 0;
+
+  }
+
+  .add-cart-btn i,
+  .quick-view-btn i {
+
+    font-size: 15px;
+
+  }
+
+
+  /* ⭐ Mobile — shorter product cards */
+
+  .product-image-wrapper {
+
+    height: 92px;
+    padding: 6px;
+
+  }
+
+
+  .product-card-body {
+
+    padding: 8px 9px 9px;
+
+  }
+
+
+  .product-name {
+
+    font-size: 12px;
+    min-height: 26px;
+
+  }
+
+
+  .product-rating {
+
+    margin-top: 5px;
+
+  }
+
+
+  .product-price-row {
+
+    padding-top: 6px;
+
+  }
+
+
+  .product-price {
+
+    font-size: 14px;
+
+  }
+
+
+  .product-card-actions {
+
+    margin-top: 6px;
+
+  }
+
+
+  .add-cart-btn,
+  .quick-view-btn {
+
+    height: 28px;
+
+  }
+
+
+  .quick-view-modal {
+
+    grid-template-columns: 1fr;
+
+    max-height: calc(100vh - 25px);
+
+    overflow-y: auto;
+
+  }
+
+
+  .quick-view-image-area {
+
+    min-height: 270px;
+
+    height: 270px;
+
+  }
+
+
+  .quick-view-details {
+
+    padding: 25px 22px;
+
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .products-page {
+
+    padding: 0 10px 30px;
+
+  }
+
+
+  .mobile-toolbar {
+
+    padding: 10px 10px;
+
+  }
+
+
+  /* ⭐ Still 2 cards per row on the smallest screens */
+
+  .products-grid {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+
+  }
+
+
+  /* ⭐ product-card-actions stays 2 columns (icon-only fits fine) */
+
+  .product-card-actions {
+
+    grid-template-columns: 1fr 1fr;
+
+  }
+
+
+  .quick-view-actions {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+
+/* =========================================================
+   ⭐ TOAST NOTIFICATION (bottom-right, replaces alert())
+========================================================= */
+
+.app-toast {
+
+  position: fixed;
+
+  right: 22px;
+
+  bottom: 22px;
+
+  z-index: 100000;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 260px;
+
+  max-width: 360px;
+
+  padding: 13px 14px;
+
+  border-radius: 10px;
+
+  background: #172033;
+
+  color: #ffffff;
+
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.28);
+
+  animation: toast-slide-in 0.25s ease;
+
+}
+
+
+.app-toast > i:first-child {
+
+  flex-shrink: 0;
+
+  font-size: 18px;
+
+}
+
+
+.app-toast.toast-success > i:first-child {
+
+  color: #22c55e;
+
+}
+
+
+.app-toast.toast-error > i:first-child {
+
+  color: #f87171;
+
+}
+
+
+.app-toast .toast-text {
+
+  flex: 1;
+
+  font-size: 12.5px;
+
+  font-weight: 600;
+
+  line-height: 1.4;
+
+}
+
+
+.app-toast .toast-close {
+
+  flex-shrink: 0;
+
+  width: 22px;
+
+  height: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.65);
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+}
+
+
+.app-toast .toast-close:hover {
+
+  background: rgba(255, 255, 255, 0.12);
+
+  color: #ffffff;
+
+}
+
+
+@keyframes toast-slide-in {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateY(14px);
+
+  }
+
+
+  to {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .app-toast {
+
+    right: 12px;
+
+    left: 12px;
+
+    bottom: 12px;
+
+    max-width: none;
+
+  }
+
+}
+
+
+
+/* =========================================================
+   ⭐ EMPTY PRODUCTS STATE (final override — no white card,
+   no border, image itself does the talking, clean & centered)
+========================================================= */
+
+.empty-products {
+  width: 100%;
+  min-height: 520px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 30px 20px;
+  box-sizing: border-box;
+
+  /* cancel the earlier white-card look completely */
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+
+// Image — no background box, no circle, just the picture
+.empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  aspect-ratio: 830 / 580;
+
+  margin: 0 auto 12px;
+  overflow: hidden;
+
+  background: transparent;
+  border-radius: 0;
+}
+
+.empty-icon img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  display: block;
+}
+
+
+// Content
+.empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-content h5 {
+  margin: 0 0 7px;
+
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.empty-content p {
+  margin: 0 0 18px;
+
+  max-width: 420px;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #777;
+}
+
+
+// Clear Filters Button
+.clear-filters-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 8px 16px;
+
+  border: 1px solid #ddd;
+  border-radius: 5px;
+
+  background: #fff;
+  color: #555;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.clear-filters-btn i {
+  font-size: 13px;
+}
+
+.clear-filters-btn:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+@media (max-width: 767.98px) {
+  .empty-products {
+    min-height: 380px;
+    padding: 20px 14px;
+  }
+
+  .empty-icon {
+    max-width: 260px;
+  }
+}

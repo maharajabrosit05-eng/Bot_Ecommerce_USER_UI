@@ -1,0 +1,76 @@
+<section
+  class="container text-center"
+  style="
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(30px, 6vw, 80px) 15px;
+    box-sizing: border-box;
+  "
+>
+  <div
+    class="animate-bounce-in"
+    style="
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+
+    <!-- 404 Image -->
+    <img
+      src="assets/img/404-page.png"
+      alt="404 Page Not Found"
+      style="
+        display: block;
+        width: min(80vw, 600px);
+        height: auto;
+        max-height: 400px;
+        object-fit: contain;
+        margin: 0 auto;
+      "
+    />
+
+    <!-- Message -->
+    <p
+      class="text-muted fs-5"
+      style="
+        width: 100%;
+        max-width: 600px;
+        margin: clamp(15px, 3vw, 25px) auto 0;
+        padding: 0 10px;
+        font-size: clamp(15px, 2vw, 20px) !important;
+        line-height: 1.5;
+        text-align: center;
+        box-sizing: border-box;
+      "
+    >
+      Oops! This page went out of stock.
+    </p>
+
+    <!-- Back to Home -->
+    <a
+      routerLink="/"
+      class="btn btn-brand mt-3"
+      style="
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 150px;
+        padding: 10px 20px;
+        font-size: clamp(14px, 1.5vw, 16px);
+        line-height: 1.4;
+        white-space: nowrap;
+        text-decoration: none;
+        box-sizing: border-box;
+      "
+    >
+      <i class="bi bi-house"></i>
+      <span>Back to Home</span>
+    </a>
+
+  </div>
+</section>

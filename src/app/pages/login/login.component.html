@@ -1,0 +1,506 @@
+<div class="login-page">
+
+  <!-- =========================================
+       HEADER
+  ========================================== -->
+  <!-- <header class="login-header">
+
+    <div class="header-inner">
+
+      <button
+        type="button"
+        class="brand"
+        (click)="router.navigateByUrl('/')"
+      >
+        <span class="brand-icon">
+          <i class="bi bi-bag-fill"></i>
+        </span>
+
+        <span class="brand-text">
+          <strong>BOT</strong>
+          <small>ECOMMERCE</small>
+        </span>
+      </button>
+
+    </div>
+
+  </header> -->
+
+
+  <!-- =========================================
+       MAIN
+  ========================================== -->
+  <main class="login-main">
+
+    <div class="auth-container">
+
+      <!-- =====================================
+           LOGIN CARD
+      ====================================== -->
+      <section class="auth-card" *ngIf="mode === 'login'">
+
+        <!-- Title -->
+        <div class="auth-title">
+
+          <h1>Sign in</h1>
+
+          <p>
+            Sign in to your BOT Ecommerce account
+          </p>
+
+        </div>
+
+
+        <!-- Error -->
+        <div class="message message-error" *ngIf="errorMsg">
+
+          <i class="bi bi-exclamation-circle-fill"></i>
+
+          <span>
+            {{ errorMsg }}
+          </span>
+
+          <button type="button" (click)="clearMessages()">
+            ×
+          </button>
+
+        </div>
+
+
+        <!-- Success -->
+        <div class="message message-success" *ngIf="successMsg">
+
+          <i class="bi bi-check-circle-fill"></i>
+
+          <span>
+            {{ successMsg }}
+          </span>
+
+          <button type="button" (click)="clearMessages()">
+            ×
+          </button>
+
+        </div>
+
+
+        <!-- Login Form -->
+        <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" novalidate>
+
+          <!-- Mobile -->
+          <div class="form-group">
+
+            <label for="login-mobile">
+              Mobile number
+            </label>
+
+            <div class="input-box">
+
+              <span class="input-prefix">
+                +91
+              </span>
+
+              <input id="login-mobile" type="tel" name="Mobile_No" [(ngModel)]="loginModel.Mobile_No" required
+                pattern="^[0-9]{10}$" maxlength="10" inputmode="numeric" placeholder="Enter mobile number"
+                autocomplete="tel" />
+
+            </div>
+
+            <small class="field-hint">
+              Enter your registered 10-digit mobile number
+            </small>
+
+          </div>
+
+
+          <!-- Password -->
+          <div class="form-group">
+
+            <div class="label-row">
+
+              <label for="login-password">
+                Password
+              </label>
+
+              <button type="button" class="forgot-link" (click)="forgotPassword()">
+                Forgot password?
+              </button>
+
+            </div>
+
+            <div class="input-box">
+
+              <input id="login-password" [type]="showLoginPassword ? 'text' : 'password'" name="app_password"
+                [(ngModel)]="loginModel.app_password" required minlength="4" placeholder="Enter password"
+                autocomplete="current-password" />
+
+              <button type="button" class="eye-btn" (click)="toggleLoginPassword()" [attr.aria-label]="
+                  showLoginPassword
+                    ? 'Hide password'
+                    : 'Show password'
+                ">
+
+                <i class="bi" [class.bi-eye]="!showLoginPassword" [class.bi-eye-slash]="showLoginPassword"></i>
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Remember -->
+          <label class="remember-row">
+
+            <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
+
+            <span class="checkmark">
+              <i class="bi bi-check"></i>
+            </span>
+
+            <span>
+              Keep me signed in
+            </span>
+
+          </label>
+
+
+          <!-- Login button -->
+          <button type="submit" class="primary-btn" [disabled]="loading">
+
+            <ng-container *ngIf="!loading">
+
+              <span>Sign in</span>
+
+              <i class="bi bi-arrow-right"></i>
+
+            </ng-container>
+
+
+            <ng-container *ngIf="loading">
+
+              <span class="spinner"></span>
+
+              <span>
+                Signing in...
+              </span>
+
+            </ng-container>
+
+          </button>
+
+
+          <!-- Terms -->
+          <p class="terms-text">
+
+            By continuing, you agree to BOT Ecommerce's
+
+            <button type="button" (click)="router.navigateByUrl('/conditions_of_us')">
+              Conditions of Use
+            </button>
+
+            and
+
+            <button type="button" (click)="router.navigateByUrl('/privacy_notice')">
+              Privacy Notice
+            </button>.
+
+          </p>
+
+        </form>
+
+
+        <!-- Divider -->
+        <div class="new-customer">
+
+          <div class="divider">
+            <span></span>
+            <small>New to BOT Ecommerce?</small>
+            <span></span>
+          </div>
+
+          <button type="button" class="secondary-btn" (click)="switchMode('signup')">
+            Create your BOT Ecommerce account
+          </button>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================
+           SIGNUP CARD
+      ====================================== -->
+      <section class="auth-card signup-card" *ngIf="mode === 'signup'">
+
+        <!-- Title -->
+        <div class="auth-title">
+
+          <h1>Create account</h1>
+
+          <p>
+            Create your BOT Ecommerce account
+          </p>
+
+        </div>
+
+
+        <!-- Error -->
+        <div class="message message-error" *ngIf="errorMsg">
+
+          <i class="bi bi-exclamation-circle-fill"></i>
+
+          <span>
+            {{ errorMsg }}
+          </span>
+
+          <button type="button" (click)="clearMessages()">
+            ×
+          </button>
+
+        </div>
+
+
+        <!-- Success -->
+        <div class="message message-success" *ngIf="successMsg">
+
+          <i class="bi bi-check-circle-fill"></i>
+
+          <span>
+            {{ successMsg }}
+          </span>
+
+          <button type="button" (click)="clearMessages()">
+            ×
+          </button>
+
+        </div>
+
+
+        <!-- Signup Form -->
+        <form #signupForm="ngForm" (ngSubmit)="onSignup(signupForm)" novalidate>
+
+          <!-- Name -->
+          <div class="form-group">
+
+            <label for="customer-name">
+              Your name
+            </label>
+
+            <input id="customer-name" class="plain-input" type="text" name="Customer_Name"
+              [(ngModel)]="signupModel.Customer_Name" required placeholder="First and last name" autocomplete="name" />
+
+          </div>
+
+
+          <!-- Mobile -->
+          <div class="form-group">
+
+            <label for="signup-mobile">
+              Mobile number
+            </label>
+
+            <div class="input-box">
+
+              <span class="input-prefix">
+                +91
+              </span>
+
+              <input id="signup-mobile" type="tel" name="Mobile_No" [(ngModel)]="signupModel.Mobile_No" required
+                pattern="^[0-9]{10}$" maxlength="10" inputmode="numeric" placeholder="10-digit mobile number"
+                autocomplete="tel" />
+
+            </div>
+
+          </div>
+
+
+          <!-- Email -->
+          <div class="form-group">
+
+            <label for="signup-email">
+              Email
+              <span class="optional">
+                Optional
+              </span>
+            </label>
+
+            <input id="signup-email" class="plain-input" type="email" name="Email_Id" [(ngModel)]="signupModel.Email_Id"
+              placeholder="you@example.com" autocomplete="email" />
+
+          </div>
+
+
+          <!-- Password -->
+          <div class="form-group">
+
+            <label for="signup-password">
+              Password
+            </label>
+
+            <div class="input-box">
+
+              <input id="signup-password" [type]="showSignupPassword ? 'text' : 'password'" name="app_password"
+                [(ngModel)]="signupModel.app_password" required minlength="4" placeholder="At least 4 characters"
+                autocomplete="new-password" />
+
+              <button type="button" class="eye-btn" (click)="toggleSignupPassword()">
+
+                <i class="bi" [class.bi-eye]="!showSignupPassword" [class.bi-eye-slash]="showSignupPassword"></i>
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Confirm password -->
+          <div class="form-group">
+
+            <label for="confirm-password">
+              Re-enter password
+            </label>
+
+            <div class="input-box">
+
+              <input id="confirm-password" [type]="showConfirmPassword ? 'text' : 'password'" name="confirmPassword"
+                [(ngModel)]="signupModel.confirmPassword" required minlength="4" placeholder="Re-enter your password"
+                autocomplete="new-password" />
+
+              <button type="button" class="eye-btn" (click)="toggleConfirmPassword()">
+
+                <i class="bi" [class.bi-eye]="!showConfirmPassword" [class.bi-eye-slash]="showConfirmPassword"></i>
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Create account -->
+          <button type="submit" class="primary-btn" [disabled]="loading">
+
+            <ng-container *ngIf="!loading">
+
+              <span>Create your account</span>
+
+              <i class="bi bi-arrow-right"></i>
+
+            </ng-container>
+
+
+            <ng-container *ngIf="loading">
+
+              <span class="spinner"></span>
+
+              <span>
+                Creating account...
+              </span>
+
+            </ng-container>
+
+          </button>
+
+
+          <!-- Terms -->
+          <p class="terms-text">
+
+            By creating an account, you agree to BOT Ecommerce's
+
+            <button type="button" (click)="router.navigateByUrl('/conditions_of_us')">
+              Conditions of Use
+            </button>
+
+            and
+
+            <button type="button" (click)="router.navigateByUrl('/privacy_notice')">
+              Privacy Notice
+            </button>.
+
+          </p>
+
+        </form>
+
+
+        <!-- Existing customer -->
+        <div class="existing-customer">
+
+          <div class="divider">
+            <span></span>
+            <small>Already have an account?</small>
+            <span></span>
+          </div>
+
+          <button type="button" class="secondary-btn" (click)="switchMode('login')">
+            Sign in to your account
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================
+           SECURITY INFORMATION
+      ====================================== -->
+      <div class="security-info">
+
+        <div class="security-item">
+
+          <i class="bi bi-shield-check"></i>
+
+          <div>
+            <strong>Secure account</strong>
+            <span>Your information is protected</span>
+          </div>
+
+        </div>
+
+        <div class="security-item">
+
+          <i class="bi bi-lock-fill"></i>
+
+          <div>
+            <strong>Private & secure</strong>
+            <span>Your details stay confidential</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- =========================================
+       FOOTER
+  ========================================== -->
+  <footer class="login-footer">
+
+    <div class="footer-links">
+
+      <button type="button" (click)="router.navigateByUrl('/conditions_of_us')">
+        Conditions of Use
+      </button>
+
+      <button type="button">
+        Privacy Notice
+      </button>
+
+      <button type="button">
+        Help
+      </button>
+
+    </div>
+
+    <p>
+      © {{ currentYear }} BOT Ecommerce. All rights reserved.
+    </p>
+
+  </footer>
+
+</div>

@@ -1,0 +1,21 @@
+<ng-container *ngIf="ads.length">
+
+  <div class="ad-banner-wrap">
+
+    <div class="ad-slider-viewport">
+      <div class="ad-slider-track" [style.transform]="'translateX(-' + (activeIndex * 100) + '%)'">
+        <a class="ad-slide" *ngFor="let ad of ads" [attr.href]="ad.Redirect_Url || null">
+          <img *ngIf="!adImageError[getAdKey(ad)]" [src]="getAdImage(ad)" [alt]="ad.Ad_Title || 'Advertisement'"
+            class="ad-banner-img" (error)="onAdImageError(ad)" />
+        </a>
+      </div>
+    </div>
+
+    <div class="ad-dots" *ngIf="ads.length > 1">
+      <button type="button" class="ad-dot" *ngFor="let ad of ads; let i = index" [class.active]="i === activeIndex"
+        (click)="goToAdSlide(i)" [attr.aria-label]="'Go to ad ' + (i + 1)"></button>
+    </div>
+
+  </div>
+
+</ng-container>

@@ -1,0 +1,78 @@
+<section class="about-page">
+
+  <div class="breadcrumb-row">
+    <nav class="breadcrumb-nav">
+      <a routerLink="/">Home</a>
+      <i class="bi bi-chevron-right"></i>
+      <span>About Us</span>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <div class="about-hero">
+    <span class="kicker">WHO WE ARE</span>
+    <h1>Bros IT Solutions</h1>
+    <p>
+      Smart technology, better business. We're a Chennai-based electronics and IT retailer
+      bringing genuine computer hardware, peripherals, and accessories to homes and businesses
+      across Tamil Nadu — backed by real support, not just a checkout page.
+    </p>
+  </div>
+
+  <!-- STATS -->
+  <div class="about-stats">
+    <div class="stat-card" *ngFor="let s of stats">
+      <strong>{{ s.value }}</strong>
+      <span>{{ s.label }}</span>
+    </div>
+  </div>
+
+  <!-- STORY -->
+  <div class="about-story">
+    <div class="story-text">
+      <span class="kicker">OUR STORY</span>
+      <h2>Built on trust, one order at a time</h2>
+      <p>
+        Bros IT Solutions started with a simple idea — buying electronics online shouldn't feel
+        like a gamble. Too many customers were dealing with fake products, vague warranties, and
+        support teams that never answered. We set out to fix that.
+      </p>
+      <p>
+        Today, we stock everything from monitors, keyboards and mice to UPS units and full PC
+        builds — every item checked, every order packed carefully, and every customer treated
+        like they're the only one that matters.
+      </p>
+    </div>
+    <div class="story-image">
+      <img src="assets/img/bros-logo.jpg" alt="Bros IT Solutions" />
+    </div>
+  </div>
+
+  <!-- VALUES -->
+  <div class="about-values">
+    <div class="section-heading">
+      <span class="kicker">WHY CHOOSE US</span>
+      <h2>What we stand for</h2>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card" *ngFor="let v of values">
+        <div class="value-icon"><i class="bi" [ngClass]="v.icon"></i></div>
+        <h4>{{ v.title }}</h4>
+        <p>{{ v.desc }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="about-cta">
+    <div>
+      <h3>Ready to upgrade your setup?</h3>
+      <p>Browse our full catalog of genuine, warranty-backed electronics.</p>
+    </div>
+    <a routerLink="/products" class="cta-btn">
+      Shop Now <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
+
+</section>

@@ -1,0 +1,977 @@
+/* =========================================================
+   ⭐ STICKY NAV WRAPPER — navbar + category bar ONLY.
+   This is the part that must stay pinned while scrolling
+   (the announcement bar above it is normal flow and scrolls
+   away). "sticky" lets it sit in normal flow first, then
+   lock to the top of the viewport once scrolled up to.
+   Height is measured live in app.component.ts (ResizeObserver)
+   and pushed into --header-height, used by sticky/fixed
+   panels elsewhere (e.g. the Products page filter drawer).
+========================================================= */
+
+.app-sticky-nav {
+
+  position: sticky;
+
+  top: 0;
+
+  left: 0;
+
+  right: 0;
+
+  width: 100%;
+
+  z-index: 1060;
+}
+
+
+/* =========================================================
+   TOP BAR (was: announcement bar with social icons)
+========================================================= */
+
+.announcement-bar {
+
+  width: 100%;
+
+  min-height: 44px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #d9dee5;
+
+  color: #1e293b;
+
+  /* Static — normal document flow. This bar is meant to scroll
+     away with the page; only the navbar/category-bar below it
+     (.app-sticky-nav) stays pinned. */
+  position: static;
+
+  z-index: 1051;
+
+  overflow: hidden;
+}
+
+
+.announcement-container {
+
+  width: 100%;
+
+  min-height: 44px;
+
+  margin: 0;
+
+  padding: 0 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LEFT : LOGO + BRAND NAME
+========================================================= */
+
+.announcement-brand-row {
+
+  display: flex;
+
+  align-items: center;
+
+  flex-shrink: 0;
+}
+
+
+/* Hidden everywhere by default — only shown on mobile
+   (see the MOBILE block near the bottom of this file) */
+.announcement-order-icon {
+
+  display: none;
+}
+
+
+.announcement-brand {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+
+  text-decoration: none;
+
+  color: #111827;
+}
+
+
+.announcement-logo {
+
+  width: 28px;
+
+  height: 28px;
+
+  object-fit: contain;
+
+  border-radius: 4px;
+
+  display: block;
+}
+
+
+.announcement-brand-name {
+
+  font-size: 0.95rem;
+
+  font-weight: 800;
+
+  letter-spacing: 0.3px;
+
+  white-space: nowrap;
+
+  color: #111827;
+}
+
+
+.announcement-brand-name .text-brand {
+
+  color: #e63946;
+}
+
+
+/* =========================================================
+   CENTER : DELIVERY ADDRESS
+========================================================= */
+
+.announcement-address {
+
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  color: #334155;
+
+  font-size: 0.78rem;
+
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+}
+
+
+.announcement-address i {
+
+  color: #e63946;
+
+  font-size: 0.85rem;
+
+  flex-shrink: 0;
+}
+
+
+.announcement-address .address-label {
+
+  color: #000000;
+
+  font-weight: 600;
+}
+
+
+.announcement-address .address-value {
+
+  color: #2477fd;
+
+  font-weight: 700;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+.announcement-address .address-caret {
+
+  font-size: 0.65rem;
+
+  color: #000000;
+}
+
+
+.announcement-address:hover .address-value {
+
+  color: #e63946;
+}
+
+
+/* =========================================================
+   RIGHT : NEED HELP
+========================================================= */
+
+.announcement-right {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  color: #334155;
+
+  font-size: 0.78rem;
+
+  white-space: nowrap;
+
+  flex-shrink: 0;
+}
+
+
+.announcement-right > i {
+
+  color: #1e293b;
+
+  font-size: 0.95rem;
+}
+
+
+.announcement-right span {
+
+  color: #334155;
+
+  font-weight: 600;
+}
+
+
+.announcement-right a {
+
+  color: #008b31;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+
+.announcement-right a:hover {
+
+  color: #006d27;
+
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+  .announcement-container {
+
+    gap: 12px;
+  }
+
+
+  .announcement-address .address-label {
+
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE — top bar used to be hidden completely here.
+   Now kept sticky instead (fixed below), so this block
+   only exists for historical reference and does nothing
+   harmful — the later block always wins.
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+  .announcement-bar {
+
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   LAPTOP (>=992px) — same inset as the navbar row
+========================================================= */
+
+@media (min-width: 992px) {
+
+  .announcement-container {
+
+    padding: 0 60px;
+  }
+
+}
+
+
+/* =========================================================
+   WIDE DESKTOP (>=1400px) — same 250px inset as the navbar
+========================================================= */
+
+// @media (min-width: 1400px) {
+
+//   .announcement-container {
+
+//     padding-left: 250px;
+
+//     padding-right: 250px;
+//   }
+
+// }
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.app-main {
+
+  display: block;
+
+  min-height: 60vh;
+}
+
+
+@media (max-width: 767.98px) {
+
+  .app-main {
+
+    /* leave room for the fixed mobile bottom nav */
+    padding-bottom: 64px;
+  }
+
+}
+
+@media (max-width: 767.98px) {
+
+  .announcement-bar {
+    display: block;
+
+    /* Static — this bar scrolls away with the page; only
+       .app-sticky-nav (navbar/category bar) stays pinned. */
+    position: static;
+
+    width: 100%;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #edf0f3;
+
+    z-index: 1040;
+  }
+
+
+  .announcement-container {
+
+    min-height: auto;
+
+    padding: 10px 14px 8px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    justify-content: flex-start;
+
+    gap: 8px;
+
+    box-sizing: border-box;
+  }
+
+
+  /* =======================================================
+     LOGO
+  ======================================================= */
+
+  .announcement-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    text-decoration: none;
+  }
+
+
+  .announcement-logo {
+
+    width: 32px;
+
+    height: 32px;
+
+    object-fit: contain;
+
+    border-radius: 5px;
+
+    flex-shrink: 0;
+  }
+
+
+  .announcement-brand-name {
+
+    font-size: 0.9rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.25px;
+
+    white-space: nowrap;
+
+    color: #111827;
+  }
+
+
+  /* =======================================================
+     LOCATION — BELOW LOGO
+  ======================================================= */
+
+  .announcement-address {
+
+    display: flex;
+
+    width: 100%;
+
+    min-width: 0;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    gap: 6px;
+
+    padding: 2px 4px 3px;
+
+    color: #334155;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+  }
+
+
+  .announcement-address > i:first-child {
+
+    color: #e63946;
+
+    font-size: 0.9rem;
+
+    flex-shrink: 0;
+  }
+
+
+  .announcement-address .address-label {
+
+    display: inline;
+
+    color: #000000;
+
+    font-size: 0.7rem;
+
+    font-weight: 700;
+
+    flex-shrink: 0;
+  }
+
+
+  .announcement-address .address-value {
+
+    color: #1c70f5;
+
+    font-size: 0.72rem;
+
+    font-weight: 700;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+  }
+
+
+  .announcement-address .address-caret {
+
+    display: inline;
+
+    color: #94a3b8;
+
+    font-size: 0.6rem;
+
+    flex-shrink: 0;
+  }
+
+
+  /* =======================================================
+     HIDE NEED HELP ON MOBILE
+  ======================================================= */
+
+  .announcement-right {
+
+    display: none;
+  }
+
+}
+
+/* =========================================================
+   MOBILE + TABLET TOP AREA
+   Premium soft background
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+  .announcement-bar {
+    display: block;
+
+    /* Static — this bar scrolls away with the page; only
+       .app-sticky-nav (navbar/category bar) stays pinned. */
+    position: static;
+
+    width: 100%;
+
+    /* Premium background */
+    background:
+      radial-gradient(circle at 10% 0%,
+        rgba(230, 57, 70, 0.10) 0%,
+        transparent 35%),
+      radial-gradient(circle at 90% 20%,
+        rgba(36, 119, 253, 0.10) 0%,
+        transparent 38%),
+      linear-gradient(
+        135deg,
+        #f8faff 0%,
+        #fff7f8 50%,
+        #f5f8ff 100%
+      );
+
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+
+    z-index: 1040;
+  }
+
+
+  .announcement-container {
+
+    min-height: auto;
+
+    padding: 12px 14px 10px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    gap: 9px;
+
+    box-sizing: border-box;
+  }
+
+
+  /* =======================================================
+     LOGO / BRAND
+  ======================================================= */
+
+  .announcement-brand {
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    width: 100%;
+
+    padding: 3px 2px;
+
+    text-decoration: none;
+  }
+
+
+  .announcement-logo {
+
+    width: 36px;
+    height: 36px;
+
+    object-fit: contain;
+
+    // border-radius: 8px;
+
+    flex-shrink: 0;
+
+    background: #ffffff;
+
+    box-shadow:
+      0 3px 10px rgba(15, 23, 42, 0.08);
+  }
+
+
+  .announcement-brand-name {
+
+    font-size: 0.92rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.25px;
+
+    white-space: nowrap;
+
+    color: #111827;
+  }
+
+
+  .announcement-brand-name .text-brand {
+
+    color: #e63946;
+  }
+
+
+  /* =======================================================
+     DELIVERY ADDRESS CARD
+  ======================================================= */
+
+  .announcement-address {
+
+    display: flex;
+
+    width: 100%;
+
+    min-width: 0;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    gap: 7px;
+
+    padding: 10px 12px;
+
+    box-sizing: border-box;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    border: 1px solid rgba(226, 232, 240, 0.9);
+
+    border-radius: 12px;
+
+    box-shadow:
+      0 4px 14px rgba(15, 23, 42, 0.06);
+
+    color: #334155;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+
+  .announcement-address:active {
+
+    transform: scale(0.99);
+
+    box-shadow:
+      0 2px 8px rgba(15, 23, 42, 0.05);
+  }
+
+
+  .announcement-address > i:first-child {
+
+    color: #e63946;
+
+    font-size: 0.95rem;
+
+    flex-shrink: 0;
+  }
+
+
+  .announcement-address .address-label {
+
+    display: inline;
+
+    color: #64748b;
+
+    font-size: 0.68rem;
+
+    font-weight: 700;
+
+    flex-shrink: 0;
+  }
+
+
+  .announcement-address .address-value {
+
+    color: #1c70f5;
+
+    font-size: 0.73rem;
+
+    font-weight: 800;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+  }
+
+
+  .announcement-address .address-caret {
+
+    display: inline;
+
+    color: #64748b;
+
+    font-size: 0.58rem;
+
+    flex-shrink: 0;
+  }
+
+
+  /* =======================================================
+     HIDE NEED HELP
+  ======================================================= */
+
+  .announcement-right {
+
+    display: none;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET — slightly larger / cleaner spacing
+   Brand row + delivery address sit in ONE row here
+   (overrides the column layout from the block above,
+   for the 768–991.98px range only).
+========================================================= */
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+  .announcement-container {
+
+    flex-direction: row;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    padding: 14px 24px 12px;
+
+    gap: 16px;
+  }
+
+
+  .announcement-brand {
+
+    padding-left: 4px;
+
+    width: auto;
+
+    flex-shrink: 0;
+  }
+
+
+  .announcement-logo {
+
+    width: 40px;
+    height: 40px;
+
+    // border-radius: 9px;
+  }
+
+
+  .announcement-brand-name {
+
+    font-size: 1rem;
+  }
+
+
+  .announcement-address {
+
+    width: auto;
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 11px 14px;
+
+    border-radius: 13px;
+  }
+
+
+  .announcement-address .address-label {
+
+    font-size: 0.72rem;
+  }
+
+
+  .announcement-address .address-value {
+
+    font-size: 0.78rem;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .announcement-container {
+
+    padding: 10px 11px 9px;
+
+    gap: 7px;
+  }
+
+
+  .announcement-logo {
+
+    width: 32px;
+    height: 32px;
+  }
+
+
+  .announcement-brand-name {
+
+    font-size: 0.84rem;
+  }
+
+
+  .announcement-address {
+
+    padding: 9px 10px;
+
+    gap: 5px;
+  }
+
+
+  .announcement-address .address-label {
+
+    font-size: 0.64rem;
+  }
+
+
+  .announcement-address .address-value {
+
+    font-size: 0.68rem;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE — "My Order" icon to the LEFT of the logo/brand.
+   Appears ONLY on mobile (≤767.98px) — hidden on tablet
+   and desktop by the base .announcement-order-icon rule.
+========================================================= */
+
+@media (max-width: 767.98px) {
+
+  .announcement-brand-row {
+
+    width: 100%;
+
+    gap: 8px;
+  }
+
+
+  .announcement-order-icon {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 44px;
+
+    height: 44px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    // background: #fdecec;
+
+    color: #097042;
+
+    font-size: 1.5rem;
+
+    text-decoration: none;
+
+    transition:
+      background 0.2s ease,
+      transform 0.15s ease;
+  }
+
+
+  .announcement-order-icon:hover {
+
+    background: #fbdada;
+  }
+
+
+  .announcement-order-icon:active {
+
+    transform: scale(0.94);
+  }
+
+
+  /* Brand now shares the row with the order icon, so it
+     no longer needs to be full width — it just fills the
+     remaining space next to the icon. */
+  .announcement-brand {
+
+    width: auto;
+
+    flex: 1;
+
+    min-width: 0;
+  }
+
+}

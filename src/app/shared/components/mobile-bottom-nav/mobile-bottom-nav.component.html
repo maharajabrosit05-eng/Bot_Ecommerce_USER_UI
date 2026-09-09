@@ -1,0 +1,43 @@
+<!-- =========================================================
+     MOBILE BOTTOM NAVIGATION
+     Home | Products | Profile | Cart
+     Only visible on mobile widths — see the component SCSS.
+========================================================= -->
+
+<nav class="mobile-bottom-nav">
+
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="mobile-nav-item">
+    <i class="bi bi-house-door"></i>
+    <span>Home</span>
+  </a>
+
+  <a routerLink="/products" routerLinkActive="active" class="mobile-nav-item">
+    <i class="bi bi-grid-3x3-gap"></i>
+    <span>Products</span>
+  </a>
+
+
+
+  <a routerLink="/cart" routerLinkActive="active" class="mobile-nav-item position-relative">
+    <i class="bi bi-cart3"></i>
+    <span>Cart</span>
+    <span *ngIf="commonService.totalCount() > 0" class="mobile-cart-badge">
+      {{ commonService.totalCount() }}
+    </span>
+  </a>
+
+  <a routerLink="/wishlist" routerLinkActive="active" class="mobile-nav-item position-relative">
+    <i class="bi bi-heart"></i>
+    <span>Likes</span>
+    <span *ngIf="wishlistService.totalCount() > 0" class="mobile-cart-badge">
+      {{ wishlistService.totalCount() }}
+    </span>
+  </a>
+
+
+  <button type="button" class="mobile-nav-item mobile-nav-btn" (click)="goToProfile()">
+    <i class="bi" [ngClass]="isLoggedIn ? 'bi-person-check' : 'bi-person'"></i>
+    <span>Profile</span>
+  </button>
+
+</nav>
