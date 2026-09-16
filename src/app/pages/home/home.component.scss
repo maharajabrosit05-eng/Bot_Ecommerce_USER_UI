@@ -59,6 +59,21 @@
   padding: 0;
 }
 
+/* ⭐ FIX: the LAST ad block on the page (Slot 5) was leaving a big
+   gap of empty white space right above the footer — its own
+   bottom margin/dots-margin had nothing after it to "absorb" it.
+   Zero that trailing margin out so the page ends right after the
+   ad, flush with the footer. */
+.home-content-full:last-of-type {
+  .ad-dots {
+    margin-bottom: 0;
+  }
+
+  .ad-slot {
+    margin-bottom: 0;
+  }
+}
+
 
 /* =========================================================
    ⭐ AD SLOT — empty-state placeholder
@@ -208,11 +223,16 @@
    ⭐ AD BANNER IMAGE (used inside ad-slide)
 ========================================================= */
 
+/* ⭐ FIX: "object-fit: contain" was letterboxing any ad image whose
+   aspect ratio didn't exactly match the 3:1 / 16:9 slider box —
+   that grey letterbox band is exactly the "empty space" reported
+   inside the ad banners. "cover" fills the box completely with
+   no gaps (crops slightly instead of padding). */
 .ad-banner-img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   background: #f3f5f8;
 }
@@ -379,24 +399,10 @@
   gap: 10px;
 }
 
-/* ⭐ FIX: "scroll-behavior: smooth" here was fighting the JS
-   auto-scroll loop (every tiny scrollLeft nudge tried to trigger
-   its own smooth animation, and they all cancelled each other out
-   — net result: it never visibly moved). Removed it; the manual
-   arrow buttons still animate smoothly because scrollTrack() passes
-   behavior:'smooth' explicitly on click. */
-// .showcase-track {
-//   display: flex;
-//   gap: 16px;
-//   overflow-x: auto;
-//   scroll-snap-type: x mandatory;
-//   padding: 4px 2px 10px;
-//   -ms-overflow-style: none;
-//   scrollbar-width: none;
-// }
-
 .showcase-track {
   display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
   gap: 16px;
   overflow-x: auto;
   padding: 4px 2px 10px;
@@ -531,6 +537,16 @@
   .showcase-card-name { font-size: 0.96rem; }
 }
 
+/* ⭐ FIX: prev/next arrow buttons are only needed on pointer devices
+   with room for them (tablet/laptop/desktop). On phones the track
+   already auto-scrolls by itself and is swipeable, so the arrows
+   just ate up width and looked cramped — hide them below 768px and
+   let the track use the full section width. */
+@media (max-width: 767.98px) {
+  .showcase-scroller { gap: 0; }
+  .showcase-nav { display: none; }
+}
+
 @media (max-width: 575.98px) {
   .showcase-section { padding-top: 30px; padding-bottom: 30px; }
   .showcase-track { gap: 10px; }
@@ -538,7 +554,6 @@
   .showcase-card-image { width: 58px; height: 58px; font-size: 20px; }
   .showcase-card-name { font-size: 0.76rem; }
   .showcase-card-count { font-size: 0.6rem; padding: 2px 8px; }
-  .showcase-nav { width: 32px; height: 32px; font-size: 12px; }
 }
 
 

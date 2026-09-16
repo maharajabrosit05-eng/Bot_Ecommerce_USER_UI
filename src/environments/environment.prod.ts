@@ -3,9 +3,13 @@ import packageInfo from '../../package.json';
 export const environment = {
   appVersion: packageInfo.version,
   production: true,
-   //apiUrl: 'https://botrestaurantapi.brosonetech.com'
-     s3Url: "https://kovilpatti.s3.ap-south-1.amazonaws.com/",
-     apiUrl: "http://localhost:5153",
-   //  apiUrl: "http://sessapi.brositecom.com",
+ 
+  apiUrl: 'https://api.brositecom.com',
+
+    // apiUrl: "http://localhost:5153",
+   
+  s3Url: "https://kovilpatti.s3.ap-south-1.amazonaws.com/",
+ 
+
 
 };
