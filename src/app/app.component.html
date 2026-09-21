@@ -1,75 +1,204 @@
 <ng-container *ngIf="!isLoginPage">
 
-     <!-- ⭐ TOP ANNOUNCEMENT BAR — normal document flow now, NOT fixed/sticky.
-          It scrolls away with the rest of the page as soon as the user
-          scrolls down, same as any other in-page content. -->
-     <div class="announcement-bar">
+  <!-- =====================================================
+       PREMIUM HEADER
+       ===================================================== -->
+  <header class="announcement-bar">
 
-          <div class="announcement-container">
+    <div class="announcement-container">
 
-               <div class="announcement-brand-row">
+      <!-- =================================================
+           TOP ROW
+           MOBILE:
+           LOGO + BRAND              MY ORDERS
+           ================================================= -->
 
-                    <a routerLink="/" class="announcement-brand">
-                         <img src="../assets/img/bros-logo.jpg" alt="Bros IT Solutions" class="announcement-logo" />
-                         <span class="announcement-brand-name">
-                              BROS IT<span class="text-brand"> SOLUTIONS</span>
-                         </span>
-                    </a>
+<div class="announcement-top-row">
 
-                    <a routerLink="/my_order" class="announcement-order-icon" aria-label="My Orders">
-                         <i class="bi bi-bag-check-fill"></i>
-                    </a>
+  <!-- BRAND CARD -->
+  <a
+    routerLink="/"
+    class="brand-card"
+    aria-label="Bros IT Solutions Home"
+  >
 
-               </div>
+    <span class="brand-logo-box">
+      <img
+        src="../assets/img/bros-logo.jpg"
+        alt="Bros IT Solutions"
+        class="brand-logo"
+      />
+    </span>
 
-               <a routerLink="/profile" class="announcement-address">
-                    <i class="bi bi-geo-alt-fill"></i>
-                    <span class="address-label">Deliver to</span>
-                    <span class="address-value">Select delivery address</span>
-                    <i class="bi bi-chevron-down address-caret"></i>
-               </a>
+    <span class="brand-name">
+      <span class="brand-bros">BROS</span>
+      <span class="brand-it">IT SOLUTIONS</span>
+    </span>
 
-               <div class="announcement-right">
+  </a>
 
-                    <i class="bi bi-headset"></i>
 
-                    <span>Need Help?</span>
+  <!-- MY ORDERS -->
+  <a
+    routerLink="/my_order"
+    class="my-orders-card"
+    aria-label="My Orders"
+  >
 
-                    <a routerLink="/contact">
-                         Contact Us
-                    </a>
+    <span class="orders-icon-box">
+      <i class="bi bi-bag-check-fill"></i>
+      <span class="orders-dot"></span>
+    </span>
 
-               </div>
+    <span class="orders-text">
+      My Orders
+    </span>
 
-          </div>
+  </a>
 
-     </div>
+</div>
 
-     <!-- ⭐ NAVBAR + CATEGORY BAR — this is the part that must NOT scroll
-          away (kept exactly like before). It's "sticky" instead of
-          "fixed": it sits in normal flow right under the announcement
-          bar, then locks to the top of the viewport once the page is
-          scrolled up to it — same pinned behaviour as today, but the
-          announcement bar above it is now free to scroll off first.
-          Its live height is measured below and fed into --header-height
-          (used by sticky/fixed panels on the Products page). -->
-     <div class="app-sticky-nav" #headerStack *ngIf="showNavAndCategoryBar">
-          <app-navbar></app-navbar>
-          <app-category-bar></app-category-bar>
-     </div>
+
+      <!-- =================================================
+           DELIVERY CARD
+           MOBILE + DESKTOP
+           ================================================= -->
+
+      <a
+        routerLink="/profile"
+        class="delivery-card"
+        aria-label="Select delivery address"
+      >
+
+        <span class="delivery-icon-box">
+
+          <i class="bi bi-geo-alt-fill"></i>
+
+        </span>
+
+
+        <span class="delivery-info">
+
+          <span class="delivery-caption">
+            DELIVER TO
+          </span>
+
+          <span class="delivery-address">
+            Select delivery address
+          </span>
+
+        </span>
+
+
+        <span class="delivery-chevron">
+
+          <i class="bi bi-chevron-right"></i>
+
+        </span>
+
+      </a>
+
+
+      <!-- =================================================
+           CONTACT
+           DESKTOP ONLY
+           ================================================= -->
+
+      <div class="desktop-contact">
+
+        <a
+          routerLink="/contact"
+          class="contact-card"
+        >
+
+          <span class="contact-icon-box">
+
+            <i class="bi bi-headset"></i>
+
+          </span>
+
+          <span class="contact-info">
+
+            <span class="contact-caption">
+              NEED HELP?
+            </span>
+
+            <span class="contact-title">
+              Contact Us
+            </span>
+
+          </span>
+
+          <span class="contact-arrow">
+
+            <i class="bi bi-arrow-up-right"></i>
+
+          </span>
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       STICKY NAVIGATION
+       ===================================================== -->
+
+  <div
+    class="app-sticky-nav"
+    #headerStack
+    *ngIf="showNavAndCategoryBar"
+  >
+
+    <app-navbar></app-navbar>
+
+    <app-category-bar></app-category-bar>
+
+  </div>
 
 </ng-container>
 
 
-<main class="app-main" [style.--header-height.px]="isLoginPage ? 0 : headerHeight">
+<!-- =======================================================
+     MAIN
+     ======================================================= -->
 
-     <router-outlet></router-outlet>
+<main
+  class="app-main"
+  [style.--header-height.px]="isLoginPage ? 0 : headerHeight"
+>
+
+  <router-outlet></router-outlet>
 
 </main>
 
 
-<app-footer *ngIf="!isLoginPage"></app-footer>
+<!-- =======================================================
+     FOOTER
+     ======================================================= -->
 
-<app-login-popup *ngIf="!isLoginPage"></app-login-popup>
+<app-footer
+  *ngIf="!isLoginPage"
+></app-footer>
 
-<app-mobile-bottom-nav *ngIf="!isLoginPage"></app-mobile-bottom-nav>
+
+<!-- =======================================================
+     LOGIN POPUP
+     ======================================================= -->
+
+<app-login-popup
+  *ngIf="!isLoginPage"
+></app-login-popup>
+
+
+<!-- =======================================================
+     MOBILE BOTTOM NAV
+     ======================================================= -->
+
+<app-mobile-bottom-nav
+  *ngIf="!isLoginPage"
+></app-mobile-bottom-nav>

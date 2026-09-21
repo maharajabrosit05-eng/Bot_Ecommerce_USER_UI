@@ -223,23 +223,49 @@
                         <span>*</span>
                       </label>
 
-                      <div class="glass-input select-input">
+                      <div class="state-dropdown" [class.open]="stateDropdownOpen">
+                        <button
+                          type="button"
+                          class="state-dropdown-trigger"
+                          [attr.aria-expanded]="stateDropdownOpen"
+                          aria-haspopup="listbox"
+                          (click)="toggleStateDropdown($event)"
+                        >
+                          <span class="state-trigger-icon">
+                            <i class="bi bi-map-fill"></i>
+                          </span>
 
-                        <div class="input-icon">
-                          <i class="bi bi-map-fill"></i>
+                          <span class="state-trigger-text" [class.placeholder]="!state">
+                            {{ state || 'Select state' }}
+                          </span>
+
+                          <span class="state-trigger-chevron">
+                            <i class="bi bi-chevron-down"></i>
+                          </span>
+                        </button>
+
+                        <div class="state-dropdown-menu" *ngIf="stateDropdownOpen" role="listbox">
+                          <div class="state-search-hint">
+                            <i class="bi bi-search"></i>
+                            <span>Choose your state</span>
+                          </div>
+
+                          <button
+                            type="button"
+                            class="state-option"
+                            *ngFor="let s of indianStates"
+                            [class.active]="state === s"
+                            (click)="selectState(s, $event)"
+                            role="option"
+                            [attr.aria-selected]="state === s"
+                          >
+                            <span class="state-option-icon">
+                              <i class="bi bi-geo-alt-fill"></i>
+                            </span>
+                            <span>{{ s }}</span>
+                            <i class="bi bi-check2 state-option-check" *ngIf="state === s"></i>
+                          </button>
                         </div>
-
-                        <select id="state" [(ngModel)]="state" name="state" (change)="onStateChange()">
-                          <option value="" disabled selected>
-                            Select state
-                          </option>
-                          <option *ngFor="let s of indianStates" [value]="s">
-                            {{ s }}
-                          </option>
-                        </select>
-
-                        <i class="bi bi-chevron-down select-chevron"></i>
-
                       </div>
 
                     </div>
@@ -464,7 +490,7 @@
                   </h2>
 
                   <p>
-                    Select a payment method below. Card and UPI open a secure Razorpay checkout.
+                    Select a payment method below. Card uses Razorpay. UPI uses a Cashfree dynamic QR.
                   </p>
                 </div>
 
@@ -587,6 +613,16 @@
 
 
 
+              <div class="selected-payment-banner" [class.show]="paymentMethod">
+                <span class="selected-payment-dot"></span>
+                <span>
+                  Selected:
+                  <strong>{{ paymentMethod === 'card' ? 'Credit / Debit Card' : (paymentMethod === 'upi' ? 'UPI Payment' : 'Cash on Delivery') }}</strong>
+                </span>
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+
+
               <!-- =========================================
                    CARD -> handled by Razorpay's own secure form
               ========================================== -->
@@ -628,23 +664,23 @@
 
 
               <!-- =========================================
-                   UPI -> handled by Razorpay's own secure form
+                   UPI -> SCAN & PAY QR (attractive, responsive)
               ========================================== -->
-              <div *ngIf="paymentMethod === 'upi'" class="payment-detail-panel glass-panel animate-payment">
+              <div *ngIf="paymentMethod === 'upi'" class="payment-detail-panel upi-qr-panel glass-panel animate-payment">
 
                 <div class="detail-panel-header">
 
                   <div class="detail-title">
 
                     <div class="detail-icon upi-icon glass-icon">
-                      <i class="bi bi-phone-fill"></i>
+                      <i class="bi bi-qr-code"></i>
                     </div>
 
                     <div>
-                      <strong>UPI Payment</strong>
+                      <strong>Scan &amp; Pay via UPI</strong>
 
                       <span>
-                        Pay using any UPI app on the next secure screen
+                        Point any UPI app's scanner at the code below
                       </span>
                     </div>
 
@@ -657,11 +693,93 @@
 
                 </div>
 
-                <p class="gateway-note">
-                  When you click <strong>Place Order</strong>, a secure Razorpay
-                  window will open where you can pay using your UPI ID, QR code,
-                  or any UPI app like Google Pay, PhonePe or Paytm.
-                </p>
+
+                <div class="upi-qr-body">
+
+                  <!-- QR CARD -->
+                  <div class="upi-qr-card">
+
+                    <span class="upi-qr-ring ring-a"></span>
+                    <span class="upi-qr-ring ring-b"></span>
+
+                    <div class="upi-qr-frame">
+
+                      <!-- Payment confirmed via Cashfree polling -->
+                      <div *ngIf="cashfreePaymentConfirmed" class="qr-status-state qr-success-state">
+                        <i class="bi bi-check-circle-fill" style="font-size:2rem; color:#16a34a;"></i>
+                        <div style="font-size:.78rem; font-weight:600; color:#16a34a; margin-top:6px; line-height:1.3;">
+                          Payment received!<br>Placing your order&hellip;
+                        </div>
+                      </div>
+
+                      <!-- QR generating -->
+                      <div *ngIf="!cashfreePaymentConfirmed && cashfreeGeneratingQr" class="qr-status-state qr-loading-state">
+                        <span class="spinner-border spinner-border-sm" style="color:#5b35d5;"></span>
+                        <div style="font-size:.75rem; color:#5b35d5; margin-top:8px;">Generating secure QR&hellip;</div>
+                      </div>
+
+                      <!-- QR generation failed -->
+                      <div *ngIf="!cashfreePaymentConfirmed && !cashfreeGeneratingQr && cashfreeQrError" class="qr-status-state qr-error-state">
+                        <div style="font-size:.72rem; color:#dc2626; margin-bottom:8px; line-height:1.3;">
+                          {{ cashfreeQrError }}
+                        </div>
+                        <button type="button" (click)="generateCashfreeQr()"
+                          style="font-size:.72rem; padding:4px 12px; border-radius:20px; border:1px solid #5b35d5; background:#fff; color:#5b35d5; cursor:pointer;">
+                          Retry
+                        </button>
+                      </div>
+
+                      <!-- Real Cashfree dynamic UPI QR (sandbox) -->
+                      <img
+                        *ngIf="!cashfreePaymentConfirmed && !cashfreeGeneratingQr && !cashfreeQrError && cashfreeQrImage"
+                        [src]="cashfreeQrImage"
+                        alt="Scan this QR code with any UPI app to pay"
+                        class="upi-qr-image"
+                        decoding="async"
+                        (error)="cashfreeQrError = 'The QR image could not be displayed. Please generate a new QR.'"
+                      />
+
+                      <span class="upi-qr-corner tl"></span>
+                      <span class="upi-qr-corner tr"></span>
+                      <span class="upi-qr-corner bl"></span>
+                      <span class="upi-qr-corner br"></span>
+
+                      <span class="upi-scan-line" *ngIf="cashfreeQrImage && !cashfreePaymentConfirmed && !cashfreeGeneratingQr"></span>
+
+                    </div>
+
+                    <div class="upi-qr-amount">
+                      <span>Amount to Pay</span>
+                      <strong>&#8377;{{ cartService.grandTotal() | number }}</strong>
+                    </div>
+
+                  </div>
+
+
+                  <!-- STEPS + APPS -->
+                  <div class="upi-qr-side">
+
+                    <div class="upi-step" *ngFor="let step of upiSteps; let i = index">
+                      <span class="upi-step-num">{{ i + 1 }}</span>
+                      <span class="upi-step-text">{{ step }}</span>
+                    </div>
+
+                    <div class="upi-apps-row">
+                      <span class="upi-app-chip"><i class="bi bi-google"></i> Google Pay</span>
+                      <span class="upi-app-chip"><i class="bi bi-wallet2"></i> PhonePe</span>
+                      <span class="upi-app-chip"><i class="bi bi-credit-card-2-front-fill"></i> Paytm</span>
+                      <span class="upi-app-chip more"><i class="bi bi-three-dots"></i> more</span>
+                    </div>
+
+                    <p class="gateway-note">
+                      This QR is generated fresh for this order via Cashfree. Once your
+                      payment is confirmed, your order is placed <strong>automatically</strong>
+                      &mdash; no need to click anything else.
+                    </p>
+
+                  </div>
+
+                </div>
 
               </div>
 
@@ -868,7 +986,13 @@
 
 
               <!-- PLACE ORDER -->
-              <button type="button" class="place-order-btn" [disabled]="!isFormValid || placingOrder"
+              <button
+                type="button"
+                class="place-order-btn"
+                [class.card-order-btn]="paymentMethod === 'card'"
+                [class.upi-order-btn]="paymentMethod === 'upi'"
+                [class.cod-order-btn]="paymentMethod === 'cod'"
+                [disabled]="!isFormValid || placingOrder" 
                 (click)="placeOrder()">
 
                 <span class="spinner-border spinner-border-sm" *ngIf="placingOrder"></span>
@@ -877,7 +1001,11 @@
                   {{
                   placingOrder
                   ? 'Processing...'
-                  : (paymentMethod === 'cod' ? 'Place Order' : 'Pay & Place Order')
+                  : (paymentMethod === 'cod'
+                      ? 'Place Order'
+                      : (paymentMethod === 'upi'
+                          ? (cashfreePaymentConfirmed ? 'Payment Received!' : (cashfreeQrImage ? 'Waiting for Payment...' : 'Generate QR & Pay'))
+                          : 'Pay & Place Order'))
                   }}
                 </span>
 

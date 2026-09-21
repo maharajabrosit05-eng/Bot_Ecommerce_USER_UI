@@ -1,17 +1,96 @@
-/* =========================================================
-   ⭐ STICKY NAV WRAPPER — navbar + category bar ONLY.
-   This is the part that must stay pinned while scrolling
-   (the announcement bar above it is normal flow and scrolls
-   away). "sticky" lets it sit in normal flow first, then
-   lock to the top of the viewport once scrolled up to.
-   Height is measured live in app.component.ts (ResizeObserver)
-   and pushed into --header-height, used by sticky/fixed
-   panels elsewhere (e.g. the Products page filter drawer).
-========================================================= */
+/* ============================================================
+   BROS IT SOLUTIONS
+   PREMIUM GLASSMORPHIC HEADER
+   ============================================================ */
 
-.app-sticky-nav {
 
-  position: sticky;
+/* ============================================================
+   GLOBAL
+   ============================================================ */
+
+:host {
+
+  --bros-black: #111111;
+  --bros-red: #e53935;
+  --bros-red-dark: #c62828;
+
+  --blue: #2563eb;
+  --blue-soft: #eff6ff;
+
+  --green: #16a34a;
+  --green-soft: #f0fdf4;
+
+  --text: #111827;
+  --muted: #64748b;
+
+  --glass:
+    rgba(255, 255, 255, 0.82);
+
+  --glass-strong:
+    rgba(255, 255, 255, 0.94);
+
+  --glass-border:
+    rgba(255, 255, 255, 0.95);
+
+  --border:
+    rgba(15, 23, 42, 0.08);
+
+  --shadow:
+    0 10px 35px rgba(15, 23, 42, 0.07);
+
+  --shadow-hover:
+    0 16px 40px rgba(15, 23, 42, 0.11);
+
+}
+
+
+/* ============================================================
+   MAIN
+   ============================================================ */
+
+.app-main {
+
+  display: block;
+
+  min-height: 60vh;
+
+  background: #ffffff;
+
+  color: var(--text);
+
+}
+
+
+/* ============================================================
+   ANNOUNCEMENT BAR
+   ============================================================ */
+
+.announcement-bar {
+
+  position: relative;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  border-bottom:
+    1px solid rgba(15, 23, 42, 0.06);
+
+  box-shadow:
+    0 4px 22px rgba(15, 23, 42, 0.045);
+
+  z-index: 1050;
+
+}
+
+
+/* TOP RED LINE */
+
+.announcement-bar::before {
+
+  content: "";
+
+  position: absolute;
 
   top: 0;
 
@@ -19,142 +98,111 @@
 
   right: 0;
 
-  width: 100%;
+  height: 2px;
 
-  z-index: 1060;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--bros-red) 25%,
+      #ff6b6b 50%,
+      var(--bros-red) 75%,
+      transparent 100%
+    );
+
 }
 
 
-/* =========================================================
-   TOP BAR (was: announcement bar with social icons)
-========================================================= */
-
-.announcement-bar {
-
-  width: 100%;
-
-  min-height: 44px;
-
-  background: #ffffff;
-
-  border-bottom: 1px solid #d9dee5;
-
-  color: #1e293b;
-
-  /* Static — normal document flow. This bar is meant to scroll
-     away with the page; only the navbar/category-bar below it
-     (.app-sticky-nav) stays pinned. */
-  position: static;
-
-  z-index: 1051;
-
-  overflow: hidden;
-}
-
+/* ============================================================
+   CONTAINER
+   ============================================================ */
 
 .announcement-container {
 
   width: 100%;
 
-  min-height: 44px;
+  min-height: 72px;
 
-  margin: 0;
+  padding: 10px 30px;
 
-  padding: 0 20px;
+  display: grid;
 
-  display: flex;
+  grid-template-columns:
+    1fr
+    minmax(300px, 430px)
+    1fr;
 
   align-items: center;
 
-  justify-content: space-between;
-
-  gap: 20px;
+  gap: 28px;
 
   box-sizing: border-box;
+
 }
 
 
-/* =========================================================
-   LEFT : LOGO + BRAND NAME
-========================================================= */
+/* ============================================================
+   TOP ROW
+   ============================================================ */
 
-.announcement-brand-row {
+.announcement-top-row {
 
   display: flex;
 
   align-items: center;
 
-  flex-shrink: 0;
+  min-width: 0;
+
 }
 
 
-/* Hidden everywhere by default — only shown on mobile
-   (see the MOBILE block near the bottom of this file) */
-.announcement-order-icon {
+/* ============================================================
+   BRAND CARD
+   ============================================================ */
 
-  display: none;
-}
+.brand-card {
 
-
-.announcement-brand {
-
-  display: flex;
+  display: inline-flex;
 
   align-items: center;
 
-  gap: 8px;
+  gap: 11px;
 
-  flex-shrink: 0;
+  min-width: 0;
+
+  padding: 4px;
+
+  color: var(--bros-black);
 
   text-decoration: none;
 
-  color: #111827;
+  transition:
+    transform .3s ease;
+
 }
 
 
-.announcement-logo {
+.brand-card:hover {
 
-  width: 28px;
+  transform:
+    translateY(-2px);
 
-  height: 28px;
-
-  object-fit: contain;
-
-  border-radius: 4px;
-
-  display: block;
 }
 
 
-.announcement-brand-name {
+/* ============================================================
+   LOGO BOX
+   ============================================================ */
 
-  font-size: 0.95rem;
+.brand-logo-box {
 
-  font-weight: 800;
+  position: relative;
 
-  letter-spacing: 0.3px;
+  width: 45px;
 
-  white-space: nowrap;
+  height: 45px;
 
-  color: #111827;
-}
-
-
-.announcement-brand-name .text-brand {
-
-  color: #e63946;
-}
-
-
-/* =========================================================
-   CENTER : DELIVERY ADDRESS
-========================================================= */
-
-.announcement-address {
-
-  flex: 1;
-
-  min-width: 0;
+  flex: 0 0 45px;
 
   display: flex;
 
@@ -162,816 +210,2528 @@
 
   justify-content: center;
 
-  gap: 6px;
+  overflow: hidden;
 
-  color: #334155;
+  border-radius: 14px;
 
-  font-size: 0.78rem;
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f8fafc
+    );
 
-  text-decoration: none;
+  border:
+    1px solid rgba(229, 57, 53, .12);
+
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, .08);
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+
+}
+
+
+.brand-logo-box::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: inherit;
+
+  border:
+    1px solid rgba(255, 255, 255, .95);
+
+  pointer-events: none;
+
+}
+
+
+.brand-card:hover
+.brand-logo-box {
+
+  transform:
+    scale(1.06)
+    rotate(-2deg);
+
+  box-shadow:
+    0 12px 30px rgba(229, 57, 53, .13);
+
+}
+
+
+.brand-logo {
+
+  width: 34px;
+
+  height: 34px;
+
+  object-fit: contain;
+
+  border-radius: 8px;
+
+  display: block;
+
+}
+
+
+/* ============================================================
+   BRAND TEXT
+   ============================================================ */
+
+.brand-name {
+
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 5px;
 
   white-space: nowrap;
 
-  overflow: hidden;
+  line-height: 1;
+
 }
 
 
-.announcement-address i {
+.brand-bros {
 
-  color: #e63946;
+  color: #111111;
 
-  font-size: 0.85rem;
+  font-size: 17px;
 
-  flex-shrink: 0;
+  font-weight: 950;
+
+  letter-spacing: .65px;
+
 }
 
 
-.announcement-address .address-label {
+.brand-it {
 
-  color: #000000;
+  color: var(--bros-red);
 
-  font-weight: 600;
+ font-size: 17px;
+
+  font-weight: 950;
+
+  letter-spacing: .25px;
+
 }
 
 
-.announcement-address .address-value {
+/* ============================================================
+   MY ORDERS
+   DESKTOP HIDDEN
+   ============================================================ */
 
-  color: #2477fd;
+.my-orders-card {
 
-  font-weight: 700;
+  display: none;
 
-  overflow: hidden;
-
-  text-overflow: ellipsis;
 }
 
 
-.announcement-address .address-caret {
+/* ============================================================
+   DELIVERY CARD
+   ============================================================ */
 
-  font-size: 0.65rem;
+.delivery-card {
 
-  color: #000000;
-}
+  width: 100%;
 
-
-.announcement-address:hover .address-value {
-
-  color: #e63946;
-}
-
-
-/* =========================================================
-   RIGHT : NEED HELP
-========================================================= */
-
-.announcement-right {
+  min-height: 51px;
 
   display: flex;
 
   align-items: center;
 
-  justify-content: flex-end;
+  gap: 11px;
 
-  gap: 8px;
+  padding: 6px 8px;
 
-  color: #334155;
-
-  font-size: 0.78rem;
-
-  white-space: nowrap;
-
-  flex-shrink: 0;
-}
-
-
-.announcement-right > i {
-
-  color: #1e293b;
-
-  font-size: 0.95rem;
-}
-
-
-.announcement-right span {
-
-  color: #334155;
-
-  font-weight: 600;
-}
-
-
-.announcement-right a {
-
-  color: #008b31;
-
-  font-size: 15px;
-
-  font-weight: 700;
+  box-sizing: border-box;
 
   text-decoration: none;
 
-  transition: color 0.2s ease;
-}
+  border-radius: 17px;
 
+  background:
+    rgba(255, 255, 255, .78);
 
-.announcement-right a:hover {
+  border:
+    1px solid rgba(255, 255, 255, .96);
 
-  color: #006d27;
+  box-shadow:
+    var(--shadow);
 
-  text-decoration: underline;
-}
+  backdrop-filter:
+    blur(18px);
 
+  -webkit-backdrop-filter:
+    blur(18px);
 
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (max-width: 991.98px) {
-
-  .announcement-container {
-
-    gap: 12px;
-  }
-
-
-  .announcement-address .address-label {
-
-    display: none;
-  }
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease,
+    border-color .3s ease;
 
 }
 
 
-/* =========================================================
-   MOBILE — top bar used to be hidden completely here.
-   Now kept sticky instead (fixed below), so this block
-   only exists for historical reference and does nothing
-   harmful — the later block always wins.
-========================================================= */
+.delivery-card:hover {
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 15px 38px rgba(37, 99, 235, .10);
+
+  border-color:
+    rgba(37, 99, 235, .15);
+
+}
+
+
+/* ============================================================
+   DELIVERY ICON
+   ============================================================ */
+
+.delivery-icon-box {
+
+  width: 38px;
+
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 12px;
+
+  color: var(--blue);
+
+  background:
+    linear-gradient(
+      145deg,
+      #eff6ff,
+      #ffffff
+    );
+
+  border:
+    1px solid #dbeafe;
+
+  box-shadow:
+    0 5px 16px rgba(37, 99, 235, .08);
+
+  transition:
+    transform .3s ease;
+
+}
+
+
+.delivery-card:hover
+.delivery-icon-box {
+
+  transform:
+    scale(1.07);
+
+}
+
+
+.delivery-icon-box i {
+
+  font-size: 15px;
+
+}
+
+
+/* ============================================================
+   DELIVERY INFORMATION
+   ============================================================ */
+
+.delivery-info {
+
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+}
+
+
+.delivery-caption {
+
+  margin-bottom: 4px;
+
+  color: #94a3b8;
+
+  font-size: 7px;
+
+  font-weight: 950;
+
+  letter-spacing: 1px;
+
+  line-height: 1;
+
+}
+
+
+.delivery-address {
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #1d4ed8;
+
+  font-size: 11px;
+
+  font-weight: 850;
+
+  line-height: 1.2;
+
+}
+
+
+/* ============================================================
+   DELIVERY CHEVRON
+   ============================================================ */
+
+.delivery-chevron {
+
+  width: 30px;
+
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: #64748b;
+
+  background:
+    #f8fafc;
+
+  border:
+    1px solid #eef2f7;
+
+  transition:
+    transform .3s ease,
+    color .3s ease,
+    background .3s ease;
+
+}
+
+
+.delivery-card:hover
+.delivery-chevron {
+
+  transform:
+    translateX(3px);
+
+  color: var(--blue);
+
+  background: var(--blue-soft);
+
+}
+
+
+.delivery-chevron i {
+
+  font-size: 9px;
+
+}
+
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+
+.desktop-contact {
+
+  justify-self: end;
+
+}
+
+
+.contact-card {
+
+  min-width: 145px;
+
+  min-height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 6px 9px;
+
+  text-decoration: none;
+
+  border-radius: 16px;
+
+  background:
+    rgba(255, 255, 255, .78);
+
+  border:
+    1px solid rgba(255, 255, 255, .96);
+
+  box-shadow:
+    var(--shadow);
+
+  backdrop-filter:
+    blur(18px);
+
+  -webkit-backdrop-filter:
+    blur(18px);
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+
+}
+
+
+.contact-card:hover {
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 15px 38px rgba(22, 163, 74, .12);
+
+}
+
+
+/* ============================================================
+   CONTACT ICON
+   ============================================================ */
+
+.contact-icon-box {
+
+  width: 34px;
+
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 11px;
+
+  color: #15803d;
+
+  background:
+    #f0fdf4;
+
+  border:
+    1px solid #dcfce7;
+
+}
+
+
+.contact-icon-box i {
+
+  font-size: 14px;
+
+}
+
+
+/* ============================================================
+   CONTACT TEXT
+   ============================================================ */
+
+.contact-info {
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+.contact-caption {
+
+  color: #94a3b8;
+
+  font-size: 6.5px;
+
+  font-weight: 900;
+
+  letter-spacing: .9px;
+
+}
+
+
+.contact-title {
+
+  margin-top: 4px;
+
+  color: #15803d;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+}
+
+
+/* ============================================================
+   CONTACT ARROW
+   ============================================================ */
+
+.contact-arrow {
+
+  width: 26px;
+
+  height: 26px;
+
+  flex: 0 0 26px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 9px;
+
+  color: #15803d;
+
+  background:
+    #f0fdf4;
+
+  transition:
+    transform .3s ease;
+
+}
+
+
+.contact-card:hover
+.contact-arrow {
+
+  transform:
+    translate(2px, -2px);
+
+}
+
+
+.contact-arrow i {
+
+  font-size: 8px;
+
+}
+
+
+/* ============================================================
+   STICKY NAV
+   ============================================================ */
+
+.app-sticky-nav {
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 1040;
+
+  width: 100%;
+
+  background: #ffffff;
+
+  isolation: isolate;
+
+  box-shadow:
+    0 4px 18px rgba(15, 23, 42, .045);
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
 
 @media (max-width: 767.98px) {
+
+
+  /* ----------------------------------------------------------
+     HEADER
+     ---------------------------------------------------------- */
 
   .announcement-bar {
-
-    display: none;
-  }
-
-}
-
-
-/* =========================================================
-   LAPTOP (>=992px) — same inset as the navbar row
-========================================================= */
-
-@media (min-width: 992px) {
-
-  .announcement-container {
-
-    padding: 0 60px;
-  }
-
-}
-
-
-/* =========================================================
-   WIDE DESKTOP (>=1400px) — same 250px inset as the navbar
-========================================================= */
-
-// @media (min-width: 1400px) {
-
-//   .announcement-container {
-
-//     padding-left: 250px;
-
-//     padding-right: 250px;
-//   }
-
-// }
-
-
-/* =========================================================
-   MAIN CONTENT
-========================================================= */
-
-.app-main {
-
-  display: block;
-
-  min-height: 60vh;
-}
-
-
-@media (max-width: 767.98px) {
-
-  .app-main {
-
-    /* leave room for the fixed mobile bottom nav */
-    padding-bottom: 64px;
-  }
-
-}
-
-@media (max-width: 767.98px) {
-
-  .announcement-bar {
-    display: block;
-
-    /* Static — this bar scrolls away with the page; only
-       .app-sticky-nav (navbar/category bar) stays pinned. */
-    position: static;
-
-    width: 100%;
 
     background: #ffffff;
 
-    border-bottom: 1px solid #edf0f3;
+    box-shadow:
+      0 5px 25px rgba(15, 23, 42, .06);
 
-    z-index: 1040;
   }
 
 
+  /* ----------------------------------------------------------
+     CONTAINER
+     ---------------------------------------------------------- */
+
   .announcement-container {
-
-    min-height: auto;
-
-    padding: 10px 14px 8px;
 
     display: flex;
 
     flex-direction: column;
 
-    align-items: flex-start;
+    align-items: stretch;
 
-    justify-content: flex-start;
-
-    gap: 8px;
-
-    box-sizing: border-box;
-  }
-
-
-  /* =======================================================
-     LOGO
-  ======================================================= */
-
-  .announcement-brand {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    width: 100%;
-
-    text-decoration: none;
-  }
-
-
-  .announcement-logo {
-
-    width: 32px;
-
-    height: 32px;
-
-    object-fit: contain;
-
-    border-radius: 5px;
-
-    flex-shrink: 0;
-  }
-
-
-  .announcement-brand-name {
-
-    font-size: 0.9rem;
-
-    font-weight: 800;
-
-    letter-spacing: 0.25px;
-
-    white-space: nowrap;
-
-    color: #111827;
-  }
-
-
-  /* =======================================================
-     LOCATION — BELOW LOGO
-  ======================================================= */
-
-  .announcement-address {
-
-    display: flex;
-
-    width: 100%;
-
-    min-width: 0;
-
-    align-items: center;
-
-    justify-content: flex-start;
-
-    gap: 6px;
-
-    padding: 2px 4px 3px;
-
-    color: #334155;
-
-    text-decoration: none;
-
-    white-space: nowrap;
-
-    overflow: hidden;
-  }
-
-
-  .announcement-address > i:first-child {
-
-    color: #e63946;
-
-    font-size: 0.9rem;
-
-    flex-shrink: 0;
-  }
-
-
-  .announcement-address .address-label {
-
-    display: inline;
-
-    color: #000000;
-
-    font-size: 0.7rem;
-
-    font-weight: 700;
-
-    flex-shrink: 0;
-  }
-
-
-  .announcement-address .address-value {
-
-    color: #1c70f5;
-
-    font-size: 0.72rem;
-
-    font-weight: 700;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-  }
-
-
-  .announcement-address .address-caret {
-
-    display: inline;
-
-    color: #94a3b8;
-
-    font-size: 0.6rem;
-
-    flex-shrink: 0;
-  }
-
-
-  /* =======================================================
-     HIDE NEED HELP ON MOBILE
-  ======================================================= */
-
-  .announcement-right {
-
-    display: none;
-  }
-
-}
-
-/* =========================================================
-   MOBILE + TABLET TOP AREA
-   Premium soft background
-========================================================= */
-
-@media (max-width: 991.98px) {
-
-  .announcement-bar {
-    display: block;
-
-    /* Static — this bar scrolls away with the page; only
-       .app-sticky-nav (navbar/category bar) stays pinned. */
-    position: static;
-
-    width: 100%;
-
-    /* Premium background */
-    background:
-      radial-gradient(circle at 10% 0%,
-        rgba(230, 57, 70, 0.10) 0%,
-        transparent 35%),
-      radial-gradient(circle at 90% 20%,
-        rgba(36, 119, 253, 0.10) 0%,
-        transparent 38%),
-      linear-gradient(
-        135deg,
-        #f8faff 0%,
-        #fff7f8 50%,
-        #f5f8ff 100%
-      );
-
-    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-
-    z-index: 1040;
-  }
-
-
-  .announcement-container {
+    gap: 9px;
 
     min-height: auto;
 
-    padding: 12px 14px 10px;
+    padding:
+      10px 12px 11px;
 
-    display: flex;
-    flex-direction: column;
-
-    align-items: flex-start;
-    justify-content: flex-start;
-
-    gap: 9px;
-
-    box-sizing: border-box;
   }
 
 
-  /* =======================================================
-     LOGO / BRAND
-  ======================================================= */
+  /* ----------------------------------------------------------
+     BRAND + ORDERS ROW
+     ---------------------------------------------------------- */
 
-  .announcement-brand {
-
-    display: flex;
-    align-items: center;
-
-    gap: 9px;
+  .announcement-top-row {
 
     width: 100%;
 
-    padding: 3px 2px;
-
-    text-decoration: none;
-  }
-
-
-  .announcement-logo {
-
-    width: 36px;
-    height: 36px;
-
-    object-fit: contain;
-
-    // border-radius: 8px;
-
-    flex-shrink: 0;
-
-    background: #ffffff;
-
-    box-shadow:
-      0 3px 10px rgba(15, 23, 42, 0.08);
-  }
-
-
-  .announcement-brand-name {
-
-    font-size: 0.92rem;
-
-    font-weight: 800;
-
-    letter-spacing: 0.25px;
-
-    white-space: nowrap;
-
-    color: #111827;
-  }
-
-
-  .announcement-brand-name .text-brand {
-
-    color: #e63946;
-  }
-
-
-  /* =======================================================
-     DELIVERY ADDRESS CARD
-  ======================================================= */
-
-  .announcement-address {
-
     display: flex;
 
-    width: 100%;
-
-    min-width: 0;
-
     align-items: center;
 
-    justify-content: flex-start;
+    justify-content: space-between;
 
-    gap: 7px;
-
-    padding: 10px 12px;
-
-    box-sizing: border-box;
-
-    background: rgba(255, 255, 255, 0.92);
-
-    border: 1px solid rgba(226, 232, 240, 0.9);
-
-    border-radius: 12px;
-
-    box-shadow:
-      0 4px 14px rgba(15, 23, 42, 0.06);
-
-    color: #334155;
-
-    text-decoration: none;
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
   }
 
 
-  .announcement-address:active {
+  /* ----------------------------------------------------------
+     BRAND CARD
+     ---------------------------------------------------------- */
 
-    transform: scale(0.99);
-
-    box-shadow:
-      0 2px 8px rgba(15, 23, 42, 0.05);
-  }
-
-
-  .announcement-address > i:first-child {
-
-    color: #e63946;
-
-    font-size: 0.95rem;
-
-    flex-shrink: 0;
-  }
-
-
-  .announcement-address .address-label {
-
-    display: inline;
-
-    color: #64748b;
-
-    font-size: 0.68rem;
-
-    font-weight: 700;
-
-    flex-shrink: 0;
-  }
-
-
-  .announcement-address .address-value {
-
-    color: #1c70f5;
-
-    font-size: 0.73rem;
-
-    font-weight: 800;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-  }
-
-
-  .announcement-address .address-caret {
-
-    display: inline;
-
-    color: #64748b;
-
-    font-size: 0.58rem;
-
-    flex-shrink: 0;
-  }
-
-
-  /* =======================================================
-     HIDE NEED HELP
-  ======================================================= */
-
-  .announcement-right {
-
-    display: none;
-  }
-
-}
-
-
-/* =========================================================
-   TABLET — slightly larger / cleaner spacing
-   Brand row + delivery address sit in ONE row here
-   (overrides the column layout from the block above,
-   for the 768–991.98px range only).
-========================================================= */
-
-@media (min-width: 768px) and (max-width: 991.98px) {
-
-  .announcement-container {
-
-    flex-direction: row;
-
-    align-items: center;
-
-    justify-content: flex-start;
-
-    padding: 14px 24px 12px;
-
-    gap: 16px;
-  }
-
-
-  .announcement-brand {
-
-    padding-left: 4px;
-
-    width: auto;
-
-    flex-shrink: 0;
-  }
-
-
-  .announcement-logo {
-
-    width: 40px;
-    height: 40px;
-
-    // border-radius: 9px;
-  }
-
-
-  .announcement-brand-name {
-
-    font-size: 1rem;
-  }
-
-
-  .announcement-address {
-
-    width: auto;
+  .brand-card {
 
     flex: 1;
 
     min-width: 0;
 
-    padding: 11px 14px;
+    gap: 9px;
+
+    padding: 0;
+
+  }
+
+
+  .brand-logo-box {
+
+    width: 42px;
+
+    height: 42px;
+
+    flex-basis: 42px;
 
     border-radius: 13px;
+
   }
 
 
-  .announcement-address .address-label {
-
-    font-size: 0.72rem;
-  }
-
-
-  .announcement-address .address-value {
-
-    font-size: 0.78rem;
-  }
-
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 380px) {
-
-  .announcement-container {
-
-    padding: 10px 11px 9px;
-
-    gap: 7px;
-  }
-
-
-  .announcement-logo {
+  .brand-logo {
 
     width: 32px;
+
     height: 32px;
+
   }
 
 
-  .announcement-brand-name {
+  .brand-name {
 
-    font-size: 0.84rem;
+    gap: 4px;
+
   }
 
 
-  .announcement-address {
+  .brand-bros {
 
-    padding: 9px 10px;
+    font-size: 13.5px;
 
-    gap: 5px;
+    letter-spacing: .45px;
+
   }
 
 
-  .announcement-address .address-label {
+  .brand-it {
 
-    font-size: 0.64rem;
+   font-size: 13.5px;
+
+    letter-spacing: .45px;
+
   }
 
 
-  .announcement-address .address-value {
+  /* ----------------------------------------------------------
+     MY ORDERS CARD
+     ---------------------------------------------------------- */
 
-    font-size: 0.68rem;
-  }
+  .my-orders-card {
 
-}
+    position: relative;
 
+    width: 47px;
 
-/* =========================================================
-   MOBILE — "My Order" icon to the LEFT of the logo/brand.
-   Appears ONLY on mobile (≤767.98px) — hidden on tablet
-   and desktop by the base .announcement-order-icon rule.
-========================================================= */
+    height: 47px;
 
-@media (max-width: 767.98px) {
+    flex: 0 0 47px;
 
-  .announcement-brand-row {
-
-    width: 100%;
-
-    gap: 8px;
-  }
-
-
-  .announcement-order-icon {
-
-    display: inline-flex;
+    display: flex;
 
     align-items: center;
 
     justify-content: center;
 
-    width: 44px;
+    margin-left: 9px;
 
-    height: 44px;
-
-    flex-shrink: 0;
-
-    border-radius: 9px;
-
-    // background: #fdecec;
-
-    color: #097042;
-
-    font-size: 1.5rem;
+    border-radius: 15px;
 
     text-decoration: none;
 
+    background:
+      linear-gradient(
+        145deg,
+        rgba(255, 255, 255, .94),
+        rgba(240, 253, 244, .88)
+      );
+
+    border:
+      1px solid rgba(22, 163, 74, .13);
+
+    box-shadow:
+      0 8px 25px rgba(22, 163, 74, .10);
+
+    backdrop-filter:
+      blur(18px);
+
+    -webkit-backdrop-filter:
+      blur(18px);
+
     transition:
-      background 0.2s ease,
-      transform 0.15s ease;
+      transform .2s ease,
+      box-shadow .2s ease;
+
   }
 
 
-  .announcement-order-icon:hover {
+  .my-orders-card::before {
 
-    background: #fbdada;
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: inherit;
+
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255,255,255,.6),
+        transparent
+      );
+
+    pointer-events: none;
+
   }
 
 
-  .announcement-order-icon:active {
+  .my-orders-card:active {
 
-    transform: scale(0.94);
+    transform:
+      scale(.92);
+
   }
 
 
-  /* Brand now shares the row with the order icon, so it
-     no longer needs to be full width — it just fills the
-     remaining space next to the icon. */
-  .announcement-brand {
+  .orders-icon-box {
 
-    width: auto;
+    position: relative;
 
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 100%;
+
+    height: 100%;
+
+  }
+
+
+  .orders-icon-box i {
+
+    color: #15803d;
+
+    font-size: 19px;
+
+  }
+
+
+  .orders-dot {
+
+    position: absolute;
+
+    top: 9px;
+
+    right: 9px;
+
+    width: 7px;
+
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--bros-red);
+
+    border:
+      2px solid #ffffff;
+
+  }
+
+
+  .orders-text {
+
+    display: none;
+
+  }
+
+
+  /* ----------------------------------------------------------
+     DELIVERY
+     ---------------------------------------------------------- */
+
+  .delivery-card {
+
+    width: 100%;
+
+    min-height: 51px;
+
+    padding: 6px 8px;
+
+    gap: 9px;
+
+    border-radius: 16px;
+
+  }
+
+
+  .delivery-icon-box {
+
+    width: 35px;
+
+    height: 35px;
+
+    flex-basis: 35px;
+
+    border-radius: 11px;
+
+  }
+
+
+  .delivery-icon-box i {
+
+    font-size: 14px;
+
+  }
+
+
+  .delivery-caption {
+
+    font-size: 6.5px;
+
+    margin-bottom: 4px;
+
+  }
+
+
+  .delivery-address {
+
+    font-size: 10px;
+
+  }
+
+
+  .delivery-chevron {
+
+    width: 28px;
+
+    height: 28px;
+
+    flex-basis: 28px;
+
+    border-radius: 9px;
+
+  }
+
+
+  /* ----------------------------------------------------------
+     CONTACT HIDDEN
+     ---------------------------------------------------------- */
+
+  .desktop-contact {
+
+    display: none;
+
+  }
+
+
+  /* ----------------------------------------------------------
+     MAIN
+     ---------------------------------------------------------- */
+
+  .app-main {
+
+    min-height:
+      calc(100vh - 60px);
+
+    padding-bottom:
+      68px;
+
+    background: #ffffff;
+
+  }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+  .announcement-container {
+
+    padding:
+      9px 10px 10px;
+
+    gap: 8px;
+
+  }
+
+
+  .brand-logo-box {
+
+    width: 39px;
+
+    height: 39px;
+
+    flex-basis: 39px;
+
+  }
+
+
+  .brand-logo {
+
+    width: 30px;
+
+    height: 30px;
+
+  }
+
+
+  .brand-bros {
+
+    font-size: 12px;
+
+  }
+
+
+  .brand-it {
+
+    font-size: 12px;
+
+  }
+
+
+  .my-orders-card {
+
+    width: 43px;
+
+    height: 43px;
+
+    flex-basis: 43px;
+
+    border-radius: 14px;
+
+  }
+
+
+  .orders-icon-box i {
+
+    font-size: 17px;
+
+  }
+
+
+  .orders-dot {
+
+    top: 8px;
+
+    right: 8px;
+
+  }
+
+
+  .delivery-card {
+
+    min-height: 48px;
+
+  }
+
+
+  .delivery-icon-box {
+
+    width: 33px;
+
+    height: 33px;
+
+    flex-basis: 33px;
+
+  }
+
+
+  .delivery-address {
+
+    font-size: 9.5px;
+
+  }
+
+}
+
+
+/* ============================================================
+   EXTRA SMALL
+   ============================================================ */
+
+@media (max-width: 340px) {
+
+  .announcement-container {
+
+    padding-left: 8px;
+
+    padding-right: 8px;
+
+  }
+
+
+  .brand-logo-box {
+
+    width: 37px;
+
+    height: 37px;
+
+    flex-basis: 37px;
+
+  }
+
+
+  .brand-logo {
+
+    width: 28px;
+
+    height: 28px;
+
+  }
+
+
+  .brand-bros {
+
+    font-size: 11px;
+
+  }
+
+
+  .brand-it {
+
+     font-size: 11px;
+
+  }
+
+
+  .my-orders-card {
+
+    width: 41px;
+
+    height: 41px;
+
+    flex-basis: 41px;
+
+    margin-left: 6px;
+
+  }
+
+
+  .delivery-address {
+
+    font-size: 9px;
+
+  }
+
+}
+
+
+/* ============================================================
+   ANIMATION
+   ============================================================ */
+
+.brand-card {
+
+  animation:
+    brandEnter .55s cubic-bezier(.22,1,.36,1) both;
+
+}
+
+
+.delivery-card {
+
+  animation:
+    deliveryEnter .55s .08s cubic-bezier(.22,1,.36,1) both;
+
+}
+
+
+.desktop-contact {
+
+  animation:
+    contactEnter .55s .15s cubic-bezier(.22,1,.36,1) both;
+
+}
+
+
+@keyframes brandEnter {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateX(-18px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateX(0);
+
+  }
+
+}
+
+
+@keyframes deliveryEnter {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(-10px)
+      scale(.97);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+  }
+
+}
+
+
+@keyframes contactEnter {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateX(18px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateX(0);
+
+  }
+
+}
+
+
+/* ============================================================
+   FOCUS
+   ============================================================ */
+
+.brand-card:focus-visible,
+.my-orders-card:focus-visible,
+.delivery-card:focus-visible,
+.contact-card:focus-visible {
+
+  outline:
+    3px solid rgba(37, 99, 235, .18);
+
+  outline-offset: 3px;
+
+}
+
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .announcement-bar *,
+  .announcement-bar *::before,
+  .announcement-bar *::after {
+
+    animation: none !important;
+
+    transition: none !important;
+
+  }
+
+}
+
+/* ============================================================
+   PREMIUM TOP BRAND + MY ORDERS CARDS
+   TADKA / HOTSTAR STYLE
+   ============================================================ */
+
+.announcement-top-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+
+/* ============================================================
+   BRAND CARD
+   LOGO + BRAND NAME
+   ============================================================ */
+
+.brand-card {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  flex: 1;
+  min-width: 0;
+
+  gap: 10px;
+
+  padding: 7px 13px;
+
+  border-radius: 18px;
+
+  text-decoration: none;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.98),
+      rgba(248, 250, 252, 0.90)
+    );
+
+  border: 1px solid rgba(229, 57, 53, 0.16);
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* RED PREMIUM GLOW */
+
+.brand-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 15%;
+  right: 15%;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #e53935,
+      #ff6b6b,
+      #e53935,
+      transparent
+    );
+
+  opacity: 0.9;
+}
+
+
+/* GLASS SHINE */
+
+.brand-card::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -80%;
+
+  width: 60%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.55),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.6s ease;
+
+  pointer-events: none;
+}
+
+
+.brand-card:hover::after {
+  left: 130%;
+}
+
+
+.brand-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(229, 57, 53, 0.25);
+
+  box-shadow:
+    0 14px 32px rgba(229, 57, 53, 0.12);
+}
+
+
+/* ============================================================
+   LOGO
+   ============================================================ */
+
+.brand-logo-box {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff,
+      #f8fafc
+    );
+
+  border: 1px solid rgba(229, 57, 53, 0.14);
+
+  box-shadow:
+    0 5px 18px rgba(15, 23, 42, 0.09);
+
+  z-index: 1;
+}
+
+
+.brand-logo {
+  width: 31px;
+  height: 31px;
+
+  object-fit: contain;
+
+  border-radius: 8px;
+
+  display: block;
+}
+
+
+/* ============================================================
+   BRAND NAME
+   ============================================================ */
+
+.brand-name {
+  display: flex;
+  align-items: baseline;
+
+  gap: 4px;
+
+  white-space: nowrap;
+
+  line-height: 1;
+
+  z-index: 1;
+}
+
+
+.brand-bros {
+  color: #111111;
+
+  font-size: 14px;
+
+  font-weight: 950;
+
+  letter-spacing: 0.45px;
+}
+
+
+.brand-it {
+  color: #e53935;
+
+  font-size: 14px;
+
+  font-weight: 950;
+
+  letter-spacing: 0.35px;
+}
+
+
+/* ============================================================
+   MY ORDERS CARD
+   ICON + TEXT
+   ============================================================ */
+
+.my-orders-card {
+  position: relative;
+
+  display: flex !important;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  flex: 0 0 auto;
+
+  min-width: 104px;
+  height: 48px;
+
+  padding: 0 13px;
+
+  margin-left: 0;
+
+  border-radius: 17px;
+
+  text-decoration: none;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.98),
+      rgba(240, 253, 244, 0.90)
+    );
+
+  border: 1px solid rgba(22, 163, 74, 0.16);
+
+  box-shadow:
+    0 8px 25px rgba(22, 163, 74, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* GREEN TOP LINE */
+
+.my-orders-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 18%;
+  right: 18%;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #16a34a,
+      #4ade80,
+      #16a34a,
+      transparent
+    );
+}
+
+
+/* GLASS SHINE */
+
+.my-orders-card::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -80%;
+
+  width: 60%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.6),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.6s ease;
+
+  pointer-events: none;
+}
+
+
+.my-orders-card:hover::after {
+  left: 130%;
+}
+
+
+.my-orders-card:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(22, 163, 74, 0.28);
+
+  box-shadow:
+    0 14px 32px rgba(22, 163, 74, 0.15);
+}
+
+
+/* ============================================================
+   ORDER ICON
+   ============================================================ */
+
+.orders-icon-box {
+  position: relative;
+
+  width: 31px;
+  height: 31px;
+
+  flex: 0 0 31px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f0fdf4,
+      #ffffff
+    );
+
+  border: 1px solid #dcfce7;
+
+  z-index: 1;
+}
+
+
+.orders-icon-box i {
+  color: #15803d;
+
+  font-size: 15px;
+}
+
+
+/* ============================================================
+   ORDER RED DOT
+   ============================================================ */
+
+.orders-dot {
+  position: absolute;
+
+  top: 4px;
+  right: 3px;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #e53935;
+
+  border: 1.5px solid #ffffff;
+}
+
+
+/* ============================================================
+   ORDER TEXT
+   ============================================================ */
+
+.orders-text {
+  display: block !important;
+
+  color: #166534;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+
+  letter-spacing: 0.15px;
+
+  z-index: 1;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 767.98px) {
+
+  .announcement-top-row {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 9px;
+  }
+
+
+  /* BRAND CARD */
+
+  .brand-card {
     flex: 1;
 
     min-width: 0;
+
+    height: 49px;
+
+    padding: 4px 10px;
+
+    gap: 8px;
+
+    border-radius: 17px;
+  }
+
+
+  .brand-logo-box {
+    width: 39px;
+    height: 39px;
+
+    flex: 0 0 39px;
+
+    border-radius: 12px;
+  }
+
+
+  .brand-logo {
+    width: 29px;
+    height: 29px;
+  }
+
+
+  .brand-name {
+    gap: 3px;
+
+    overflow: hidden;
+  }
+
+
+  .brand-bros,
+  .brand-it {
+    font-size: 12px;
+
+    letter-spacing: 0.25px;
+  }
+
+
+  /* MY ORDERS */
+
+  .my-orders-card {
+    min-width: 100px;
+
+    width: 100px;
+
+    height: 49px;
+
+    flex: 0 0 100px;
+
+    padding: 0 8px;
+
+    gap: 6px;
+
+    margin-left: 0;
+
+    border-radius: 17px;
+  }
+
+
+  .orders-icon-box {
+    width: 29px;
+    height: 29px;
+
+    flex: 0 0 29px;
+
+    border-radius: 9px;
+  }
+
+
+  .orders-icon-box i {
+    font-size: 14px;
+  }
+
+
+  .orders-text {
+    display: block !important;
+
+    font-size: 10.5px;
+  }
+
+
+  .orders-dot {
+    width: 5px;
+    height: 5px;
+
+    top: 3px;
+    right: 2px;
+  }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+  .announcement-top-row {
+    gap: 7px;
+  }
+
+
+  .brand-card {
+    height: 46px;
+
+    padding: 3px 8px;
+
+    gap: 7px;
+
+    border-radius: 15px;
+  }
+
+
+  .brand-logo-box {
+    width: 36px;
+    height: 36px;
+
+    flex-basis: 36px;
+
+    border-radius: 11px;
+  }
+
+
+  .brand-logo {
+    width: 27px;
+    height: 27px;
+  }
+
+
+  .brand-bros,
+  .brand-it {
+    font-size: 10.5px;
+  }
+
+
+  .my-orders-card {
+    width: 94px;
+
+    min-width: 94px;
+
+    flex-basis: 94px;
+
+    height: 46px;
+
+    border-radius: 15px;
+
+    gap: 5px;
+
+    padding: 0 6px;
+  }
+
+
+  .orders-icon-box {
+    width: 27px;
+    height: 27px;
+
+    flex-basis: 27px;
+  }
+
+
+  .orders-icon-box i {
+    font-size: 13px;
+  }
+
+
+  .orders-text {
+    font-size: 9.5px;
+  }
+}
+
+/* ============================================================
+   FINAL HEADER RESPONSIVE CONTROL
+   MY ORDERS + PREMIUM CONTACT
+   ============================================================ */
+
+
+/* ============================================================
+   DEFAULT
+   LAPTOP / DESKTOP
+   MY ORDERS HIDDEN
+   ============================================================ */
+
+.my-orders-card {
+  display: none !important;
+}
+
+
+/* ============================================================
+   PREMIUM CONTACT CARD
+   DESKTOP / LAPTOP
+   ============================================================ */
+
+.desktop-contact {
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+}
+
+
+.contact-card {
+  position: relative;
+
+  min-width: 175px;
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 6px 8px 6px 7px;
+
+  box-sizing: border-box;
+
+  text-decoration: none;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(240, 253, 244, 0.90)
+    );
+
+  border: 1px solid rgba(22, 163, 74, 0.14);
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  overflow: hidden;
+
+  transition:
+    transform .28s ease,
+    box-shadow .28s ease,
+    border-color .28s ease;
+}
+
+
+/* TOP GREEN ACCENT */
+
+.contact-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 18%;
+  right: 18%;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #16a34a,
+      #4ade80,
+      #16a34a,
+      transparent
+    );
+}
+
+
+/* GLASS SHINE */
+
+.contact-card::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -90%;
+
+  width: 65%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.65),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition: left .65s ease;
+
+  pointer-events: none;
+}
+
+
+.contact-card:hover::after {
+  left: 130%;
+}
+
+
+.contact-card:hover {
+  transform: translateY(-3px);
+
+  border-color:
+    rgba(22, 163, 74, .28);
+
+  box-shadow:
+    0 16px 38px rgba(22, 163, 74, .14),
+    inset 0 1px 0 rgba(255, 255, 255, .95);
+}
+
+
+/* ============================================================
+   CONTACT ICON
+   ============================================================ */
+
+.contact-icon-box {
+  position: relative;
+
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  color: #15803d;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f0fdf4,
+      #ffffff
+    );
+
+  border: 1px solid #dcfce7;
+
+  box-shadow:
+    0 5px 15px rgba(22, 163, 74, .10);
+
+  z-index: 1;
+
+  transition:
+    transform .28s ease,
+    box-shadow .28s ease;
+}
+
+
+.contact-card:hover .contact-icon-box {
+  transform:
+    scale(1.08)
+    rotate(-3deg);
+
+  box-shadow:
+    0 8px 20px rgba(22, 163, 74, .16);
+}
+
+
+.contact-icon-box i {
+  font-size: 16px;
+}
+
+
+/* ============================================================
+   CONTACT TEXT
+   ============================================================ */
+
+.contact-info {
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  z-index: 1;
+}
+
+
+.contact-caption {
+  margin-bottom: 4px;
+
+  color: #94a3b8;
+
+  font-size: 7px;
+
+  font-weight: 950;
+
+  letter-spacing: 1.15px;
+
+  line-height: 1;
+}
+
+
+.contact-title {
+  margin-top: 0;
+
+  color: #166534;
+
+  font-size: 12px;
+
+  font-weight: 950;
+
+  letter-spacing: .15px;
+
+  line-height: 1.2;
+}
+
+
+/* ============================================================
+   CONTACT ARROW
+   ============================================================ */
+
+.contact-arrow {
+  width: 30px;
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: #15803d;
+
+  background:
+    rgba(240, 253, 244, .95);
+
+  border:
+    1px solid rgba(22, 163, 74, .10);
+
+  z-index: 1;
+
+  transition:
+    transform .28s ease,
+    background .28s ease;
+}
+
+
+.contact-card:hover .contact-arrow {
+  transform:
+    translate(3px, -3px);
+
+  background:
+    #dcfce7;
+}
+
+
+.contact-arrow i {
+  font-size: 9px;
+}
+
+
+/* ============================================================
+   TABLET + MOBILE
+   0 - 991px
+   MY ORDERS SHOW
+   ============================================================ */
+
+@media (max-width: 991.98px) {
+
+  .announcement-top-row {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+  }
+
+
+  /* -----------------------------------------
+     MY ORDERS SHOW
+     ----------------------------------------- */
+
+  .my-orders-card {
+    display: flex !important;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    width: 110px;
+    min-width: 110px;
+
+    height: 49px;
+
+    flex: 0 0 110px;
+
+    padding: 0 10px;
+
+    margin-left: 0;
+
+    border-radius: 17px;
+  }
+
+
+  .orders-icon-box {
+    width: 30px;
+    height: 30px;
+
+    flex: 0 0 30px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+  }
+
+
+  .orders-icon-box i {
+    font-size: 15px;
+  }
+
+
+  .orders-text {
+    display: block !important;
+
+    font-size: 10.5px;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+  }
+
+
+  .orders-dot {
+    width: 6px;
+    height: 6px;
+
+    top: 4px;
+    right: 3px;
+  }
+
+
+  /* -----------------------------------------
+     CONTACT HIDDEN
+     ----------------------------------------- */
+
+  .desktop-contact {
+    display: none !important;
+  }
+
+}
+
+
+/* ============================================================
+   TABLET
+   768px - 991px
+   ============================================================ */
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+
+  .announcement-container {
+    padding:
+      12px 20px 13px;
+
+    gap: 12px;
+  }
+
+
+  .announcement-top-row {
+    gap: 14px;
+  }
+
+
+  .brand-card {
+    height: 54px;
+
+    padding: 5px 14px;
+
+    gap: 11px;
+
+    border-radius: 18px;
+  }
+
+
+  .brand-logo-box {
+    width: 44px;
+    height: 44px;
+
+    flex-basis: 44px;
+
+    border-radius: 13px;
+  }
+
+
+  .brand-logo {
+    width: 33px;
+    height: 33px;
+  }
+
+
+  .brand-bros,
+  .brand-it {
+    font-size: 14px;
+  }
+
+
+  .my-orders-card {
+    width: 125px;
+    min-width: 125px;
+
+    flex-basis: 125px;
+
+    height: 54px;
+
+    border-radius: 18px;
+
+    gap: 8px;
+  }
+
+
+  .orders-icon-box {
+    width: 33px;
+    height: 33px;
+
+    flex-basis: 33px;
+
+    border-radius: 11px;
+  }
+
+
+  .orders-icon-box i {
+    font-size: 16px;
+  }
+
+
+  .orders-text {
+    font-size: 11.5px;
+  }
+
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 767.98px) {
+
+  .announcement-container {
+    padding:
+      10px 12px 11px;
+  }
+
+
+  .announcement-top-row {
+    gap: 9px;
+  }
+
+
+  .brand-card {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 49px;
+
+    padding: 4px 10px;
+
+    gap: 8px;
+
+    border-radius: 17px;
+  }
+
+
+  .brand-logo-box {
+    width: 39px;
+    height: 39px;
+
+    flex: 0 0 39px;
+
+    border-radius: 12px;
+  }
+
+
+  .brand-logo {
+    width: 29px;
+    height: 29px;
+  }
+
+
+  .brand-bros,
+  .brand-it {
+    font-size: 12px;
+  }
+
+
+  .my-orders-card {
+    width: 100px;
+    min-width: 100px;
+
+    flex: 0 0 100px;
+
+    height: 49px;
+
+    border-radius: 17px;
+
+    padding: 0 8px;
+
+    gap: 6px;
+  }
+
+
+  .orders-icon-box {
+    width: 29px;
+    height: 29px;
+
+    flex-basis: 29px;
+
+    border-radius: 9px;
+  }
+
+
+  .orders-icon-box i {
+    font-size: 14px;
+  }
+
+
+  .orders-text {
+    font-size: 10px;
+  }
+
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 380px) {
+
+  .announcement-container {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+
+  .announcement-top-row {
+    gap: 7px;
+  }
+
+
+  .brand-card {
+    height: 46px;
+
+    padding: 3px 8px;
+
+    gap: 7px;
+
+    border-radius: 15px;
+  }
+
+
+  .brand-logo-box {
+    width: 36px;
+    height: 36px;
+
+    flex-basis: 36px;
+
+    border-radius: 11px;
+  }
+
+
+  .brand-logo {
+    width: 27px;
+    height: 27px;
+  }
+
+
+  .brand-bros,
+  .brand-it {
+    font-size: 10.5px;
+  }
+
+
+  .my-orders-card {
+    width: 94px;
+    min-width: 94px;
+
+    flex-basis: 94px;
+
+    height: 46px;
+
+    padding: 0 6px;
+
+    gap: 5px;
+
+    border-radius: 15px;
+  }
+
+
+  .orders-icon-box {
+    width: 27px;
+    height: 27px;
+
+    flex-basis: 27px;
+  }
+
+
+  .orders-icon-box i {
+    font-size: 13px;
+  }
+
+
+  .orders-text {
+    font-size: 9.5px;
   }
 
 }

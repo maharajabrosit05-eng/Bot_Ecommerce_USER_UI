@@ -80,6 +80,21 @@ export interface CancelReturnDetails {
   refunds: any[];
 }
 
+// ---- Cashfree UPI QR support types ----
+
+export interface CashfreeOrderResult {
+  orderNo: string;
+  cfOrderId: string;
+  cfPaymentId: string;
+  qrImage: string;   // ready "data:image/png;base64,...." string from backend
+  txnCode: string;
+}
+
+export interface CashfreeStatusResult {
+  status: string;              // ACTIVE / PAID / EXPIRED / TERMINATED / TERMINATION_REQUESTED
+  paidAmount: number | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class OrderService {
 
@@ -135,7 +150,7 @@ export class OrderService {
     });
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // ==================================================================
   // PLACE ORDER
@@ -190,6 +205,195 @@ export class OrderService {
         onError?.(err?.error?.message);
       }
     });
+  }
+
+  // ==================================================================
+  // CASHFREE — CREATE ORDER + GENERATE DYNAMIC UPI QR
+  // Checkout-ல UPI select பண்ணும் நேரமே இதை call பண்ணுவோம். Backend
+  // real Cashfree sandbox order create பண்ணி, base64 QR image-ஐ
+  // திருப்பி அனுப்பும் — அதை நேரடியா <img [src]> ல காட்டலாம்.
+  // ==================================================================
+  createCashfreeOrder(
+    amount: number,
+    customerCode: string,
+    phone?: string,
+    email?: string,
+    onSuccess?: (data: CashfreeOrderResult) => void,
+    onError?: (message?: string) => void
+  ): void {
+
+    const payload = {
+      Customer_Code: customerCode,
+      Customer_Phone: phone,
+      Customer_Email: email,
+      Amount: amount
+    };
+
+    this.http.post(`${this.baseUrl}/api/payment/CreateCashfreeQr`, payload).subscribe({
+      next: (res: any) => {
+        console.log('CASHFREE CREATE QR RESPONSE:', res);
+
+        if (res?.status !== true) {
+          onError?.(res?.message || 'Cashfree could not create the payment QR.');
+          return;
+        }
+
+        const data = res?.data ?? {};
+
+        // ASP.NET JSON can expose the property as qr_Image / Qr_Image
+        // depending on the configured JSON naming policy. Accept both.
+        const qrImage =
+          data?.Qr_Image ??
+          data?.qr_Image ??
+          data?.QR_Image ??
+          data?.qr_image ??
+          '';
+
+        const orderNo =
+          data?.Order_No ??
+          data?.order_No ??
+          data?.orderNo ??
+          '';
+
+        const cfOrderId =
+          data?.Cf_Order_Id ??
+          data?.cf_Order_Id ??
+          data?.cfOrderId ??
+          '';
+
+        const cfPaymentId =
+          data?.Cf_Payment_Id ??
+          data?.cf_Payment_Id ??
+          data?.cfPaymentId ??
+          '';
+
+        const txnCode =
+          data?.Txn_Code ??
+          data?.txn_Code ??
+          data?.txnCode ??
+          '';
+
+        if (!orderNo) {
+          console.error('CASHFREE ORDER NUMBER MISSING:', data);
+          onError?.('Cashfree order number was not returned by the API.');
+          return;
+        }
+
+        if (!qrImage) {
+          console.error('CASHFREE QR IMAGE MISSING:', data);
+          onError?.('Cashfree created the order, but QR image was not returned.');
+          return;
+        }
+
+        // The backend already returns a complete data URL. If a provider
+        // ever sends only raw base64, convert it to a browser-ready URL.
+        const normalizedQrImage = qrImage.startsWith('data:image/')
+          ? qrImage
+          : `data:image/png;base64,${qrImage}`;
+
+        onSuccess?.({
+          orderNo: String(orderNo),
+          cfOrderId: String(cfOrderId),
+          cfPaymentId: String(cfPaymentId),
+          qrImage: normalizedQrImage,
+          txnCode: String(txnCode)
+        });
+      },
+      error: (err: any) => {
+        console.error('CREATE CASHFREE ORDER ERROR:', err);
+        onError?.(
+          err?.error?.message ||
+          err?.error?.Message ||
+          'Unable to create Cashfree payment QR.'
+        );
+      }
+    });
+  }
+
+  // ==================================================================
+  // CASHFREE — POLL ORDER STATUS
+  // Backend calls Cashfree directly and returns:
+  // SUCCESS / PAID  -> paid
+  // PENDING / ACTIVE -> waiting
+  // FAILED / EXPIRED / TERMINATED -> failed
+  // ==================================================================
+  checkCashfreeStatus(
+    orderNo: string,
+    onResult: (data: CashfreeStatusResult) => void,
+    onError?: (message?: string) => void
+  ): void {
+
+    if (!orderNo?.trim()) {
+      onError?.('Cashfree order number is missing.');
+      return;
+    }
+
+    this.http
+      .get(`${this.baseUrl}/api/payment/CashfreeStatus/${encodeURIComponent(orderNo)}`)
+      .subscribe({
+        next: (res: any) => {
+          console.log('CASHFREE STATUS RESPONSE:', res);
+
+          if (res?.status !== true) {
+            onError?.(res?.message || 'Unable to check Cashfree payment status.');
+            return;
+          }
+
+          const data = res?.data ?? {};
+
+          const rawStatus =
+            data?.Status ??
+            data?.status ??
+            data?.payment_status ??
+            data?.Payment_Status ??
+            data?.order_status ??
+            data?.Order_Status ??
+            '';
+
+          const backendStatus = String(rawStatus).trim().toUpperCase();
+
+          const status =
+            backendStatus === 'SUCCESS' ||
+            backendStatus === 'PAID'
+              ? 'PAID'
+              : backendStatus === 'ACTIVE' ||
+                backendStatus === 'PENDING'
+                ? 'PENDING'
+                : backendStatus === 'FAILED' ||
+                  backendStatus === 'EXPIRED' ||
+                  backendStatus === 'TERMINATED' ||
+                  backendStatus === 'TERMINATION_REQUESTED'
+                  ? 'FAILED'
+                  : backendStatus || 'PENDING';
+
+          const rawAmount =
+            data?.Amount ??
+            data?.amount ??
+            data?.paid_amount ??
+            data?.Paid_Amount ??
+            null;
+
+          const paidAmount =
+            rawAmount === null || rawAmount === undefined || rawAmount === ''
+              ? null
+              : Number(rawAmount);
+
+          onResult({
+            status,
+            paidAmount: Number.isFinite(paidAmount as number)
+              ? paidAmount
+              : null
+          });
+        },
+        error: (err: any) => {
+          console.error('CASHFREE STATUS CHECK ERROR:', err);
+          onError?.(
+            err?.error?.message ||
+            err?.error?.Message ||
+            'Payment status check failed.'
+          );
+        }
+      });
   }
 
   // ==================================================================
@@ -267,13 +471,13 @@ export class OrderService {
 
         const items: LiveStatusItem[] = Array.isArray(rawItems)
           ? rawItems.map((row: any) => ({
-              orderItemId: Number(row.Order_Item_Id ?? row.OrderItemId) || 0,
-              productCode: row.Product_Code ?? row.ProductCode ?? '',
-              name: row.Product_Name ?? row.ProductName ?? row.Name ?? '',
-              image: row.ProdImgUrl ?? row.Product_Image ?? row.ProductImage ?? row.Image ?? '',
-              quantity: Number(row.Quantity ?? row.Qty) || 0,
-              price: Number(row.Selling_Price ?? row.SellingPrice ?? row.Price) || 0
-            }))
+            orderItemId: Number(row.Order_Item_Id ?? row.OrderItemId) || 0,
+            productCode: row.Product_Code ?? row.ProductCode ?? '',
+            name: row.Product_Name ?? row.ProductName ?? row.Name ?? '',
+            image: row.ProdImgUrl ?? row.Product_Image ?? row.ProductImage ?? row.Image ?? '',
+            quantity: Number(row.Quantity ?? row.Qty) || 0,
+            price: Number(row.Selling_Price ?? row.SellingPrice ?? row.Price) || 0
+          }))
           : [];
 
         if (items.length === 0) {
@@ -370,65 +574,65 @@ export class OrderService {
   }
 
   // POST api/order/ReturnOrderItem
-returnOrderItem(
-  payload: ReturnOrderItemPayload,
-  onSuccess?: (data: {
-    returnCode: string;
-    refundCode: string;
-    refundAmount: string;
-  }) => void,
-  onError?: (message?: string) => void
-): void {
+  returnOrderItem(
+    payload: ReturnOrderItemPayload,
+    onSuccess?: (data: {
+      returnCode: string;
+      refundCode: string;
+      refundAmount: string;
+    }) => void,
+    onError?: (message?: string) => void
+  ): void {
 
-  this.http.post(
-    `${this.baseUrl}/api/order/ReturnOrderItem`,
-    payload
-  ).subscribe({
+    this.http.post(
+      `${this.baseUrl}/api/order/ReturnOrderItem`,
+      payload
+    ).subscribe({
 
-    next: (res: any) => {
+      next: (res: any) => {
 
-      if (res?.status === true) {
+        if (res?.status === true) {
 
-        // IMPORTANT:
-        // Immediately update current UI state
-        this.orders.update(list =>
-          list.map(o =>
-            o.id === payload.OrderCode
-              ? { ...o, status: 'Returned' }
-              : o
-          )
+          // IMPORTANT:
+          // Immediately update current UI state
+          this.orders.update(list =>
+            list.map(o =>
+              o.id === payload.OrderCode
+                ? { ...o, status: 'Returned' }
+                : o
+            )
+          );
+
+          onSuccess?.({
+            returnCode: res.data?.Return_Code,
+            refundCode: res.data?.Refund_Code,
+            refundAmount: res.data?.Refund_Amount
+          });
+
+        } else {
+
+          onError?.(res?.message);
+
+        }
+
+      },
+
+      error: (err: any) => {
+
+        console.error(
+          'RETURN ORDER ITEM ERROR:',
+          err
         );
 
-        onSuccess?.({
-          returnCode: res.data?.Return_Code,
-          refundCode: res.data?.Refund_Code,
-          refundAmount: res.data?.Refund_Amount
-        });
-
-      } else {
-
-        onError?.(res?.message);
+        onError?.(
+          err?.error?.message ||
+          'Could not submit return request.'
+        );
 
       }
 
-    },
-
-    error: (err: any) => {
-
-      console.error(
-        'RETURN ORDER ITEM ERROR:',
-        err
-      );
-
-      onError?.(
-        err?.error?.message ||
-        'Could not submit return request.'
-      );
-
-    }
-
-  });
-}
+    });
+  }
 
   // POST api/order/ProcessRefund (admin/finance side)
   processRefund(
@@ -477,4 +681,21 @@ returnOrderItem(
       }
     });
   }
+
+
+
+
+
+
+  checkCashfreePayment(orderNo: string) {
+    return this.http.get<any>(
+      `${this.baseUrl}/api/payment/CheckCashfreePayment/${encodeURIComponent(orderNo)}`
+    );
+  }
+
+
+
+
+
+
 }

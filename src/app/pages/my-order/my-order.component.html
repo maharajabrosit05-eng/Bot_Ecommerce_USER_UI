@@ -22,8 +22,8 @@
             </a>
         </div>
 
-        <p class="mt-3 mb-1 fw-bold">No orders yet</p>
-        <p class="text-muted mb-4">Everything you order will show up here.</p>
+        <!-- <p class="mt-3 mb-1 fw-bold">No orders yet</p>
+        <p class="text-muted mb-4">Everything you order will show up here.</p> -->
         <ng-container *ngIf="!loading && !errorMessage">
 
             <!-- ================= EMPTY ================= -->
@@ -249,17 +249,51 @@
 
                                 <!-- CANCELLED / RETURNED -->
                                 <div class="cancelled-banner"
-                                    *ngIf="order.status === 'Cancelled' || order.status === 'Returned'">
+                                    *ngIf="order.status === 'Cancelled' || order.status === 'Returned'"
+                                    [class.refund-success]="selectedRefund?.Refund_Status === 'PROCESSED'"
+                                    [class.refund-pending]="selectedRefund && selectedRefund.Refund_Status !== 'PROCESSED' && selectedRefund.Refund_Status !== 'NOT_APPLICABLE'">
+
                                     <div class="banner-icon">
-                                        <i class="bi bi-info-lg"></i>
+                                        <i class="bi"
+                                            [ngClass]="selectedRefund?.Refund_Status === 'PROCESSED' ? 'bi-check-circle-fill' : 'bi-info-lg'"></i>
                                     </div>
+
                                     <div>
                                         <p class="mb-0 fw-bold">
                                             This order was {{ order.status.toLowerCase() }}
                                         </p>
-                                        <p class="mb-0 small">
-                                            Check the timeline below for details.
-                                        </p>
+
+                                        <ng-container [ngSwitch]="selectedRefund?.Refund_Status">
+
+                                            <!-- Refund fully processed -->
+                                            <p class="mb-0 small" *ngSwitchCase="'PROCESSED'">
+                                                &#8377;{{ selectedRefund.Refund_Amount | number: '1.2-2' }} refund
+                                                processed successfully
+                                                <ng-container *ngIf="selectedRefund.Processed_On">
+                                                    on {{ selectedRefund.Processed_On | date: 'mediumDate' }}
+                                                </ng-container>
+                                                <ng-container *ngIf="selectedRefund.Refund_TxnRef">
+                                                    &bull; Ref: {{ selectedRefund.Refund_TxnRef }}
+                                                </ng-container>
+                                            </p>
+
+                                            <!-- COD order that was never actually paid -->
+                                            <p class="mb-0 small" *ngSwitchCase="'NOT_APPLICABLE'">
+                                                No refund applicable — payment wasn't collected for this order.
+                                            </p>
+
+                                            <!-- Refund requested but not yet processed, or still loading -->
+                                            <p class="mb-0 small" *ngSwitchDefault>
+                                                <ng-container *ngIf="selectedRefund; else refundCheckingTimeline">
+                                                    &#8377;{{ selectedRefund.Refund_Amount | number: '1.2-2' }} refund
+                                                    is being processed. It'll reflect in your account soon.
+                                                </ng-container>
+                                                <ng-template #refundCheckingTimeline>
+                                                    Check the timeline below for details.
+                                                </ng-template>
+                                            </p>
+
+                                        </ng-container>
                                     </div>
                                 </div>
 

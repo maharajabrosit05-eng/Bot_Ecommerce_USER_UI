@@ -4,9 +4,9 @@ export const environment = {
   appVersion: packageInfo.version,
   production: true,
  
-  apiUrl: 'https://api.brositecom.com',
+  // apiUrl: 'https://api.brositecom.com',
 
-    // apiUrl: "http://localhost:5153",
+    apiUrl: "http://localhost:5153",
    
   s3Url: "https://kovilpatti.s3.ap-south-1.amazonaws.com/",
  

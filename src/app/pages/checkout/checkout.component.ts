@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -19,7 +19,7 @@ declare const window: any;
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent implements OnInit, OnDestroy {
 
   /* =====================================================
      CHECKOUT STEP
@@ -153,6 +153,34 @@ export class CheckoutComponent implements OnInit {
 
   get availableCities(): string[] {
     return this.state ? (this.citiesByState[this.state] || []) : [];
+  }
+
+  /* =====================================================
+     PREMIUM STATE DROPDOWN
+  ====================================================== */
+  stateDropdownOpen = false;
+
+  toggleStateDropdown(event?: Event): void {
+    event?.stopPropagation();
+
+    if (this.placingOrder) {
+      return;
+    }
+
+    this.stateDropdownOpen = !this.stateDropdownOpen;
+  }
+
+  selectState(selectedState: string, event?: Event): void {
+    event?.stopPropagation();
+
+    this.state = selectedState;
+    this.stateDropdownOpen = false;
+    this.onStateChange();
+  }
+
+  @HostListener('document:click')
+  closeStateDropdown(): void {
+    this.stateDropdownOpen = false;
   }
 
   onStateChange(): void {
@@ -333,6 +361,37 @@ export class CheckoutComponent implements OnInit {
 
 
   /* =====================================================
+     UPI — REAL CASHFREE DYNAMIC QR (SANDBOX)
+     Old behaviour used a static/dummy QR image just for looks.
+     Now, the instant the person picks UPI, we call the backend
+     (api/payment/CreateCashfreeOrder), which creates a real
+     Cashfree sandbox order and hands back a ready-to-render
+     base64 QR image — that's what gets shown below.
+
+     After the QR is up, we poll api/payment/CashfreeOrderStatus
+     every few seconds (Cashfree's webhook can't reach localhost,
+     so polling is the correct way to test this in sandbox). The
+     moment the status flips to PAID, the order is placed
+     automatically — no extra click needed.
+  ====================================================== */
+
+  cashfreeOrderNo = '';
+  cashfreeQrImage = '';
+  cashfreePaymentId = '';
+  cashfreeGeneratingQr = false;
+  cashfreeQrError = '';
+  cashfreePaymentConfirmed = false;
+
+  private cashfreePollHandle: any = null;
+
+  readonly upiSteps: string[] = [
+    'Open any UPI app on your phone',
+    'Scan the QR code shown here',
+    'Confirm the amount and complete the payment'
+  ];
+
+
+  /* =====================================================
      STATE
   ====================================================== */
 
@@ -363,6 +422,13 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSavedAddress();
+  }
+
+  ngOnDestroy(): void {
+    // page vittu poitaa (order success-kku navigate aana, illa
+    // vera page-ku poana) polling background-la ongoing-a irukka
+    // koodathu -> stop panniduvom.
+    this.stopCashfreePolling();
   }
 
   // ============================================================
@@ -507,8 +573,9 @@ export class CheckoutComponent implements OnInit {
      PAYMENT VALIDATION
      Card/UPI field checks stay only as a quick client-side
      sanity check for the manual-entry panels. The actual
-     charge always happens inside the Razorpay widget, which
-     does its own full validation.
+     charge always happens inside the Razorpay widget (card)
+     or the Cashfree QR (UPI), which do their own full
+     validation.
   ====================================================== */
 
   get isPaymentValid(): boolean {
@@ -518,7 +585,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     if (this.paymentMethod === 'upi') {
-      return true; // UPI ID / QR / app choice happens inside Razorpay's own secure form.
+      return true; // Payment happens by scanning the Cashfree QR shown on screen.
     }
 
     /* COD */
@@ -537,6 +604,17 @@ export class CheckoutComponent implements OnInit {
 
     this.paymentMethod = method;
     this.errorMessage = '';
+
+    if (method === 'upi') {
+      // UPI select panra odane real Cashfree QR generate pannitu,
+      // status polling-ஐயும் start pannidalaam.
+      this.generateCashfreeQr();
+    } else {
+      // Vera method-ku switch panninaa, background polling-ஐ
+      // niruthiடு — QR/order data-ஐ maatha vendaam, thirumbi UPI-ku
+      // vandha resume aagum (generateCashfreeQr() la irukkura check).
+      this.stopCashfreePolling();
+    }
   }
 
   /* =====================================================
@@ -669,7 +747,7 @@ export class CheckoutComponent implements OnInit {
 
 
   /* =====================================================
-     RAZORPAY SCRIPT LOADER
+     RAZORPAY SCRIPT LOADER (CARD PAYMENTS ONLY)
   ====================================================== */
 
   private loadRazorpayScript(): Promise<boolean> {
@@ -692,21 +770,194 @@ export class CheckoutComponent implements OnInit {
 
 
   /* =====================================================
+     CASHFREE — GENERATE / RESUME THE UPI QR
+     Called the moment UPI is selected. If a QR already exists
+     for this checkout session, we just resume polling instead
+     of generating a fresh Cashfree order every time the person
+     flips between payment methods.
+  ====================================================== */
+
+  generateCashfreeQr(): void {
+
+    if (this.cashfreePaymentConfirmed || this.placingOrder) {
+      return;
+    }
+
+    // Re-use the existing QR when the customer switches payment methods.
+    if (this.cashfreeQrImage && this.cashfreeOrderNo) {
+      this.cashfreeQrError = '';
+      this.startCashfreePolling();
+      return;
+    }
+
+    if (this.cashfreeGeneratingQr) {
+      return;
+    }
+
+    const customerCode = this.getCustomerCode();
+
+    if (!customerCode) {
+      this.errorMessage = 'Please login to place an order.';
+      return;
+    }
+
+    this.errorMessage = '';
+    this.cashfreeQrError = '';
+    this.cashfreeGeneratingQr = true;
+    this.cashfreeQrImage = '';
+    this.cashfreeOrderNo = '';
+    this.cashfreePaymentId = '';
+
+    const amount = Number(this.cartService.grandTotal());
+
+    this.orderService.createCashfreeOrder(
+      amount,
+      customerCode,
+      this.phone,
+      undefined,
+
+      (data) => {
+        this.cashfreeGeneratingQr = false;
+
+        this.cashfreeOrderNo = data.orderNo || '';
+        this.cashfreePaymentId = data.cfPaymentId || '';
+        this.cashfreeQrImage = data.qrImage || '';
+        this.cashfreeQrError = '';
+
+        console.log('CASHFREE QR READY');
+        console.log('Order No:', this.cashfreeOrderNo);
+        console.log('Payment Id:', this.cashfreePaymentId);
+        console.log('QR image received:', !!this.cashfreeQrImage);
+        console.log('QR prefix:', this.cashfreeQrImage.substring(0, 30));
+
+        if (!this.cashfreeQrImage) {
+          this.cashfreeQrError = 'QR image was not received from Cashfree.';
+          return;
+        }
+
+        // Check status immediately, then every 4 seconds.
+        this.startCashfreePolling();
+      },
+
+      (message) => {
+        this.cashfreeGeneratingQr = false;
+        this.cashfreeQrImage = '';
+        this.cashfreeOrderNo = '';
+        this.cashfreePaymentId = '';
+        this.cashfreeQrError =
+          message ||
+          'Could not generate the UPI QR right now. Please try again.';
+
+        console.error('CASHFREE QR GENERATION ERROR:', message);
+      }
+    );
+  }
+
+
+  /* =====================================================
+     CASHFREE — POLL ORDER STATUS
+     First check immediately, then every 4 seconds.
+     When backend returns SUCCESS/PAID, finalize the order
+     and navigate to /order-success automatically.
+  ====================================================== */
+
+  private startCashfreePolling(): void {
+
+    this.stopCashfreePolling();
+
+    if (!this.cashfreeOrderNo || this.cashfreePaymentConfirmed) {
+      return;
+    }
+
+    const checkStatus = () => {
+
+      if (
+        !this.cashfreeOrderNo ||
+        this.cashfreePaymentConfirmed ||
+        this.placingOrder
+      ) {
+        return;
+      }
+
+      const orderNo = this.cashfreeOrderNo;
+
+      this.orderService.checkCashfreeStatus(
+        orderNo,
+
+        (result) => {
+          console.log(
+            'CASHFREE PAYMENT STATUS:',
+            result.status,
+            'Amount:',
+            result.paidAmount
+          );
+
+          if (result.status === 'PAID' && !this.cashfreePaymentConfirmed) {
+
+            // Stop polling before finalizing to prevent duplicate order calls.
+            this.stopCashfreePolling();
+
+            const customerCode = this.getCustomerCode();
+
+            if (!customerCode) {
+              this.cashfreeQrError =
+                'Payment received, but customer session expired. Please login again.';
+              return;
+            }
+
+            // Hide QR and show the payment-received state while PlaceOrder runs.
+            this.cashfreePaymentConfirmed = true;
+            this.placingOrder = true;
+            this.errorMessage = '';
+
+            this.finalizeOrder(
+              customerCode,
+              'UPI',
+              this.cashfreePaymentId
+            );
+
+            return;
+          }
+
+          if (result.status === 'FAILED') {
+            this.stopCashfreePolling();
+            this.cashfreePaymentConfirmed = false;
+            this.cashfreeQrError =
+              'Cashfree payment expired or failed. Please generate a new QR and try again.';
+          }
+        },
+
+        (message) => {
+          console.error('CASHFREE STATUS POLL ERROR:', message);
+        }
+      );
+    };
+
+    // Do not wait 4 seconds for the first status request.
+    checkStatus();
+
+    this.cashfreePollHandle = setInterval(checkStatus, 4000);
+  }
+
+  private stopCashfreePolling(): void {
+    if (this.cashfreePollHandle) {
+      clearInterval(this.cashfreePollHandle);
+      this.cashfreePollHandle = null;
+    }
+  }
+
+
+  /* =====================================================
      PLACE ORDER
      - COD: goes straight to order creation, as before.
-     - CARD / UPI: opens the real Razorpay checkout widget so
+     - UPI: the QR is already generated (as soon as the
+       method was selected) and status polling is already
+       running in the background — clicking here is mostly
+       a nudge; the order actually gets placed automatically
+       the instant the poll sees PAID.
+     - CARD: opens the real Razorpay checkout widget so
        money actually moves through a licensed gateway, then
        creates the order only after payment succeeds.
-
-     TODO (backend, required for CARD/UPI to move real money):
-       1) Add an endpoint that creates a Razorpay Order
-          (amount, currency='INR') using your Razorpay Key
-          Secret, and returns { id, amount, currency }.
-          Wire it up below as orderService.createPaymentOrder().
-       2) After payment, verify razorpay_payment_id /
-          razorpay_order_id / razorpay_signature on your
-          server using your Key Secret BEFORE fulfilling the
-          order. Never trust the frontend for that check.
   ====================================================== */
 
   async placeOrder(): Promise<void> {
@@ -731,6 +982,29 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.errorMessage = '';
+
+    /* ================= UPI via Cashfree Dynamic QR ================= */
+
+    if (this.paymentMethod === 'upi') {
+
+      if (this.cashfreePaymentConfirmed) {
+        return; // finalizeOrder is already running from the poll callback
+      }
+
+      if (this.cashfreeGeneratingQr) {
+        this.errorMessage = 'Generating your QR code, please wait a moment.';
+        return;
+      }
+
+      if (!this.cashfreeQrImage) {
+        this.generateCashfreeQr();
+      }
+
+      this.errorMessage = 'Scan the QR code with any UPI app to complete your payment.';
+
+      return;
+    }
+
     this.placingOrder = true;
 
     if (this.paymentMethod === 'cod') {
@@ -738,7 +1012,7 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
-    /* ================= CARD / UPI via Razorpay ================= */
+    /* ================= CARD via Razorpay ================= */
 
     const scriptLoaded = await this.loadRazorpayScript();
 
@@ -775,13 +1049,13 @@ export class CheckoutComponent implements OnInit {
 
       this.placingOrder = false;
       this.errorMessage =
-        'Online payment is not fully set up yet. Please ask your developer to add the createPaymentOrder backend API (see TODO in checkout.component.ts), or choose Cash on Delivery for now.';
+        'Online card payment is not fully set up yet. Please ask your developer to add the createPaymentOrder backend API (see TODO in checkout.component.ts), or choose UPI / Cash on Delivery for now.';
     }
   }
 
 
   /* =====================================================
-     OPEN RAZORPAY CHECKOUT WIDGET
+     OPEN RAZORPAY CHECKOUT WIDGET (CARD PAYMENTS ONLY)
   ====================================================== */
 
   private openRazorpayCheckout(
@@ -803,8 +1077,8 @@ export class CheckoutComponent implements OnInit {
       order_id: razorpayOrder.id,
 
       method: {
-        card: this.paymentMethod === 'card',
-        upi: this.paymentMethod === 'upi',
+        card: true,
+        upi: false,
         netbanking: false,
         wallet: false
       },
@@ -827,7 +1101,7 @@ export class CheckoutComponent implements OnInit {
 
         this.finalizeOrder(
           customerCode,
-          this.paymentMethod === 'card' ? 'CARD' : 'UPI',
+          'CARD',
           response.razorpay_payment_id
         );
       },

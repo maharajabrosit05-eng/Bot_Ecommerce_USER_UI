@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { OrderService, LiveStatusResult, LiveStatusItem, STATUS_STEPS } from '../../core/services/order.service';
+import { OrderService, LiveStatusResult, LiveStatusItem, STATUS_STEPS, CancelReturnDetails } from '../../core/services/order.service';
 import { Order } from '../../core/models/product.model';
 
 type FilterKey = 'all' | 'active' | 'delivered' | 'cancelled';
@@ -33,6 +33,13 @@ export class MyOrderComponent implements OnInit, OnDestroy {
   // what fixes the "badge says Packed but stepper says Placed" bug —
   // there used to be two different sources of truth for status.
   liveResults: Record<string, LiveStatusResult> = {};
+
+  // Refund_Code/Refund_Amount/Refund_Status/Refund_TxnRef/Processed_On for a
+  // Cancelled/Returned order — fetched via OrderCancelReturnDetails. Kept in
+  // its own cache (separate from liveResults) since it's only relevant once
+  // an order is Cancelled/Returned, and needs to be re-fetched on refresh so
+  // "PENDING" flips to "PROCESSED" once finance actually processes it.
+  refundDetails: Record<string, CancelReturnDetails> = {};
 
   loadingOrderId: string | null = null;
 
@@ -126,6 +133,7 @@ export class MyOrderComponent implements OnInit, OnDestroy {
         this.orderService.getLiveStatus(orderId, (result) => {
           this.liveResults[orderId] = result;
         });
+        this.loadRefundDetails(orderId);
       });
     });
   }
@@ -150,6 +158,7 @@ export class MyOrderComponent implements OnInit, OnDestroy {
             this.refreshing = false;
           }
         });
+        this.loadRefundDetails(orderId);
       });
     });
   }
@@ -164,6 +173,27 @@ export class MyOrderComponent implements OnInit, OnDestroy {
     }
   }
 
+  private loadRefundDetails(orderId: string): void {
+    const order = this.orderService.getOrder(orderId);
+    if (!order || (order.status !== 'Cancelled' && order.status !== 'Returned')) {
+      return;
+    }
+
+    this.orderService.getCancelReturnDetails(orderId, (details) => {
+      this.refundDetails[orderId] = details;
+    });
+  }
+
+  // Latest refund row for the currently selected order (M_REFUND can carry
+  // more than one row per order — e.g. multiple partial returns — so we
+  // always show the most recently requested one).
+  get selectedRefund(): any {
+    if (!this.selectedOrderId) { return undefined; }
+    const details = this.refundDetails[this.selectedOrderId];
+    if (!details?.refunds?.length) { return undefined; }
+    return details.refunds[details.refunds.length - 1];
+  }
+
   private prefetchPreviews(): void {
     for (const order of this.orderService.ordersList()) {
       if (this.liveResults[order.id]) { continue; }
@@ -173,6 +203,8 @@ export class MyOrderComponent implements OnInit, OnDestroy {
         this.liveResults[order.id] = result;
         this.previewLoading[order.id] = false;
       });
+
+      this.loadRefundDetails(order.id);
     }
   }
 
@@ -258,6 +290,8 @@ export class MyOrderComponent implements OnInit, OnDestroy {
     this.selectedOrderId = order.id;
     this.animateReady[order.id] = false;
     this.journeyMoving[order.id] = false;
+
+    this.loadRefundDetails(order.id);
 
     const playReplay = () => {
       setTimeout(() => {
@@ -347,6 +381,9 @@ export class MyOrderComponent implements OnInit, OnDestroy {
         this.orderService.getLiveStatus(order.id, (result) => {
           this.liveResults[order.id] = result;
         });
+        // Refund row was just created by SP_M_OrderCancel/SP_M_RefundProcess —
+        // fetch it so the banner can show its status right away.
+        this.loadRefundDetails(order.id);
       },
       (message) => {
         this.cancelling = false;
@@ -357,12 +394,79 @@ export class MyOrderComponent implements OnInit, OnDestroy {
 
   // -----------------------------------------------------------------
   // RETURN ITEM
-  // Only ever offered on a Delivered order — enforced both here
-  // (button hidden by canReturnOrder in the template) and again as a
-  // guard in openReturnModal, so it can't be triggered any other way.
+  // Return is available ONLY for 24 hours from the actual Delivered
+  // timestamp. After the 24-hour window expires, the Return button is
+  // hidden and the modal cannot be opened.
   // -----------------------------------------------------------------
   canReturnOrder(order: Order): boolean {
-    return order.status === 'Delivered';
+    if (order.status !== 'Delivered') {
+      return false;
+    }
+
+    const deliveredAt = this.getDeliveredAt(order.id);
+    if (!deliveredAt) {
+      return false;
+    }
+
+    const deliveredTime = deliveredAt.getTime();
+    const now = Date.now();
+    const returnWindowMs = 24 * 60 * 60 * 1000;
+
+    return now >= deliveredTime && now < deliveredTime + returnWindowMs;
+  }
+
+  /**
+   * Reads the real Delivered timestamp from the live order history.
+   * The history is populated by getLiveStatus(), so this stays aligned
+   * with the same backend timeline shown in the UI.
+   */
+  private getDeliveredAt(orderId: string): Date | null {
+    const history = this.liveResults[orderId]?.history ?? [];
+
+    const deliveredEntry = history
+      .filter(h => (h.Order_Status || '').trim().toLowerCase() === 'delivered')
+      .sort((a, b) => {
+        const aTime = new Date(a.Changed_On).getTime();
+        const bTime = new Date(b.Changed_On).getTime();
+        return bTime - aTime;
+      })[0];
+
+    if (!deliveredEntry?.Changed_On) {
+      return null;
+    }
+
+    const date = new Date(deliveredEntry.Changed_On);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  /**
+   * Remaining return-window text for the UI.
+   * This is intentionally display-only; canReturnOrder() remains the
+   * authoritative guard for the Return action.
+   */
+  getReturnWindowText(order: Order): string {
+    if (!this.canReturnOrder(order)) {
+      return '';
+    }
+
+    const deliveredAt = this.getDeliveredAt(order.id);
+    if (!deliveredAt) {
+      return '';
+    }
+
+    const remainingMs = Math.max(
+      0,
+      deliveredAt.getTime() + (24 * 60 * 60 * 1000) - Date.now()
+    );
+
+    const hours = Math.floor(remainingMs / (60 * 60 * 1000));
+    const minutes = Math.floor((remainingMs % (60 * 60 * 1000)) / (60 * 1000));
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m left`;
+    }
+
+    return `${Math.max(1, minutes)}m left`;
   }
 
   private markOrderAsReturned(orderId: string): void {
@@ -437,6 +541,8 @@ export class MyOrderComponent implements OnInit, OnDestroy {
         this.orderService.getLiveStatus(order.id, (result) => {
           this.liveResults[order.id] = result;
         });
+
+        this.loadRefundDetails(order.id);
 
       },
 
